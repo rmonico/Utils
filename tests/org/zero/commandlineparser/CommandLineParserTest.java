@@ -68,10 +68,11 @@ public class CommandLineParserTest {
 		assertEquals("arg1", (int) 45, (int) switches.getArg1());
 	}
 
-	public void testDefaultSwitch() {
+	@Test
+	public void testBooleanSwitch() {
 		parser.setCommandLine(new String[] { "help" });
 
-		DefaultSwitch switches = new DefaultSwitch();
+		BooleanSwitch switches = new BooleanSwitch();
 		
 		switches.setShowHelp(false);
 
@@ -145,7 +146,7 @@ class ParsedSwitch {
 	}
 }
 
-class DefaultSwitch  {
+class BooleanSwitch  {
 	private boolean showHelp;
 	
 	@CommandLineSwitch(param="help")
