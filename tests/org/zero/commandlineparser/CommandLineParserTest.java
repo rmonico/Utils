@@ -16,7 +16,7 @@ public class CommandLineParserTest {
 
 	@Test
 	public void testMinimalParsing() {
-		parser.setCommandLine(new String[] { "arg1", "arg1_value" });
+		parser.setCommandLine(new String[] { "Arg1", "arg1_value" });
 
 		BasicSwitch switches = new BasicSwitch();
 
@@ -24,7 +24,7 @@ public class CommandLineParserTest {
 
 		parser.doParsing();
 
-		assertEquals("arg1", "arg1_value", switches.getArg1());
+		assertEquals("Arg1", "arg1_value", switches.getArg1());
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class CommandLineParserTest {
 	
 	@Test
 	public void testParsedSwitch() {
-		parser.setCommandLine(new String[] {"arg1", "45"});
+		parser.setCommandLine(new String[] {"Arg1", "45"});
 
 		parser.addParser("arg1parser", new IntegerParser());
 		
@@ -65,14 +65,14 @@ public class CommandLineParserTest {
 		
 		parser.doParsing();
 		
-		assertEquals("arg1", (int) 45, (int) switches.getArg1());
+		assertEquals("Arg1", (int) 45, (int) switches.getArg1());
 	}
 
 	@Test
 	public void testEnumSwitch() {
 		CommandLineParser cmdlParser = new CommandLineParser();
 		
-		cmdlParser.setCommandLine(new String[] {"command", "add"});
+		cmdlParser.setCommandLine(new String[] {"Command", "add"});
 		
 		EnumSwitch so = new EnumSwitch();
 		
@@ -82,7 +82,7 @@ public class CommandLineParserTest {
 		
 		cmdlParser.doParsing();
 		
-		assertEquals("command", Command.ADD, so.getCommand());
+		assertEquals("Command", Command.ADD, so.getCommand());
 	}
 
 	@Test
