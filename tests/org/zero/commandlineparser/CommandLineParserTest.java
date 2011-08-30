@@ -69,6 +69,23 @@ public class CommandLineParserTest {
 	}
 
 	@Test
+	public void testEnumSwitch() {
+		CommandLineParser cmdlParser = new CommandLineParser();
+		
+		cmdlParser.setCommandLine(new String[] {"command", "add"});
+		
+		EnumSwitch so = new EnumSwitch();
+		
+		cmdlParser.setSwitchesObject(so);
+		
+		cmdlParser.addParser("EnumParser", new EnumParser(Command.class));
+		
+		cmdlParser.doParsing();
+		
+		assertEquals("command", Command.ADD, so.getCommand());
+	}
+
+	@Test
 	public void testBooleanSwitch() {
 		parser.setCommandLine(new String[] { "help" });
 
@@ -143,6 +160,23 @@ class ParsedSwitch {
 	
 	public Integer getArg1() {
 		return arg1;
+	}
+}
+
+enum Command {
+	ADD, REMOVE;
+}
+
+class EnumSwitch {
+	private Command command;
+	
+	@CommandLineSwitch(parser="EnumParser.parseEnum")
+	public void setCommand(Command value) {
+		command = value;
+	}
+	
+	public Command getCommand() {
+		return command;
 	}
 }
 
