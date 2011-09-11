@@ -16,7 +16,7 @@ public @interface CommandLineSwitch {
 	 * 
 	 * @return
 	 */
-	String param() default "";
+	String[] param() default {};
 
 	/**
 	 * Valor que substitui o da linha de comando, caso o usuário final não

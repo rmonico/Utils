@@ -5,9 +5,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO Levar em conta o uso de prefixos para os argumentos.
 // TODO Devolver os itens excessivos na linha de comando
-// TODO Suportar múltiplos nomes para a mesma propriedade na anotação CommandLineSwitch
 public class CommandLineParser {
 
 	private String[] commandLine;
@@ -156,9 +154,11 @@ public class CommandLineParser {
 
 		for (Method method : switchesObject.getClass().getMethods()) {
 			if (isPropertySetterMethod(method)) {
-				String propertyName = getPropertyNameFor(method);
+				String[] propertiesNames = getPropertyNameFor(method);
 
-				properties.put(propertyName, method);
+				for (String propertyName : propertiesNames) {
+					properties.put(propertyName, method);
+				}
 
 				setDefaultValue(method);
 			}
@@ -185,13 +185,13 @@ public class CommandLineParser {
 		}
 	}
 
-	private String getPropertyNameFor(Method method) {
+	private String[] getPropertyNameFor(Method method) {
 		// Procura o nome da propriedade pela anotação
 		CommandLineSwitch switchSetup = method.getAnnotation(CommandLineSwitch.class);
-		if (!switchSetup.param().isEmpty()) {
+		if (switchSetup.param().length > 0) {
 			return switchSetup.param();
 		} else {
-			return method.getName().substring(3);
+			return new String[] { method.getName().substring(3) };
 		}
 	}
 

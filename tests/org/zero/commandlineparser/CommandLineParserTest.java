@@ -129,6 +129,30 @@ public class CommandLineParserTest {
 		
 		assertEquals("default param", AnotherCommand.REMOVE, switches.getCommand());
 	}
+	
+	@Test
+	public void testMultipleNamedSwitch() {
+		parser.setCommandLine(new String[] { "-arg", "option1" });
+
+		MultipleNamedSwitch switches = new MultipleNamedSwitch();
+
+		parser.setSwitchesObject(switches);
+
+		parser.doParsing();
+		
+		assertEquals("-arg", "option1", switches.getArgument());
+
+	
+		parser.setCommandLine(new String[] { "--argument", "option2" });
+
+		switches = new MultipleNamedSwitch();
+
+		parser.setSwitchesObject(switches);
+
+		parser.doParsing();
+		
+		assertEquals("-arg", "option2", switches.getArgument());
+	}
 }
 
 class BasicSwitch {
@@ -253,4 +277,18 @@ class CommandLineOptionSwitch {
 	public AnotherCommand getCommand() {
 		return command;
 	}
+}
+
+class MultipleNamedSwitch {
+	private String argument;
+
+	@CommandLineSwitch(param={"-arg", "--argument"})
+	public void setArgument(String value) {
+		argument = value;
+	}
+
+	public String getArgument() {
+		return argument;
+	}
+	
 }
