@@ -1,6 +1,7 @@
 package org.zero.commandlineparser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -205,13 +206,13 @@ public class CommandLineParserTest {
 
 		parser.parse();
 
-		assertEquals("Arg1", (int) 0, (int) switches.getArg1());
+		assertNull("Arg1", switches.getArg1());
 
 		assertEquals("filter - size", 1, parser.getErrors().size());
 
 		assertTrue("filter - item 0, class", parser.getErrors().get(0) instanceof CommandLineNotFilteredError);
 
-		assertEquals("filter - item 0, valor", "Arg1: não são permitidos valores negativos.", parser.getErrors().get(0).getMessage());
+		assertEquals("filter - item 0, valor", "Arg1: são permitidos apenas valores positivos.", parser.getErrors().get(0).getMessage());
 	}
 }
 
@@ -349,7 +350,7 @@ class MultipleNamedSwitch {
 class MyFilter {
 	@CommandLineOptionFilter
 	public String positiveFilter(Integer value) {
-		return value < 0 ? "Arg1: não são permitidos valores negativos." : null;
+		return value <= 0 ? "Arg1: são permitidos apenas valores positivos." : null;
 	}
 }
 

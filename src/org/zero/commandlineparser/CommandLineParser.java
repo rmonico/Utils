@@ -13,6 +13,7 @@ public class CommandLineParser {
 	private String[] commandLine;
 	private Object switchesObject;
 	private Map<String, Object> parsers = new HashMap<String, Object>();
+	private Map<String, Object> filters = new HashMap<String, Object>();
 	private Map<String, Method> properties;
 	private List<IInvalidCommandLineArgument> errors;
 
@@ -112,9 +113,78 @@ public class CommandLineParser {
 		}
 	}
 
-	private boolean objectPassesFilters(Method propertySetterMethod, Object o) {
-		// TODO Criar filtros para o valor que chegou do parsing
-		return true;
+	private boolean objectPassesFilters(Method setter, Object o) throws CommandLineParserException {
+		CommandLineSwitch switchSetup = setter.getAnnotation(CommandLineSwitch.class);
+		
+		String filterName = switchSetup.filter();
+		
+		// Nada a fazer
+		if (filterName.isEmpty()) {
+			return true;
+		}
+		
+		String filterId = filterName.substring(0, filterName.indexOf('.'));
+		
+		Object filter = filters.get(filterId);
+		
+		Class<?> setterParameter = setter.getParameterTypes()[0];
+
+		Method filterMethod = getFilterMethod(filterName, filter, setterParameter);
+		
+		if (!isValidFilterMethod(filterMethod, setterParameter)) {
+			throw new CommandLineParserException("O método \"" + filterMethod + "\" não é um método de filtro válido para propriedades do tipo \"" + setterParameter + "\".");
+		}
+		
+		String filterMessage;
+		try {
+			filterMessage = (String) filterMethod.invoke(filter, o);
+		} catch (IllegalArgumentException e) {
+			// Condição verificada anteriormente, não deveria acontecer
+			assert false : e;
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			// Condição verificada anteriormente, não deveria acontecer
+			assert false : e;
+			throw new RuntimeException(e);
+		} catch (InvocationTargetException e) {
+			throw new CommandLineParserException("Erro chamando o filtro \"" + filterMethod + "\"...\n\n" + e);
+		}
+		
+		boolean filterPassed = ((filterMessage == null) || (filterMessage.isEmpty()));
+		
+		if (!filterPassed) {
+			errors.add(new CommandLineNotFilteredError(filterMessage));
+		}
+		
+		return filterPassed;
+	}
+
+	private boolean isValidFilterMethod(Method method, Class<?> setterParameter) {
+		boolean isPublic = Modifier.isPublic(method.getModifiers());
+		boolean isReturnString = String.class.equals(method.getReturnType());
+		boolean isOneParameterMethod = method.getParameterTypes().length == 1;
+		boolean theParameterIsRightType = setterParameter.equals(method.getParameterTypes()[0]);
+		
+		return isPublic && isReturnString && isOneParameterMethod && theParameterIsRightType;
+	}
+
+	private Method getFilterMethod(String filterName, Object filter, Class<?> setterParameter) throws CommandLineParserException {
+		int dotIndex = filterName.indexOf('.');
+
+		String filterMethod = filterName.substring(dotIndex + 1, filterName.length());
+
+		Method method = null;
+		try {
+			method = filter.getClass().getMethod(filterMethod, setterParameter);
+			// Nenhuma das duas exceções abaixo deveria acontecer, já foi
+			// verificado antes
+		} catch (SecurityException e) {
+			throw new CommandLineParserException(e);
+		} catch (NoSuchMethodException e) {
+			throw new CommandLineParserException(e);
+		}
+
+		return method;
 	}
 
 	private Object doParser(Method setter, String value) throws CommandLineParserException {
@@ -316,8 +386,17 @@ public class CommandLineParser {
 	}
 
 	public void addFilter(String filterId, Object filter) {
-		// TODO Auto-generated method stub
-		
+		filters.put(filterId, filter);
+	}
+	
+	public boolean hasErrors() {
+		return !getErrors().isEmpty();
+	}
+	
+	public void printErrors() {
+		for (IInvalidCommandLineArgument error : getErrors()) {
+			System.out.println(error);
+		}
 	}
 
 }
