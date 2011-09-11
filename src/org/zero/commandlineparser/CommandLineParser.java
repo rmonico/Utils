@@ -47,22 +47,31 @@ public class CommandLineParser {
 				valueCandidate = null;
 			}
 
-			for (String propertyName : properties.keySet()) {
-				if (switchCandidate.equals(propertyName)) {
-					Method setter = properties.get(propertyName);
+			Method setter = properties.get(switchCandidate);
 
-					// Se for boolean, só precisa do nome do argumento
-					if (isBooleanSwitch(setter)) {
-						valueCandidate = "true";
-					} else {
-						// Se não for boolean, o argumento precisa de um valor
-						i++;
-					}
-
-					callSetterFor(setter, valueCandidate);
+			if (setter != null) {
+				// Se for boolean, só precisa do nome do argumento
+				if (isBooleanSwitch(setter)) {
+					valueCandidate = "true";
+				} else {
+					// Se não for boolean, o argumento precisa de um valor
+					i++;
 				}
+
+			} else if (isIndexedArgument(i)) {
+				setter = null;
+				// Tratar propriedade indexada
+			} else {
+				continue;
 			}
+
+			callSetterFor(setter, valueCandidate);
 		}
+	}
+
+	private boolean isIndexedArgument(int i) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	private boolean isBooleanSwitch(Method setter) {
@@ -184,7 +193,7 @@ public class CommandLineParser {
 		boolean isVoidMethod = method.getReturnType().getName().equals("void");
 		boolean isPublicMethod = Modifier.isPublic(method.getModifiers());
 		boolean isStatic = Modifier.isStatic(method.getModifiers());
-		
+
 		return isAnnotated && isOneParameterMethod && methodNameBeginsWithSet && isVoidMethod && isPublicMethod && (!isStatic);
 	}
 
