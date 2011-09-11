@@ -2,7 +2,9 @@ package org.zero.commandlineparser;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // TODO Devolver os itens excessivos na linha de comando
@@ -12,6 +14,7 @@ public class CommandLineParser {
 	private Object switchesObject;
 	private Map<String, Object> parsers = new HashMap<String, Object>();
 	private Map<String, Method> properties;
+	private List<String> excessiveArguments;
 
 	public void setCommandLine(String[] commandLine) {
 		this.commandLine = commandLine;
@@ -23,6 +26,8 @@ public class CommandLineParser {
 
 	public void doParsing() {
 		properties = new HashMap<String, Method>();
+		
+		excessiveArguments = new ArrayList<String>();
 
 		findProperties();
 
@@ -61,6 +66,7 @@ public class CommandLineParser {
 				}
 
 			} else {
+				excessiveArguments.add(switchCandidate);
 				continue;
 			}
 
@@ -207,6 +213,10 @@ public class CommandLineParser {
 
 	public void addParser(String parserId, Object parser) {
 		parsers.put(parserId, parser);
+	}
+
+	public List<String> getExcessiveArguments() {
+		return excessiveArguments ;
 	}
 
 }

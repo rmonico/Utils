@@ -153,6 +153,22 @@ public class CommandLineParserTest {
 		
 		assertEquals("-arg", "option2", switches.getArgument());
 	}
+	
+	@Test
+	public void testExcessiveCommandLineArgs() {
+		parser.setCommandLine(new String[] { "Arg1", "arg1_value", "excessive argument"});
+
+		BasicSwitch switches = new BasicSwitch();
+
+		parser.setSwitchesObject(switches);
+
+		parser.doParsing();
+
+		assertEquals("excessive argument - size", 1, parser.getExcessiveArguments().size());
+		
+		assertEquals("excessive argument - itens", "excessive argument", parser.getExcessiveArguments().get(0));
+		
+	}
 }
 
 class BasicSwitch {
