@@ -123,10 +123,10 @@ public class CommandLineParserTest {
 
 		parser.setSwitchesObject(switches);
 
-		parser.addParser("EnumParser", new EnumParser(Command.class));
+		parser.addParser("EnumParser", new EnumParser(AnotherCommand.class));
 
 		parser.doParsing();
-
+		
 		assertEquals("default param", AnotherCommand.REMOVE, switches.getCommand());
 	}
 }

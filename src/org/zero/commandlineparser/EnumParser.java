@@ -11,10 +11,28 @@ public class EnumParser {
 
 	@SuppressWarnings("rawtypes")
 	public Enum parseEnum(String value) {
-		// TODO Usar o valueOf do próprio Enum
 		for (Enum e : enumClass.getEnumConstants()) {
-			// TODO: Trocar a linha abaixo por uma anotação na constante do enum
-			if (e.name().equals(value)) {
+			String switchParam;
+			CommandLineSwitchParam switchParamAnnotation;
+			try {
+				switchParamAnnotation = enumClass.getDeclaredField(e.name()).getAnnotation(CommandLineSwitchParam.class);
+			} catch (SecurityException e1) {
+				// Nunca deveria acontecer...
+				throw new RuntimeException(e1);
+			} catch (NoSuchFieldException e2) {
+				// Nunca deveria acontecer...
+				throw new RuntimeException(e2);
+			}
+
+			if (switchParamAnnotation != null) {
+				switchParam = switchParamAnnotation.name();
+
+			} else {
+				// Usa o nome da constante como a opção do parâmetro
+				switchParam = e.name();
+			}
+
+			if (switchParam.equals(value)) {
 				return e;
 			}
 		}
