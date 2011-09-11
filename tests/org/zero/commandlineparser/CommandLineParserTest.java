@@ -156,7 +156,7 @@ public class CommandLineParserTest {
 	}
 	
 	@Test
-	public void testExcessiveCommandLineArgumentError() throws CommandLineParserException {
+	public void testExcessiveCommandLineArgument() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "Arg1", "arg1_value", "excessive argument"});
 
 		BasicSwitch switches = new BasicSwitch();
@@ -232,14 +232,6 @@ class DefaultValueSwitch {
 	public String getArg1() {
 		return arg1;
 	}
-}
-
-class IntegerParser {
-	@CommandLineArgumentParserMethod
-	public Integer parse(String value) {
-		return Integer.parseInt(value);
-	}
-	
 }
 
 class ParsedSwitch {

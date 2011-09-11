@@ -93,6 +93,10 @@ public class CommandLineParser {
 	private void callSetterFor(Method propertySetterMethod, String value) throws CommandLineParserException {
 		Object o = doParser(propertySetterMethod, value);
 
+		if (!objectPassesFilters(propertySetterMethod, o)) {
+			return;
+		}
+
 		try {
 			propertySetterMethod.invoke(switchesObject, o);
 		} catch (IllegalArgumentException e) {
@@ -106,6 +110,11 @@ public class CommandLineParser {
 		} catch (InvocationTargetException e) {
 			throw new CommandLineParserException("Erro chamando método setter...\n\n" + e);
 		}
+	}
+
+	private boolean objectPassesFilters(Method propertySetterMethod, Object o) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 	private Object doParser(Method setter, String value) throws CommandLineParserException {
@@ -138,7 +147,7 @@ public class CommandLineParser {
 		Method parserMethod = getParserMethod(parserName, parser);
 
 		if (!isValidParserMethodFor(parserMethod, setterParameter)) {
-			throw new CommandLineParserException("O método \"" + parserMethod + "\" é um método de parsing inválido.");
+			throw new CommandLineParserException("O método \"" + parserMethod + "\" não é um método de parsing válido para propriedades do tipo \"" + setterParameter + "\".");
 		}
 
 		Object parsedObject;
@@ -157,17 +166,22 @@ public class CommandLineParser {
 			throw new CommandLineParserException("Erro chamando parser...\n\n" + e);
 		}
 
+		// TODO verificar se o parsing não deu nenhum erro, criar outra anotação
+		// para o método de parser indicar quem devolve condições de erro
+
 		return parsedObject;
 	}
 
 	private boolean isValidParserMethodFor(Method parserMethod, Class<?> setterParameter) {
 
 		boolean hasRightAnnotation = parserMethod.getAnnotation(CommandLineArgumentParserMethod.class) != null;
-		boolean isAccessible = parserMethod.isAccessible();
+		boolean isMethodPublic = Modifier.isPublic(parserMethod.getModifiers());
 		boolean isOneParameterMethod = parserMethod.getParameterTypes().length == 1;
-		boolean theParameterIsRightType = isOneParameterMethod ? parserMethod.getParameterTypes()[0].getDeclaringClass().equals(setterParameter) : false;
+		boolean isStringParameter = isOneParameterMethod ? parserMethod.getParameterTypes()[0].equals(String.class) : false;
+		boolean isReturnTypeOk = setterParameter.isAssignableFrom(parserMethod.getReturnType());
+		boolean isEnumProperty = ((setterParameter.isEnum()) && (parserMethod.getReturnType().equals(Enum.class)));
 
-		return ((hasRightAnnotation) && (isAccessible) && (isOneParameterMethod) && (theParameterIsRightType));
+		return hasRightAnnotation && isMethodPublic && isOneParameterMethod && isStringParameter && (isReturnTypeOk || isEnumProperty);
 	}
 
 	private Method getParserMethod(String parserName, Object parser) {
