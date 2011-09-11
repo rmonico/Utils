@@ -70,17 +70,15 @@ public class CommandLineParserTest {
 
 	@Test
 	public void testEnumSwitch() {
-		CommandLineParser cmdlParser = new CommandLineParser();
-
-		cmdlParser.setCommandLine(new String[] { "Command", "ADD" });
+		parser.setCommandLine(new String[] { "Command", "ADD" });
 
 		EnumSwitch so = new EnumSwitch();
 
-		cmdlParser.setSwitchesObject(so);
+		parser.setSwitchesObject(so);
 
-		cmdlParser.addParser("EnumParser", new EnumParser(Command.class));
+		parser.addParser("EnumParser", new EnumParser(Command.class));
 
-		cmdlParser.doParsing();
+		parser.doParsing();
 
 		assertEquals("Command", Command.ADD, so.getCommand());
 	}
@@ -95,6 +93,8 @@ public class CommandLineParserTest {
 
 		parser.setSwitchesObject(switches);
 
+		parser.addParser("EnumParser", new EnumParser(Command.class));
+		
 		parser.doParsing();
 
 		assertEquals("show help", true, switches.getShowHelp());
@@ -107,6 +107,8 @@ public class CommandLineParserTest {
 		DefaultSwitch switches = new DefaultSwitch();
 
 		parser.setSwitchesObject(switches);
+
+		parser.addParser("EnumParser", new EnumParser(Command.class));
 
 		parser.doParsing();
 

@@ -41,26 +41,27 @@ public class CommandLineParser {
 			String switchCandidate = commandLine[i];
 			String valueCandidate;
 
-			if (i < commandLine.length - 1) {
-				valueCandidate = commandLine[i + 1];
-			} else {
-				valueCandidate = null;
-			}
+			Method setter;
 
-			Method setter = properties.get(switchCandidate);
+			if ((setter = getIndexedArgument(properties, i)) != null) {
+				valueCandidate = commandLine[i];
 
-			if (setter != null) {
+			} else if ((setter = properties.get(switchCandidate)) != null) {
+
 				// Se for boolean, só precisa do nome do argumento
 				if (isBooleanSwitch(setter)) {
 					valueCandidate = "true";
 				} else {
-					// Se não for boolean, o argumento precisa de um valor
+					// Se não for boolean...
+
+					// valueCandidate deve ser o próximo item na linha de
+					// comando
+					valueCandidate = commandLine[i + 1];
+
+					// O argumento já foi consumido, pular ele
 					i++;
 				}
 
-			} else if (isIndexedArgument(i)) {
-				setter = null;
-				// Tratar propriedade indexada
 			} else {
 				continue;
 			}
@@ -69,9 +70,16 @@ public class CommandLineParser {
 		}
 	}
 
-	private boolean isIndexedArgument(int i) {
-		// TODO Auto-generated method stub
-		return false;
+	private Method getIndexedArgument(Map<String, Method> properties, int argIndex) {
+		for (Method method : properties.values()) {
+			CommandLineSwitch annotation = method.getAnnotation(CommandLineSwitch.class);
+
+			if (annotation.index() > 0) {
+				return method;
+			}
+		}
+
+		return null;
 	}
 
 	private boolean isBooleanSwitch(Method setter) {
