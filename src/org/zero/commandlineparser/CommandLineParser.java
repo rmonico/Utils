@@ -97,17 +97,19 @@ public class CommandLineParser {
 		try {
 			propertySetterMethod.invoke(switchesObject, o);
 		} catch (IllegalArgumentException e) {
-			// Condição verificada anteriormente
+			// Condição verificada anteriormente, não deveria acontecer
 			assert false : e;
 			throw new RuntimeException(e);
 		} catch (IllegalAccessException e) {
-			throw new CommandLineParserException("Visibilidade do método parser insuficiente.");
+			// Condição verificada anteriormente, não deveria acontecer
+			assert false : e;
+			throw new RuntimeException(e);
 		} catch (InvocationTargetException e) {
-			throw new CommandLineParserException(e);
+			throw new CommandLineParserException("Erro chamando método setter...\n\n" + e);
 		}
 	}
 
-	private Object doParser(Method setter, String value) {
+	private Object doParser(Method setter, String value) throws CommandLineParserException {
 		CommandLineSwitch switchSetup = setter.getAnnotation(CommandLineSwitch.class);
 
 		Class<?> setterParameter = setter.getParameterTypes()[0];
@@ -138,9 +140,16 @@ public class CommandLineParser {
 
 		try {
 			return parserMethod.invoke(parser, value);
-		} catch (Exception e) {
+		} catch (IllegalArgumentException e) {
+			// Condição verificada anteriormente, não deveria acontecer
 			assert false : e;
 			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			// Condição verificada anteriormente, não deveria acontecer
+			assert false : e;
+			throw new RuntimeException(e);
+		} catch (InvocationTargetException e) {
+			throw new CommandLineParserException("Erro chamando parser...\n\n" + e);
 		}
 
 	}
