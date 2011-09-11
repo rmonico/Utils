@@ -36,10 +36,10 @@ public class CommandLineParser {
 			return;
 		}
 
-		parseCommandLine();
+		doParsing();
 	}
 
-	private void parseCommandLine() {
+	private void doParsing() {
 		for (int i = 0; i < commandLine.length; i++) {
 			String switchCandidate = commandLine[i];
 			String valueCandidate;
