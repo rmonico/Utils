@@ -156,7 +156,7 @@ public class CommandLineParserTest {
 	}
 	
 	@Test
-	public void testExcessiveCommandLineArgs() throws CommandLineParserException {
+	public void testExcessiveCommandLineArgumentError() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "Arg1", "arg1_value", "excessive argument"});
 
 		BasicSwitch switches = new BasicSwitch();
@@ -167,15 +167,15 @@ public class CommandLineParserTest {
 
 		assertEquals("excessive argument - size", 1, parser.getErrors().size());
 		
-		assertTrue("excessive argument - item 0, class", parser.getErrors().get(0) instanceof ExcessiveCommandLineArgument);
+		assertTrue("excessive argument - item 0, class", parser.getErrors().get(0) instanceof ExcessiveArgument);
 		
 		assertEquals("excessive argument - item 0, valor", "excessive argument", parser.getErrors().get(0).getMessage());
 		
 	}
 
 	@Test
-	public void testParserErrors() throws CommandLineParserException {
-		parser.setCommandLine(new String[] { "Arg1", "arg1_value", "excessive argument"});
+	public void testParserError() throws CommandLineParserException {
+		parser.setCommandLine(new String[] { "Arg1", "-1"});
 
 		BasicSwitch switches = new BasicSwitch();
 
@@ -183,9 +183,11 @@ public class CommandLineParserTest {
 
 		parser.parse();
 
-		assertEquals("excessive argument - size", 1, parser.getErrors().size());
+		assertEquals("parser error - size", 1, parser.getErrors().size());
 		
-		assertEquals("excessive argument - itens", "excessive argument", parser.getErrors().get(0));
+		assertTrue("parser error - item 0, class", parser.getErrors().get(0) instanceof CommandLineOptionParsingError);
+		
+		assertEquals("parser error - item 0, valor", "\"Arg1\" must be a positive integer", parser.getErrors().get(0).getMessage());
 	}
 }
 

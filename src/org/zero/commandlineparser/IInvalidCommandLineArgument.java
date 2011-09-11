@@ -7,6 +7,6 @@ package org.zero.commandlineparser;
  * 
  */
 
-public interface ICommandLineParsingError {
+public interface IInvalidCommandLineArgument {
 	String getMessage();
 }

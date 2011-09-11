@@ -14,7 +14,7 @@ public class CommandLineParser {
 	private Object switchesObject;
 	private Map<String, Object> parsers = new HashMap<String, Object>();
 	private Map<String, Method> properties;
-	private List<ICommandLineParsingError> errors;
+	private List<IInvalidCommandLineArgument> errors;
 
 	public void setCommandLine(String[] commandLine) {
 		this.commandLine = commandLine;
@@ -27,7 +27,7 @@ public class CommandLineParser {
 	public void parse() throws CommandLineParserException {
 		properties = new HashMap<String, Method>();
 
-		errors = new ArrayList<ICommandLineParsingError>();
+		errors = new ArrayList<IInvalidCommandLineArgument>();
 
 		findProperties();
 
@@ -66,7 +66,7 @@ public class CommandLineParser {
 				}
 
 			} else {
-				errors.add(new ExcessiveCommandLineArgument(switchCandidate));
+				errors.add(new ExcessiveArgument(switchCandidate));
 				continue;
 			}
 
@@ -157,11 +157,7 @@ public class CommandLineParser {
 			throw new CommandLineParserException("Erro chamando parser...\n\n" + e);
 		}
 
-		if (parsedObject == null) {
-			return null;
-		} else {
-			return parsedObject;
-		}
+		return parsedObject;
 	}
 
 	private boolean isValidParserMethodFor(Method parserMethod, Class<?> setterParameter) {
@@ -255,7 +251,7 @@ public class CommandLineParser {
 		parsers.put(parserId, parser);
 	}
 
-	public List<ICommandLineParsingError> getErrors() {
+	public List<IInvalidCommandLineArgument> getErrors() {
 		return errors;
 	}
 

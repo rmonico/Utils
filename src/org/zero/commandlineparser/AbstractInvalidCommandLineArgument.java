@@ -1,14 +1,14 @@
 package org.zero.commandlineparser;
 
-public abstract class AbstractCommandLineParsingError implements ICommandLineParsingError {
+public abstract class AbstractInvalidCommandLineArgument implements IInvalidCommandLineArgument {
 
 	private String message;
 
-	public AbstractCommandLineParsingError() {
+	public AbstractInvalidCommandLineArgument() {
 		super();
 	}
 
-	public AbstractCommandLineParsingError(String message) {
+	public AbstractInvalidCommandLineArgument(String message) {
 		this.message = message;
 	}
 
