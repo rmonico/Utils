@@ -72,7 +72,7 @@ public class CommandLineParserTest {
 	public void testEnumSwitch() {
 		CommandLineParser cmdlParser = new CommandLineParser();
 
-		cmdlParser.setCommandLine(new String[] { "Command", "add" });
+		cmdlParser.setCommandLine(new String[] { "Command", "ADD" });
 
 		EnumSwitch so = new EnumSwitch();
 

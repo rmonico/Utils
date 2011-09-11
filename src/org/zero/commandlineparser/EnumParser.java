@@ -15,7 +15,7 @@ public class EnumParser {
 		for (Enum e : enumClass.getEnumConstants()) {
 			// TODO: Trocar o upperCase da linha abaixo por uma anotação na
 			// constante do enum
-			if (e.name().equals(value.toUpperCase())) {
+			if (e.name().equals(value)) {
 				return e;
 			}
 		}
