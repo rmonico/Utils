@@ -1,6 +1,7 @@
 package org.zero.commandlineparser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -164,10 +165,27 @@ public class CommandLineParserTest {
 
 		parser.parse();
 
-		assertEquals("excessive argument - size", 1, parser.getExcessiveArguments().size());
+		assertEquals("excessive argument - size", 1, parser.getErrors().size());
 		
-		assertEquals("excessive argument - itens", "excessive argument", parser.getExcessiveArguments().get(0));
+		assertTrue("excessive argument - item 0, class", parser.getErrors().get(0) instanceof ExcessiveCommandLineArgument);
 		
+		assertEquals("excessive argument - item 0, valor", "excessive argument", parser.getErrors().get(0).getMessage());
+		
+	}
+
+	@Test
+	public void testParserErrors() throws CommandLineParserException {
+		parser.setCommandLine(new String[] { "Arg1", "arg1_value", "excessive argument"});
+
+		BasicSwitch switches = new BasicSwitch();
+
+		parser.setSwitchesObject(switches);
+
+		parser.parse();
+
+		assertEquals("excessive argument - size", 1, parser.getErrors().size());
+		
+		assertEquals("excessive argument - itens", "excessive argument", parser.getErrors().get(0));
 	}
 }
 
