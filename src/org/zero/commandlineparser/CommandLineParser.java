@@ -138,8 +138,14 @@ public class CommandLineParser {
 
 		Method parserMethod = getParserMethod(parserName, parser);
 
+		if (!isValidParserMethodFor(parserMethod, setterParameter)) {
+			throw new CommandLineParserException("O método \"" + parserMethod + "\" é um método de parsing inválido.");
+		}
+
+		Object parsedObject;
+
 		try {
-			return parserMethod.invoke(parser, value);
+			parsedObject = parserMethod.invoke(parser, value);
 		} catch (IllegalArgumentException e) {
 			// Condição verificada anteriormente, não deveria acontecer
 			assert false : e;
@@ -152,6 +158,21 @@ public class CommandLineParser {
 			throw new CommandLineParserException("Erro chamando parser...\n\n" + e);
 		}
 
+		if (parsedObject == null) {
+			return null;
+		} else {
+			return parsedObject;
+		}
+	}
+
+	private boolean isValidParserMethodFor(Method parserMethod, Class<?> setterParameter) {
+
+		boolean hasRightAnnotation = parserMethod.getAnnotation(CommandLineArgumentParserMethod.class) != null;
+		boolean isAccessible = parserMethod.isAccessible();
+		boolean isOneParameterMethod = parserMethod.getParameterTypes().length == 1;
+		boolean theParameterIsRightType = isOneParameterMethod ? parserMethod.getParameterTypes()[0].getDeclaringClass().equals(setterParameter) : false;
+
+		return ((hasRightAnnotation) && (isAccessible) && (isOneParameterMethod) && (theParameterIsRightType));
 	}
 
 	private Method getParserMethod(String parserName, Object parser) {
@@ -172,14 +193,7 @@ public class CommandLineParser {
 			throw new RuntimeException(e);
 		}
 
-		// À princípio, mera formalidade. Porém, um parser pode precisar de mais
-		// parâmetros, então obrigo que todos os parsers sejam marcados dessa
-		// forma
-		if (method.getAnnotation(CommandLineArgumentParserMethod.class) != null) {
-			return method;
-		} else {
-			return null;
-		}
+		return method;
 	}
 
 	private void findProperties() throws CommandLineParserException {
