@@ -115,18 +115,18 @@ public class CommandLineParserTest {
 		assertEquals("default param", Command.REMOVE, switches.getCommand());
 	}
 
-//	@Test
-//	public void testCommandLineSwitchOption() {
-//		parser.setCommandLine(new String[] { "Command", "rm" });
-//
-//		CommandLineOptionSwitch switches = new CommandLineOptionSwitch();
-//
-//		parser.setSwitchesObject(switches);
-//
-//		parser.doParsing();
-//
-//		assertEquals("default param", AnotherCommand.REMOVE, switches.getCommand());
-//	}
+	@Test
+	public void testCommandLineSwitchOption() {
+		parser.setCommandLine(new String[] { "Command", "rm" });
+
+		CommandLineOptionSwitch switches = new CommandLineOptionSwitch();
+
+		parser.setSwitchesObject(switches);
+
+		parser.doParsing();
+
+		assertEquals("default param", AnotherCommand.REMOVE, switches.getCommand());
+	}
 }
 
 class BasicSwitch {
@@ -240,15 +240,15 @@ enum AnotherCommand {
 	REMOVE;
 }
 
-//class CommandLineOptionSwitch {
-//	private AnotherCommand command;
-//
-//	@CommandLineSwitch(parser = "EnumParser.parseEnum")
-//	public void setCommand(AnotherCommand value) {
-//		command = value;
-//	}
-//
-//	public AnotherCommand getCommand() {
-//		return command;
-//	}
-//}
+class CommandLineOptionSwitch {
+	private AnotherCommand command;
+
+	@CommandLineSwitch(parser = "EnumParser.parseEnum")
+	public void setCommand(AnotherCommand value) {
+		command = value;
+	}
+
+	public AnotherCommand getCommand() {
+		return command;
+	}
+}
