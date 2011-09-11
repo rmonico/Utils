@@ -1,5 +1,6 @@
 package org.zero.commandlineparser;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -24,9 +25,9 @@ public class CommandLineParser {
 		switchesObject = o;
 	}
 
-	public void parse() {
+	public void parse() throws CommandLineParserException {
 		properties = new HashMap<String, Method>();
-		
+
 		excessiveArguments = new ArrayList<String>();
 
 		findProperties();
@@ -39,7 +40,7 @@ public class CommandLineParser {
 		doParsing();
 	}
 
-	private void doParsing() {
+	private void doParsing() throws CommandLineParserException {
 		for (int i = 0; i < commandLine.length; i++) {
 			String switchCandidate = commandLine[i];
 			String valueCandidate;
@@ -90,13 +91,19 @@ public class CommandLineParser {
 		return setter.getParameterTypes()[0].getName().equals("boolean");
 	}
 
-	private void callSetterFor(Method propertySetterMethod, String value) {
+	private void callSetterFor(Method propertySetterMethod, String value) throws CommandLineParserException {
 		Object o = doParser(propertySetterMethod, value);
 
 		try {
 			propertySetterMethod.invoke(switchesObject, o);
-		} catch (Exception e) {
+		} catch (IllegalArgumentException e) {
+			// Condição verificada anteriormente
+			assert false : e;
 			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new CommandLineParserException("Visibilidade do método parser insuficiente.");
+		} catch (InvocationTargetException e) {
+			throw new CommandLineParserException(e);
 		}
 	}
 
@@ -146,8 +153,12 @@ public class CommandLineParser {
 		Method method = null;
 		try {
 			method = parser.getClass().getMethod(parserMethod, String.class);
-		} catch (Exception e) {
-			// Nunca deveria acontecer, isso já foi verificado anteriormente
+			// Nenhuma das duas exceções abaixo deveria acontecer, já foi
+			// verificado antes
+		} catch (SecurityException e) {
+			assert false : e;
+			throw new RuntimeException(e);
+		} catch (NoSuchMethodException e) {
 			assert false : e;
 			throw new RuntimeException(e);
 		}
@@ -155,7 +166,7 @@ public class CommandLineParser {
 		return method;
 	}
 
-	private void findProperties() {
+	private void findProperties() throws CommandLineParserException {
 
 		for (Method method : switchesObject.getClass().getMethods()) {
 			if (isPropertySetterMethod(method)) {
@@ -170,7 +181,7 @@ public class CommandLineParser {
 		}
 	}
 
-	private void setDefaultValue(Method setter) {
+	private void setDefaultValue(Method setter) throws CommandLineParserException {
 		CommandLineSwitch switchSetup = setter.getAnnotation(CommandLineSwitch.class);
 
 		String defaultValue;
@@ -216,7 +227,7 @@ public class CommandLineParser {
 	}
 
 	public List<String> getExcessiveArguments() {
-		return excessiveArguments ;
+		return excessiveArguments;
 	}
 
 }

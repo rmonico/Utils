@@ -15,7 +15,7 @@ public class CommandLineParserTest {
 	}
 
 	@Test
-	public void testMinimalParsing() {
+	public void testMinimalParsing() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "Arg1", "arg1_value" });
 
 		BasicSwitch switches = new BasicSwitch();
@@ -28,7 +28,7 @@ public class CommandLineParserTest {
 	}
 
 	@Test
-	public void testNamedSwitches() {
+	public void testNamedSwitches() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "argument1", "argument1_value" });
 
 		NamedSwitch switches = new NamedSwitch();
@@ -41,7 +41,7 @@ public class CommandLineParserTest {
 	}
 
 	@Test
-	public void testDefaultValueSwitch() {
+	public void testDefaultValueSwitch() throws CommandLineParserException {
 		parser.setCommandLine(new String[] {});
 
 		DefaultValueSwitch switches = new DefaultValueSwitch();
@@ -54,7 +54,7 @@ public class CommandLineParserTest {
 	}
 
 	@Test
-	public void testParsedSwitch() {
+	public void testParsedSwitch() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "Arg1", "45" });
 
 		parser.addParser("arg1parser", new IntegerParser());
@@ -69,7 +69,7 @@ public class CommandLineParserTest {
 	}
 
 	@Test
-	public void testEnumSwitch() {
+	public void testEnumSwitch() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "Command", "ADD" });
 
 		EnumSwitch so = new EnumSwitch();
@@ -84,7 +84,7 @@ public class CommandLineParserTest {
 	}
 
 	@Test
-	public void testBooleanSwitch() {
+	public void testBooleanSwitch() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "help" });
 
 		BooleanSwitch switches = new BooleanSwitch();
@@ -101,7 +101,7 @@ public class CommandLineParserTest {
 	}
 
 	@Test
-	public void testDefaultSwitch() {
+	public void testDefaultSwitch() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "REMOVE" });
 
 		DefaultSwitch switches = new DefaultSwitch();
@@ -116,7 +116,7 @@ public class CommandLineParserTest {
 	}
 
 	@Test
-	public void testCommandLineSwitchOption() {
+	public void testCommandLineSwitchOption() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "Command", "rm" });
 
 		CommandLineOptionSwitch switches = new CommandLineOptionSwitch();
@@ -131,7 +131,7 @@ public class CommandLineParserTest {
 	}
 	
 	@Test
-	public void testMultipleNamedSwitch() {
+	public void testMultipleNamedSwitch() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "-arg", "option1" });
 
 		MultipleNamedSwitch switches = new MultipleNamedSwitch();
@@ -155,7 +155,7 @@ public class CommandLineParserTest {
 	}
 	
 	@Test
-	public void testExcessiveCommandLineArgs() {
+	public void testExcessiveCommandLineArgs() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "Arg1", "arg1_value", "excessive argument"});
 
 		BasicSwitch switches = new BasicSwitch();
