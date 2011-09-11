@@ -175,19 +175,21 @@ public class CommandLineParserTest {
 
 	@Test
 	public void testParserError() throws CommandLineParserException {
-		parser.setCommandLine(new String[] { "Arg1", "-1"});
+		parser.setCommandLine(new String[] { "Arg1", "xxx"});
 
-		BasicSwitch switches = new BasicSwitch();
+		parser.addParser("arg1parser", new IntegerParser());
+
+		ParsedSwitch switches = new ParsedSwitch();
 
 		parser.setSwitchesObject(switches);
-
+		
 		parser.parse();
 
 		assertEquals("parser error - size", 1, parser.getErrors().size());
 		
 		assertTrue("parser error - item 0, class", parser.getErrors().get(0) instanceof CommandLineOptionParsingError);
 		
-		assertEquals("parser error - item 0, valor", "\"Arg1\" must be a positive integer", parser.getErrors().get(0).getMessage());
+		assertEquals("parser error - item 0, valor", "Formato incorreto do número (\"xxx\").", parser.getErrors().get(0).getMessage());
 	}
 }
 

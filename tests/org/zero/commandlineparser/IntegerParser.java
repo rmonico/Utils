@@ -1,10 +1,20 @@
 package org.zero.commandlineparser;
 
 class IntegerParser {
-	@CommandLineArgumentParserMethod
+	private String error = null;
+	
+	@CommandLineArgumentParserMethod(errorMessage="getError")
 	public Integer parse(String value) {
-		return Integer.parseInt(value);
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException nfe) {
+			error = "Formato incorreto do número (\"" + value + "\").";
+			return 0;
+		}
 	}
 	
+	public String getError() {
+		return error;
+	}
 }
 

@@ -113,7 +113,7 @@ public class CommandLineParser {
 	}
 
 	private boolean objectPassesFilters(Method propertySetterMethod, Object o) {
-		// TODO Auto-generated method stub
+		// TODO Criar filtros para o valor que chegou do parsing
 		return true;
 	}
 

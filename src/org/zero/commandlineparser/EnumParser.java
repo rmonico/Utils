@@ -4,13 +4,14 @@ public class EnumParser {
 
 	@SuppressWarnings("rawtypes")
 	private Class<? extends Enum> enumClass;
+	private String error;
 
 	public EnumParser(@SuppressWarnings("rawtypes") Class<? extends Enum> enumClass) {
 		this.enumClass = enumClass;
 	}
 
 	@SuppressWarnings("rawtypes")
-	@CommandLineArgumentParserMethod
+	@CommandLineArgumentParserMethod(errorMessage="getError")
 	public Enum parseEnum(String value) {
 		for (Enum e : enumClass.getEnumConstants()) {
 			String switchParam;
@@ -37,7 +38,13 @@ public class EnumParser {
 				return e;
 			}
 		}
+		
+		error = "Não foi possível resolver a constante \"" + value + "\" para o enum \"" + enumClass.getName() + "\".";
 
 		return null;
+	}
+	
+	public String getError() {
+		return error;
 	}
 }
