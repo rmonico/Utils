@@ -7,8 +7,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface CommandLineArgumentParserMethod {
-
-	String messageMethod() default "";
+public @interface CommandLineOptionFilter {
 
 }

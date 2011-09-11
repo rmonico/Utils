@@ -3,7 +3,7 @@ package org.zero.commandlineparser;
 class IntegerParser {
 	private String error = null;
 	
-	@CommandLineArgumentParserMethod(errorMessage="getError")
+	@CommandLineArgumentParserMethod(messageMethod="getError")
 	public Integer parse(String value) {
 		try {
 			return Integer.parseInt(value);

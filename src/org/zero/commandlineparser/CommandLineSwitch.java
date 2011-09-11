@@ -73,4 +73,6 @@ public @interface CommandLineSwitch {
 	 */
 	int index() default -1;
 
+	String filter() default "";
+
 }

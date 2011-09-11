@@ -95,7 +95,7 @@ public class CommandLineParserTest {
 		parser.setSwitchesObject(switches);
 
 		parser.addParser("EnumParser", new EnumParser(Command.class));
-		
+
 		parser.parse();
 
 		assertEquals("show help", true, switches.getShowHelp());
@@ -127,10 +127,10 @@ public class CommandLineParserTest {
 		parser.addParser("EnumParser", new EnumParser(AnotherCommand.class));
 
 		parser.parse();
-		
+
 		assertEquals("default param", AnotherCommand.REMOVE, switches.getCommand());
 	}
-	
+
 	@Test
 	public void testMultipleNamedSwitch() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "-arg", "option1" });
@@ -140,10 +140,9 @@ public class CommandLineParserTest {
 		parser.setSwitchesObject(switches);
 
 		parser.parse();
-		
+
 		assertEquals("-arg", "option1", switches.getArgument());
 
-	
 		parser.setCommandLine(new String[] { "--argument", "option2" });
 
 		switches = new MultipleNamedSwitch();
@@ -151,13 +150,13 @@ public class CommandLineParserTest {
 		parser.setSwitchesObject(switches);
 
 		parser.parse();
-		
+
 		assertEquals("-arg", "option2", switches.getArgument());
 	}
-	
+
 	@Test
 	public void testExcessiveCommandLineArgument() throws CommandLineParserException {
-		parser.setCommandLine(new String[] { "Arg1", "arg1_value", "excessive argument"});
+		parser.setCommandLine(new String[] { "Arg1", "arg1_value", "excessive argument" });
 
 		BasicSwitch switches = new BasicSwitch();
 
@@ -166,30 +165,53 @@ public class CommandLineParserTest {
 		parser.parse();
 
 		assertEquals("excessive argument - size", 1, parser.getErrors().size());
-		
+
 		assertTrue("excessive argument - item 0, class", parser.getErrors().get(0) instanceof ExcessiveArgument);
-		
+
 		assertEquals("excessive argument - item 0, valor", "excessive argument", parser.getErrors().get(0).getMessage());
-		
+
 	}
 
 	@Test
 	public void testParserError() throws CommandLineParserException {
-		parser.setCommandLine(new String[] { "Arg1", "xxx"});
+		parser.setCommandLine(new String[] { "Arg1", "xxx" });
 
 		parser.addParser("arg1parser", new IntegerParser());
 
 		ParsedSwitch switches = new ParsedSwitch();
 
 		parser.setSwitchesObject(switches);
-		
+
 		parser.parse();
 
 		assertEquals("parser error - size", 1, parser.getErrors().size());
-		
+
 		assertTrue("parser error - item 0, class", parser.getErrors().get(0) instanceof CommandLineOptionParsingError);
-		
+
 		assertEquals("parser error - item 0, valor", "Formato incorreto do número (\"xxx\").", parser.getErrors().get(0).getMessage());
+	}
+
+	@Test
+	public void testFilter() throws CommandLineParserException {
+		parser.setCommandLine(new String[] { "Arg1", "-1" });
+
+		parser.addParser("arg1parser", new IntegerParser());
+
+		parser.addFilter("myfilter", new MyFilter());
+
+		FilteredSwitch switches = new FilteredSwitch();
+
+		parser.setSwitchesObject(switches);
+
+		parser.parse();
+
+		assertEquals("Arg1", (int) 0, (int) switches.getArg1());
+
+		assertEquals("filter - size", 1, parser.getErrors().size());
+
+		assertTrue("filter - item 0, class", parser.getErrors().get(0) instanceof CommandLineNotFilteredError);
+
+		assertEquals("filter - item 0, valor", "Arg1: não são permitidos valores negativos.", parser.getErrors().get(0).getMessage());
 	}
 }
 
@@ -282,7 +304,7 @@ class BooleanSwitch {
 class DefaultSwitch {
 	private Command command;
 
-	@CommandLineSwitch(parser = "EnumParser.parseEnum", index=1)
+	@CommandLineSwitch(parser = "EnumParser.parseEnum", index = 1)
 	public void setCommand(Command value) {
 		command = value;
 	}
@@ -293,8 +315,7 @@ class DefaultSwitch {
 }
 
 enum AnotherCommand {
-	ADD,
-	@CommandLineSwitchParam(name = "rm")
+	ADD, @CommandLineSwitchParam(name = "rm")
 	REMOVE;
 }
 
@@ -314,7 +335,7 @@ class CommandLineOptionSwitch {
 class MultipleNamedSwitch {
 	private String argument;
 
-	@CommandLineSwitch(param={"-arg", "--argument"})
+	@CommandLineSwitch(param = { "-arg", "--argument" })
 	public void setArgument(String value) {
 		argument = value;
 	}
@@ -322,5 +343,26 @@ class MultipleNamedSwitch {
 	public String getArgument() {
 		return argument;
 	}
-	
+
+}
+
+class MyFilter {
+	@CommandLineOptionFilter
+	public String positiveFilter(Integer value) {
+		return value < 0 ? "Arg1: não são permitidos valores negativos." : null;
+	}
+}
+
+class FilteredSwitch {
+	private Integer arg1;
+
+	@CommandLineSwitch(parser = "arg1parser.parse", filter = "myfilter.positiveFilter")
+	public void setArg1(Integer value) {
+		arg1 = value;
+	}
+
+	public Integer getArg1() {
+		return arg1;
+	}
+
 }

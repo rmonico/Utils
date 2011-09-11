@@ -166,10 +166,56 @@ public class CommandLineParser {
 			throw new CommandLineParserException("Erro chamando parser...\n\n" + e);
 		}
 
-		// TODO verificar se o parsing não deu nenhum erro, criar outra anotação
-		// para o método de parser indicar quem devolve condições de erro
+		CommandLineArgumentParserMethod parserMethodSetup = parserMethod.getAnnotation(CommandLineArgumentParserMethod.class);
+
+		// Verifica se houve algum problema durante o parsing
+		String parserMessageMethodName;
+		if (!(parserMessageMethodName = parserMethodSetup.messageMethod()).isEmpty()) {
+			Method parserMessageMethod;
+			try {
+				parserMessageMethod = parser.getClass().getMethod(parserMessageMethodName);
+				
+			} catch (Exception e) {
+				throwInvalidParserMessageMethodException(parserMessageMethodName, parser);
+				
+				// Código inatingível, ver método acima
+				return null;
+			}
+			
+			if (!(parserMessageMethod.getReturnType().equals(String.class) && (Modifier.isPublic(parserMessageMethod.getModifiers())))) {
+				throwInvalidParserMessageMethodException(parserMessageMethodName, parser);
+				
+				// Código inatingível, ver método acima
+				return null;
+			}
+			
+			String message;
+			
+			try {
+				message = (String) parserMessageMethod.invoke(parser);
+			} catch (IllegalArgumentException e) {
+				// Condição verificada anteriormente, não deveria acontecer
+				assert false : e;
+				throw new RuntimeException(e);
+			} catch (IllegalAccessException e) {
+				// Condição verificada anteriormente, não deveria acontecer
+				assert false : e;
+				throw new RuntimeException(e);
+			} catch (InvocationTargetException e) {
+				throw new CommandLineParserException("Erro devolvendo a mensagem de erro...");
+			}
+			
+			if (message != null) {
+				errors.add(new CommandLineOptionParsingError(message));
+			}
+			
+		}
 
 		return parsedObject;
+	}
+
+	private void throwInvalidParserMessageMethodException(String methodName, Object parser) throws CommandLineParserException {
+		throw new CommandLineParserException("O nome de método \"" + methodName + "\" é inválido para a classe \"" + parser.getClass() + "\".");
 	}
 
 	private boolean isValidParserMethodFor(Method parserMethod, Class<?> setterParameter) {
@@ -267,6 +313,11 @@ public class CommandLineParser {
 
 	public List<IInvalidCommandLineArgument> getErrors() {
 		return errors;
+	}
+
+	public void addFilter(String filterId, Object filter) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

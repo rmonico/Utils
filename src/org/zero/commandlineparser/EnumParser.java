@@ -11,7 +11,7 @@ public class EnumParser {
 	}
 
 	@SuppressWarnings("rawtypes")
-	@CommandLineArgumentParserMethod(errorMessage="getError")
+	@CommandLineArgumentParserMethod(messageMethod="getError")
 	public Enum parseEnum(String value) {
 		for (Enum e : enumClass.getEnumConstants()) {
 			String switchParam;
