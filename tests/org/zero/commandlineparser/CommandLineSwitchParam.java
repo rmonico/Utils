@@ -21,6 +21,7 @@ public @interface CommandLineSwitchParam {
 	 * 
 	 * @return
 	 */
+	// TODO Mudar para String[]
 	String name();
 
 }

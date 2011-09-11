@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// TODO Criar suporte a i18n. Do jeito que está teria que fazer uma classe para cada localidade que tiver que ser suportada.
+// TODO Ver o que fazer quando houver um defaultValue e um index simultaneamente no mesmo switch
 public class CommandLineParser {
 
 	private String[] commandLine;
@@ -41,6 +43,12 @@ public class CommandLineParser {
 	}
 
 	private void doParsing() throws CommandLineParserException {
+
+		// Nada a fazer
+		if (commandLine == null) {
+			return;
+		}
+
 		for (int i = 0; i < commandLine.length; i++) {
 			String switchCandidate = commandLine[i];
 			String valueCandidate;
@@ -115,26 +123,26 @@ public class CommandLineParser {
 
 	private boolean objectPassesFilters(Method setter, Object o) throws CommandLineParserException {
 		CommandLineSwitch switchSetup = setter.getAnnotation(CommandLineSwitch.class);
-		
+
 		String filterName = switchSetup.filter();
-		
+
 		// Nada a fazer
 		if (filterName.isEmpty()) {
 			return true;
 		}
-		
+
 		String filterId = filterName.substring(0, filterName.indexOf('.'));
-		
+
 		Object filter = filters.get(filterId);
-		
+
 		Class<?> setterParameter = setter.getParameterTypes()[0];
 
 		Method filterMethod = getFilterMethod(filterName, filter, setterParameter);
-		
+
 		if (!isValidFilterMethod(filterMethod, setterParameter)) {
 			throw new CommandLineParserException("O método \"" + filterMethod + "\" não é um método de filtro válido para propriedades do tipo \"" + setterParameter + "\".");
 		}
-		
+
 		String filterMessage;
 		try {
 			filterMessage = (String) filterMethod.invoke(filter, o);
@@ -149,13 +157,13 @@ public class CommandLineParser {
 		} catch (InvocationTargetException e) {
 			throw new CommandLineParserException("Erro chamando o filtro \"" + filterMethod + "\"...\n\n" + e);
 		}
-		
+
 		boolean filterPassed = ((filterMessage == null) || (filterMessage.isEmpty()));
-		
+
 		if (!filterPassed) {
 			errors.add(new CommandLineNotFilteredError(filterMessage));
 		}
-		
+
 		return filterPassed;
 	}
 
@@ -164,7 +172,7 @@ public class CommandLineParser {
 		boolean isReturnString = String.class.equals(method.getReturnType());
 		boolean isOneParameterMethod = method.getParameterTypes().length == 1;
 		boolean theParameterIsRightType = setterParameter.equals(method.getParameterTypes()[0]);
-		
+
 		return isPublic && isReturnString && isOneParameterMethod && theParameterIsRightType;
 	}
 
@@ -244,23 +252,23 @@ public class CommandLineParser {
 			Method parserMessageMethod;
 			try {
 				parserMessageMethod = parser.getClass().getMethod(parserMessageMethodName);
-				
+
 			} catch (Exception e) {
 				throwInvalidParserMessageMethodException(parserMessageMethodName, parser);
-				
+
 				// Código inatingível, ver método acima
 				return null;
 			}
-			
+
 			if (!(parserMessageMethod.getReturnType().equals(String.class) && (Modifier.isPublic(parserMessageMethod.getModifiers())))) {
 				throwInvalidParserMessageMethodException(parserMessageMethodName, parser);
-				
+
 				// Código inatingível, ver método acima
 				return null;
 			}
-			
+
 			String message;
-			
+
 			try {
 				message = (String) parserMessageMethod.invoke(parser);
 			} catch (IllegalArgumentException e) {
@@ -274,11 +282,11 @@ public class CommandLineParser {
 			} catch (InvocationTargetException e) {
 				throw new CommandLineParserException("Erro devolvendo a mensagem de erro...");
 			}
-			
+
 			if (message != null) {
 				errors.add(new CommandLineOptionParsingError(message));
 			}
-			
+
 		}
 
 		return parsedObject;
@@ -388,11 +396,11 @@ public class CommandLineParser {
 	public void addFilter(String filterId, Object filter) {
 		filters.put(filterId, filter);
 	}
-	
+
 	public boolean hasErrors() {
 		return !getErrors().isEmpty();
 	}
-	
+
 	public void printErrors() {
 		for (IInvalidCommandLineArgument error : getErrors()) {
 			System.out.println(error);
