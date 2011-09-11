@@ -219,11 +219,10 @@ class BooleanSwitch {
 	}
 }
 
-//@CommandLineBean(defaultSwitch = "Command")
 class DefaultSwitch {
 	private Command command;
 
-	@CommandLineSwitch(parser = "EnumParser.parseEnum")
+	@CommandLineSwitch(parser = "EnumParser.parseEnum", index=1)
 	public void setCommand(Command value) {
 		command = value;
 	}

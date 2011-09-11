@@ -13,8 +13,7 @@ public class EnumParser {
 	public Enum parseEnum(String value) {
 		// TODO Usar o valueOf do próprio Enum
 		for (Enum e : enumClass.getEnumConstants()) {
-			// TODO: Trocar o upperCase da linha abaixo por uma anotação na
-			// constante do enum
+			// TODO: Trocar a linha abaixo por uma anotação na constante do enum
 			if (e.name().equals(value)) {
 				return e;
 			}

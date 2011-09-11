@@ -55,4 +55,22 @@ public @interface CommandLineSwitch {
 	 */
 	String parser() default "";
 
+	/**
+	 * Indica o local onde o parâmetro deverá aparecer na linha de comando. Caso
+	 * a posição do parâmetro seja indicado através desse atributo, a opção não
+	 * deverá aparecer na linha de comando. Por exemplo, a linha de comando:
+	 * 
+	 * "Arg1 opt1"
+	 * 
+	 * Pelo uso desse atributo, poderia ser:
+	 * 
+	 * "opt1"
+	 * 
+	 * Nesse caso "opt1" seria passado diretamente ao parser responsável por
+	 * esse parâmetro.
+	 * 
+	 * @return
+	 */
+	int index() default -1;
+
 }
