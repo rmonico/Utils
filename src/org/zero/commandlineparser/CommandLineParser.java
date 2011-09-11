@@ -46,7 +46,7 @@ public class CommandLineParser {
 
 			} else if ((setter = properties.get(switchCandidate)) != null) {
 
-				// Se for boolean, só precisa do nome do argumento
+				// Se for boolean, não preciso do valor
 				if (isBooleanSwitch(setter)) {
 					valueCandidate = "true";
 				} else {
