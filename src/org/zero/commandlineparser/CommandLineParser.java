@@ -24,7 +24,7 @@ public class CommandLineParser {
 		switchesObject = o;
 	}
 
-	public void doParsing() {
+	public void parse() {
 		properties = new HashMap<String, Method>();
 		
 		excessiveArguments = new ArrayList<String>();

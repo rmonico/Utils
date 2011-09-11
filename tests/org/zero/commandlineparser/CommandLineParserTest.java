@@ -22,7 +22,7 @@ public class CommandLineParserTest {
 
 		parser.setSwitchesObject(switches);
 
-		parser.doParsing();
+		parser.parse();
 
 		assertEquals("Arg1", "arg1_value", switches.getArg1());
 	}
@@ -35,7 +35,7 @@ public class CommandLineParserTest {
 
 		parser.setSwitchesObject(switches);
 
-		parser.doParsing();
+		parser.parse();
 
 		assertEquals("argument1", "argument1_value", switches.getArg1());
 	}
@@ -48,7 +48,7 @@ public class CommandLineParserTest {
 
 		parser.setSwitchesObject(switches);
 
-		parser.doParsing();
+		parser.parse();
 
 		assertEquals("arg1", "argument1_value", switches.getArg1());
 	}
@@ -63,7 +63,7 @@ public class CommandLineParserTest {
 
 		parser.setSwitchesObject(switches);
 
-		parser.doParsing();
+		parser.parse();
 
 		assertEquals("Arg1", (int) 45, (int) switches.getArg1());
 	}
@@ -78,7 +78,7 @@ public class CommandLineParserTest {
 
 		parser.addParser("EnumParser", new EnumParser(Command.class));
 
-		parser.doParsing();
+		parser.parse();
 
 		assertEquals("Command", Command.ADD, so.getCommand());
 	}
@@ -95,7 +95,7 @@ public class CommandLineParserTest {
 
 		parser.addParser("EnumParser", new EnumParser(Command.class));
 		
-		parser.doParsing();
+		parser.parse();
 
 		assertEquals("show help", true, switches.getShowHelp());
 	}
@@ -110,7 +110,7 @@ public class CommandLineParserTest {
 
 		parser.addParser("EnumParser", new EnumParser(Command.class));
 
-		parser.doParsing();
+		parser.parse();
 
 		assertEquals("default param", Command.REMOVE, switches.getCommand());
 	}
@@ -125,7 +125,7 @@ public class CommandLineParserTest {
 
 		parser.addParser("EnumParser", new EnumParser(AnotherCommand.class));
 
-		parser.doParsing();
+		parser.parse();
 		
 		assertEquals("default param", AnotherCommand.REMOVE, switches.getCommand());
 	}
@@ -138,7 +138,7 @@ public class CommandLineParserTest {
 
 		parser.setSwitchesObject(switches);
 
-		parser.doParsing();
+		parser.parse();
 		
 		assertEquals("-arg", "option1", switches.getArgument());
 
@@ -149,7 +149,7 @@ public class CommandLineParserTest {
 
 		parser.setSwitchesObject(switches);
 
-		parser.doParsing();
+		parser.parse();
 		
 		assertEquals("-arg", "option2", switches.getArgument());
 	}
@@ -162,7 +162,7 @@ public class CommandLineParserTest {
 
 		parser.setSwitchesObject(switches);
 
-		parser.doParsing();
+		parser.parse();
 
 		assertEquals("excessive argument - size", 1, parser.getExcessiveArguments().size());
 		
