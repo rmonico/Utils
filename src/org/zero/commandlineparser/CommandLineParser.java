@@ -7,6 +7,7 @@ import java.util.Map;
 
 // TODO Levar em conta o uso de prefixos para os argumentos.
 // TODO Devolver os itens excessivos na linha de comando
+// TODO Suportar múltiplos nomes para a mesma propriedade na anotação CommandLineSwitch
 public class CommandLineParser {
 
 	private String[] commandLine;
