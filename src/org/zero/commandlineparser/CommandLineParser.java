@@ -11,6 +11,7 @@ public class CommandLineParser {
 	private String[] commandLine;
 	private Object switchesObject;
 	private Map<String, Object> parsers = new HashMap<String, Object>();
+	private Map<String, Method> properties;
 
 	public void setCommandLine(String[] commandLine) {
 		this.commandLine = commandLine;
@@ -21,21 +22,19 @@ public class CommandLineParser {
 	}
 
 	public void doParsing() {
-		// Chave: nome da propriedade + Método que deve ser chamado para ela
-		Map<String, Method> properties = new HashMap<String, Method>();
+		properties = new HashMap<String, Method>();
 
-		findProperties(properties);
+		findProperties();
 
 		// Nada a fazer
 		if (properties.isEmpty()) {
 			return;
 		}
 
-		parseCommandLine(properties);
-
+		parseCommandLine();
 	}
 
-	private void parseCommandLine(Map<String, Method> properties) {
+	private void parseCommandLine() {
 		for (int i = 0; i < commandLine.length; i++) {
 			String switchCandidate = commandLine[i];
 			String valueCandidate;
@@ -150,7 +149,7 @@ public class CommandLineParser {
 		return method;
 	}
 
-	private void findProperties(Map<String, Method> properties) {
+	private void findProperties() {
 
 		for (Method method : switchesObject.getClass().getMethods()) {
 			if (isPropertySetterMethod(method)) {
