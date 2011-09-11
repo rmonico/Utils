@@ -10,6 +10,7 @@ public class EnumParser {
 	}
 
 	@SuppressWarnings("rawtypes")
+	@CommandLineArgumentParserMethod
 	public Enum parseEnum(String value) {
 		for (Enum e : enumClass.getEnumConstants()) {
 			String switchParam;

@@ -215,9 +215,11 @@ class DefaultValueSwitch {
 }
 
 class IntegerParser {
+	@CommandLineArgumentParserMethod
 	public Integer parse(String value) {
 		return Integer.parseInt(value);
 	}
+	
 }
 
 class ParsedSwitch {

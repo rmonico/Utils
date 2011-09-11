@@ -172,7 +172,14 @@ public class CommandLineParser {
 			throw new RuntimeException(e);
 		}
 
-		return method;
+		// À princípio, mera formalidade. Porém, um parser pode precisar de mais
+		// parâmetros, então obrigo que todos os parsers sejam marcados dessa
+		// forma
+		if (method.getAnnotation(CommandLineArgumentParserMethod.class) != null) {
+			return method;
+		} else {
+			return null;
+		}
 	}
 
 	private void findProperties() throws CommandLineParserException {
