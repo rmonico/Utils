@@ -102,7 +102,7 @@ public class CommandLineParserTest {
 
 	@Test
 	public void testDefaultSwitch() {
-		parser.setCommandLine(new String[] { "remove" });
+		parser.setCommandLine(new String[] { "REMOVE" });
 
 		DefaultSwitch switches = new DefaultSwitch();
 
