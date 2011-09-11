@@ -10,6 +10,7 @@ import java.util.Map;
 
 // TODO Criar suporte a i18n. Do jeito que está teria que fazer uma classe para cada localidade que tiver que ser suportada.
 // TODO Ver o que fazer quando houver um defaultValue e um index simultaneamente no mesmo switch
+// TODO Fazer um último filtro para ser aplicado após o parser ser finalizado
 public class CommandLineParser {
 
 	private String[] commandLine;
