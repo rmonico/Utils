@@ -238,7 +238,7 @@ class DefaultSwitch {
 
 enum AnotherCommand {
 	ADD,
-//	@CommandLineSwitchParam(name = "rm")
+	@CommandLineSwitchParam(name = "rm")
 	REMOVE;
 }
 
