@@ -9,4 +9,6 @@ package org.zero.commandlineparser;
 
 public interface IInvalidCommandLineArgument {
 	String getMessage();
+	
+	// Obs: override method toString too
 }

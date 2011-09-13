@@ -36,6 +36,11 @@ public class CommandLineParser {
 		findProperties();
 
 		// Nada a fazer
+		if (commandLine == null) {
+			return;
+		}
+
+		// Nada a fazer
 		if (properties.isEmpty()) {
 			return;
 		}
@@ -44,12 +49,6 @@ public class CommandLineParser {
 	}
 
 	private void doParsing() throws CommandLineParserException {
-
-		// Nada a fazer
-		if (commandLine == null) {
-			return;
-		}
-
 		for (int i = 0; i < commandLine.length; i++) {
 			String switchCandidate = commandLine[i];
 			String valueCandidate;
