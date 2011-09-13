@@ -3,17 +3,11 @@ package org.zero.commandlineparser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.zero.commandlineparser.parsers.EnumParser;
+import org.zero.commandlineparser.parsers.IntegerParser;
 
-public class CommandLineParserTest {
-
-	CommandLineParser parser;
-
-	@Before
-	public void setUp() throws Exception {
-		parser = new CommandLineParser();
-	}
+public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void testMinimalParsing() throws CommandLineParserException {
@@ -52,36 +46,6 @@ public class CommandLineParserTest {
 		parser.parse();
 
 		assertEquals("arg1", "argument1_value", switches.getArg1());
-	}
-
-	@Test
-	public void testParsedSwitch() throws CommandLineParserException {
-		parser.setCommandLine(new String[] { "Arg1", "45" });
-
-		parser.addParser("arg1parser", new IntegerParser());
-
-		ParsedSwitch switches = new ParsedSwitch();
-
-		parser.setSwitchesObject(switches);
-
-		parser.parse();
-
-		assertEquals("Arg1", (int) 45, (int) switches.getArg1());
-	}
-
-	@Test
-	public void testEnumSwitch() throws CommandLineParserException {
-		parser.setCommandLine(new String[] { "Command", "ADD" });
-
-		EnumSwitch so = new EnumSwitch();
-
-		parser.setSwitchesObject(so);
-
-		parser.addParser("EnumParser", new EnumParser(Command.class));
-
-		parser.parse();
-
-		assertEquals("Command", Command.ADD, so.getCommand());
 	}
 
 	@Test
@@ -233,36 +197,6 @@ class DefaultValueSwitch {
 
 	public String getArg1() {
 		return arg1;
-	}
-}
-
-class ParsedSwitch {
-	private Integer arg1;
-
-	@CommandLineSwitch(parser = "arg1parser.parse")
-	public void setArg1(Integer value) {
-		arg1 = value;
-	}
-
-	public Integer getArg1() {
-		return arg1;
-	}
-}
-
-enum Command {
-	ADD, REMOVE;
-}
-
-class EnumSwitch {
-	private Command command;
-
-	@CommandLineSwitch(parser = "EnumParser.parseEnum")
-	public void setCommand(Command value) {
-		command = value;
-	}
-
-	public Command getCommand() {
-		return command;
 	}
 }
 
