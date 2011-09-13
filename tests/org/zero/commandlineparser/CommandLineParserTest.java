@@ -1,7 +1,6 @@
 package org.zero.commandlineparser;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -192,28 +191,6 @@ public class CommandLineParserTest {
 		assertEquals("parser error - item 0, valor", "Formato incorreto do número (\"xxx\").", parser.getErrors().get(0).getMessage());
 	}
 
-	@Test
-	public void testFilter() throws CommandLineParserException {
-		parser.setCommandLine(new String[] { "Arg1", "-1" });
-
-		parser.addParser("arg1parser", new IntegerParser());
-
-		parser.addFilter("myfilter", new MyFilter());
-
-		FilteredSwitch switches = new FilteredSwitch();
-
-		parser.setSwitchesObject(switches);
-
-		parser.parse();
-
-		assertNull("Arg1", switches.getArg1());
-
-		assertEquals("filter - size", 1, parser.getErrors().size());
-
-		assertTrue("filter - item 0, class", parser.getErrors().get(0) instanceof CommandLineNotFilteredError);
-
-		assertEquals("filter - item 0, valor", "Arg1: são permitidos apenas valores positivos.", parser.getErrors().get(0).getMessage());
-	}
 }
 
 class BasicSwitch {
@@ -347,23 +324,3 @@ class MultipleNamedSwitch {
 
 }
 
-class MyFilter {
-	@CommandLineOptionFilter
-	public String positiveFilter(Integer value) {
-		return value <= 0 ? "Arg1: são permitidos apenas valores positivos." : null;
-	}
-}
-
-class FilteredSwitch {
-	private Integer arg1;
-
-	@CommandLineSwitch(parser = "arg1parser.parse", filter = "myfilter.positiveFilter")
-	public void setArg1(Integer value) {
-		arg1 = value;
-	}
-
-	public Integer getArg1() {
-		return arg1;
-	}
-
-}
