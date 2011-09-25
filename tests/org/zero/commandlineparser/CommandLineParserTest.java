@@ -157,20 +157,6 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 	}
 }
 
-class BasicSwitch {
-	private String arg1;
-
-	@CommandLineSwitch
-	public void setArg1(String value) {
-		arg1 = value;
-	}
-
-	public String getArg1() {
-		return arg1;
-	}
-
-}
-
 class NamedSwitch {
 
 	private String arg1;
