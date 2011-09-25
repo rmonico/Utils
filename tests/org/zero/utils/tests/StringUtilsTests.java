@@ -4,7 +4,8 @@ package org.zero.utils.tests;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.zero.utils.StringUtils;
+
+import br.zero.utils.StringUtils;
 
 public class StringUtilsTests {
 

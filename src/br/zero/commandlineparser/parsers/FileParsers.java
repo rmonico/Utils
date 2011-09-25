@@ -1,8 +1,8 @@
-package org.zero.commandlineparser.parsers;
+package br.zero.commandlineparser.parsers;
 
 import java.io.File;
 
-import org.zero.commandlineparser.CommandLineArgumentParserMethod;
+import br.zero.commandlineparser.CommandLineArgumentParserMethod;
 
 public class FileParsers {
 	private String error = null;

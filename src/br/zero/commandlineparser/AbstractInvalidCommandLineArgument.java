@@ -1,4 +1,4 @@
-package org.zero.commandlineparser;
+package br.zero.commandlineparser;
 
 public abstract class AbstractInvalidCommandLineArgument implements IInvalidCommandLineArgument {
 

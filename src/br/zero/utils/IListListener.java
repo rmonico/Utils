@@ -1,4 +1,4 @@
-package org.zero.utils;
+package br.zero.utils;
 
 
 public interface IListListener<E> {

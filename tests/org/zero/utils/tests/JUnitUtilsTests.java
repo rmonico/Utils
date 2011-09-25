@@ -4,7 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.ComparisonFailure;
 import org.junit.Test;
-import org.zero.utils.JUnitUtils;
+
+import br.zero.utils.JUnitUtils;
 
 public class JUnitUtilsTests {
 	

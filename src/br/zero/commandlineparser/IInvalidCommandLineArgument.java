@@ -1,4 +1,4 @@
-package org.zero.commandlineparser;
+package br.zero.commandlineparser;
 
 /**
  * Representação de um erro em uma linha de comando.

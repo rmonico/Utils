@@ -1,4 +1,4 @@
-package org.zero.utils;
+package br.zero.utils;
 
 import static org.junit.Assert.assertEquals;
 

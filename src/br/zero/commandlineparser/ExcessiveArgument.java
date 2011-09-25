@@ -1,4 +1,4 @@
-package org.zero.commandlineparser;
+package br.zero.commandlineparser;
 
 public class ExcessiveArgument extends AbstractInvalidCommandLineArgument implements IInvalidCommandLineArgument {
 

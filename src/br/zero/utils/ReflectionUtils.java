@@ -1,4 +1,4 @@
-package org.zero.utils;
+package br.zero.utils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;

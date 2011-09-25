@@ -1,4 +1,4 @@
-package org.zero.commandlineparser;
+package br.zero.commandlineparser;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

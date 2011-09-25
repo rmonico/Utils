@@ -1,6 +1,6 @@
-package org.zero.commandlineparser.parsers;
+package br.zero.commandlineparser.parsers;
 
-import org.zero.commandlineparser.CommandLineArgumentParserMethod;
+import br.zero.commandlineparser.CommandLineArgumentParserMethod;
 
 public class IntegerParser {
 	private String error = null;

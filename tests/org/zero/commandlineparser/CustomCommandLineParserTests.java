@@ -2,6 +2,8 @@ package org.zero.commandlineparser;
 
 import org.junit.Before;
 
+import br.zero.commandlineparser.CommandLineParser;
+
 public class CustomCommandLineParserTests {
 
 	protected CommandLineParser parser;

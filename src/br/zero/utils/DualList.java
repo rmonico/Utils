@@ -1,4 +1,4 @@
-package org.zero.utils;
+package br.zero.utils;
 
 import java.util.Collection;
 import java.util.Iterator;
