@@ -27,6 +27,7 @@ public abstract class CustomDAO<T> {
 	 * @return
 	 */
 	protected String getPersistenceUnitName() {
+		// TODO Transformar essa variável em field
 		DAOSetup puinfo = getClass().getAnnotation(DAOSetup.class);
 		
 		if (puinfo != null) {
@@ -86,7 +87,7 @@ public abstract class CustomDAO<T> {
 
 	@SuppressWarnings("unchecked")
 	public List<T> listarTodos() {
-		Query q = getEntityManager().createNamedQuery(setup.findAllQueryName());
+		Query q = getEntityManager().createQuery(setup.findAllQuery());
 
 		List<T> results = q.getResultList();
 
@@ -103,7 +104,7 @@ public abstract class CustomDAO<T> {
 
 	@SuppressWarnings("unchecked")
 	public T getById(int id) {
-		Query q = getEntityManager().createNamedQuery(setup.findByIdQueryName());
+		Query q = getEntityManager().createNamedQuery(setup.findByIdQuery());
 		q.setParameter(setup.idFieldName(), id);
 
 		List<T> results = q.getResultList();
