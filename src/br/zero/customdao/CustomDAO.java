@@ -75,12 +75,6 @@ public abstract class CustomDAO<T> {
 		List<T> results = q.getResultList();
 
 		return results;
-		// Query q = getEntityManager().createQuery(
-		// getListaTodosQuery());
-		//
-		// List<T> results = q.getResultList();
-		//
-		// return results;
 	}
 
 	public void inserir(T o) {
