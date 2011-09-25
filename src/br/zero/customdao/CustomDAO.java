@@ -27,7 +27,7 @@ public abstract class CustomDAO<T> {
 	 * @return
 	 */
 	protected String getPersistenceUnitName() {
-		DAOInfo puinfo = getClass().getAnnotation(DAOInfo.class);
+		DAOSetup puinfo = getClass().getAnnotation(DAOSetup.class);
 		
 		if (puinfo != null) {
 			return puinfo.persistenceUnitName();
@@ -75,10 +75,10 @@ public abstract class CustomDAO<T> {
 	 * @return
 	 */
 	private Class<?> getEntityClass() {
-		DAOInfo daoInfo = getClass().getAnnotation(DAOInfo.class);
+		DAOSetup daoInfo = getClass().getAnnotation(DAOSetup.class);
 		
 		if (daoInfo == null) {
-			throw new RuntimeException("DAO's herdados de CustomDAO<T> devem ser anotados com @DAOInfo.");
+			throw new RuntimeException("DAO's herdados de CustomDAO<T> devem ser anotados com @DAOSetup.");
 		}
 		
 		return daoInfo.entityClass();
