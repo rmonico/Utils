@@ -26,7 +26,15 @@ public abstract class CustomDAO<T> {
 	 * 
 	 * @return
 	 */
-	protected abstract String getPersistenceUnitName();
+	protected String getPersistenceUnitName() {
+		DAOInfo puinfo = getClass().getAnnotation(DAOInfo.class);
+		
+		if (puinfo != null) {
+			return puinfo.persistenceUnitName();
+		}
+		
+		return null;
+	}
 
 	private EntityManagerFactory getEntityManagerFactory() {
 		if (entityManagerFactory == null) {
@@ -66,7 +74,15 @@ public abstract class CustomDAO<T> {
 	 * 
 	 * @return
 	 */
-	protected abstract Class<T> getEntityClass();
+	private Class<?> getEntityClass() {
+		DAOInfo daoInfo = getClass().getAnnotation(DAOInfo.class);
+		
+		if (daoInfo == null) {
+			throw new RuntimeException("DAO's herdados de CustomDAO<T> devem ser anotados com @DAOInfo.");
+		}
+		
+		return daoInfo.entityClass();
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<T> listarTodos() {
