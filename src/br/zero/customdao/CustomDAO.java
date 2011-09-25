@@ -10,14 +10,14 @@ import javax.persistence.Query;
 
 public abstract class CustomDAO<T> {
 
-	private static DAOSetup setup;
+	private static EntitySetup setup;
 	private EntityManagerFactory entityManagerFactory;
 	private EntityManager entityManager;
 	private EntityTransaction entityTransaction;
 
 	public CustomDAO() {
 		if (setup == null) {
-			setup = getEntityClass().getAnnotation(DAOSetup.class);
+			setup = getEntityClass().getAnnotation(EntitySetup.class);
 		}
 	}
 
