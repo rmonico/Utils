@@ -10,101 +10,110 @@ import javax.persistence.Query;
 
 public abstract class CustomDAO<T> {
 
-    private static DAOSetup setup;
-    private EntityManagerFactory entityManagerFactory;
-    private EntityManager entityManager;
-    private EntityTransaction entityTransaction;
+	private static DAOSetup setup;
+	private EntityManagerFactory entityManagerFactory;
+	private EntityManager entityManager;
+	private EntityTransaction entityTransaction;
 
-    public CustomDAO() {
-    	if (setup == null) {
-    		setup = getEntityClass().getAnnotation(DAOSetup.class);
-    	}
-    }
+	public CustomDAO() {
+		if (setup == null) {
+			setup = getEntityClass().getAnnotation(DAOSetup.class);
+		}
+	}
 
-    private EntityManagerFactory getEntityManagerFactory() {
-        if (entityManagerFactory == null) {
-            entityManagerFactory = Persistence.createEntityManagerFactory("ControleFinanceiro");
-        }
+	/**
+	 * Deve devolver o nome da unidade de persistência para o projeto.
+	 * 
+	 * @return
+	 */
+	protected abstract String getPersistenceUnitName();
 
-        return entityManagerFactory;
-    }
+	private EntityManagerFactory getEntityManagerFactory() {
+		if (entityManagerFactory == null) {
+			entityManagerFactory = Persistence.createEntityManagerFactory(getPersistenceUnitName());
+		}
 
-    public void close() {
-        getEntityManager().close();
-        entityManager = null;
-        getEntityManagerFactory().close();
-    }
+		return entityManagerFactory;
+	}
 
-    protected EntityManager getEntityManager() {
-        if (entityManager == null) {
-            entityManager = getEntityManagerFactory().createEntityManager();
-        }
+	public void close() {
+		getEntityManager().close();
+		entityManager = null;
+		getEntityManagerFactory().close();
+	}
 
-        return entityManager;
-    }
+	protected EntityManager getEntityManager() {
+		if (entityManager == null) {
+			entityManager = getEntityManagerFactory().createEntityManager();
+		}
 
-    protected void commitTransaction() {
-        entityTransaction.commit();
-    }
+		return entityManager;
+	}
 
-    protected void beginTransaction() {
-        entityTransaction = getEntityManager().getTransaction();
+	protected void commitTransaction() {
+		entityTransaction.commit();
+	}
 
-        entityTransaction.begin();
-    }
+	protected void beginTransaction() {
+		entityTransaction = getEntityManager().getTransaction();
 
-    /**
-     * Quero que a anotação com a configuração para o DAO fique na entidade, não aqui. Por isso preciso pagar o preço de ter esse método aqui.
-     * @return 
-     */
-    protected abstract Class<T> getEntityClass();
+		entityTransaction.begin();
+	}
 
-    @SuppressWarnings("unchecked")
-    public List<T> listarTodos() {
-        Query q = getEntityManager().createNamedQuery(setup.findAllQueryName());
+	/**
+	 * Quero que a anotação com a configuração para o DAO fique na entidade, não
+	 * aqui. Por isso preciso pagar o preço de ter esse método aqui.
+	 * 
+	 * @return
+	 */
+	protected abstract Class<T> getEntityClass();
 
-        List<T> results = q.getResultList();
+	@SuppressWarnings("unchecked")
+	public List<T> listarTodos() {
+		Query q = getEntityManager().createNamedQuery(setup.findAllQueryName());
 
-        return results;
-//		Query q = getEntityManager().createQuery(
-//				getListaTodosQuery());
-//
-//		List<T> results = q.getResultList();
-//
-//		return results;
-    }
+		List<T> results = q.getResultList();
 
-    public void inserir(T o) {
-        beginTransaction();
+		return results;
+		// Query q = getEntityManager().createQuery(
+		// getListaTodosQuery());
+		//
+		// List<T> results = q.getResultList();
+		//
+		// return results;
+	}
 
-        getEntityManager().persist(o);
+	public void inserir(T o) {
+		beginTransaction();
 
-        commitTransaction();
-    }
+		getEntityManager().persist(o);
 
-    @SuppressWarnings("unchecked")
-    public T getById(int id) {
-        Query q = getEntityManager().createNamedQuery(setup.findByIdQueryName());
-        q.setParameter(setup.idFieldName(), id);
+		commitTransaction();
+	}
 
-        List<T> results = q.getResultList();
+	@SuppressWarnings("unchecked")
+	public T getById(int id) {
+		Query q = getEntityManager().createNamedQuery(setup.findByIdQueryName());
+		q.setParameter(setup.idFieldName(), id);
 
-        return results.get(0);
-    }
+		List<T> results = q.getResultList();
 
-    public void excluir(T o) {
-        beginTransaction();
+		return results.get(0);
+	}
 
-        getEntityManager().remove(o);
+	public void excluir(T o) {
+		beginTransaction();
 
-        commitTransaction();
-    }
+		getEntityManager().remove(o);
 
-    public void alterar(T o) {
-        beginTransaction();
+		commitTransaction();
+	}
 
-        getEntityManager().persist(o);
+	public void alterar(T o) {
+		beginTransaction();
 
-        commitTransaction();
-    }
+		getEntityManager().persist(o);
+
+		commitTransaction();
+	}
 }
