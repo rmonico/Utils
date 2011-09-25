@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.zero.commandlineparser.Command;
-import org.zero.commandlineparser.CommandLineParserTests;
+import org.zero.commandlineparser.CustomCommandLineParserTests;
 import org.zero.commandlineparser.EnumSwitch;
 import org.zero.commandlineparser.ParsedSwitch;
 
@@ -12,7 +12,7 @@ import br.zero.commandlineparser.CommandLineParserException;
 import br.zero.commandlineparser.parsers.EnumParser;
 import br.zero.commandlineparser.parsers.IntegerParser;
 
-public class ParsersTest extends CommandLineParserTests {
+public class ParsersTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void testParsedSwitch() throws CommandLineParserException {
