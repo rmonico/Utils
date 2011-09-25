@@ -4,7 +4,7 @@ import org.junit.Before;
 
 import br.zero.commandlineparser.CommandLineParser;
 
-public class CustomCommandLineParserTests {
+public class CommandLineParserTests {
 
 	protected CommandLineParser parser;
 
