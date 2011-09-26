@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ public class CommandLineParser {
 	private Map<String, Object> parsers = new HashMap<String, Object>();
 	private Map<String, Method> properties;
 	private List<IInvalidCommandLineArgument> errors;
+	private CommandLineSwitch switchSetup;
 
 	public void setCommandLine(String[] commandLine) {
 		this.commandLine = commandLine;
@@ -49,27 +51,44 @@ public class CommandLineParser {
 	private void doParsing() throws CommandLineParserException {
 		for (int i = 0; i < commandLine.length; i++) {
 			String switchCandidate = commandLine[i];
-			String valueCandidate;
+			String[] valueCandidate;
 
 			Method setter;
+			
+			switchSetup = null;
 
 			if ((setter = getIndexedArgument(properties, i)) != null) {
-				valueCandidate = commandLine[i];
+				switchSetup = setter.getAnnotation(CommandLineSwitch.class);
 
+				if (switchSetup.complexParser()) {
+					valueCandidate = Arrays.copyOfRange(commandLine, i, commandLine.length);
+				} else {
+					valueCandidate = new String[] { commandLine[i] };
+				}
 			} else if ((setter = properties.get(switchCandidate)) != null) {
+				switchSetup = setter.getAnnotation(CommandLineSwitch.class);
 
 				// Se for boolean, não preciso do valor
 				if (isBooleanSwitch(setter)) {
-					valueCandidate = "true";
+					if (switchSetup.complexParser()) {
+						valueCandidate = Arrays.copyOfRange(commandLine, i, commandLine.length);
+					} else {
+						valueCandidate = new String[] { "true" };
+					}
 				} else {
 					// Se não for boolean...
 
-					// valueCandidate deve ser o próximo item na linha de
-					// comando
-					valueCandidate = commandLine[i + 1];
+					if (switchSetup.complexParser()) {
+						valueCandidate = Arrays.copyOfRange(commandLine, i + 1, commandLine.length);
+					} else {
+						// valueCandidate deve ser o próximo item na linha de
+						// comando
+						valueCandidate = new String[] { commandLine[i + 1] };
 
-					// O argumento já foi consumido, pular ele
-					i++;
+						// O argumento já foi consumido, pular ele
+						i++;
+					}
+
 				}
 
 			} else {
@@ -78,6 +97,11 @@ public class CommandLineParser {
 			}
 
 			callSetterFor(setter, valueCandidate);
+			
+			// switch's complexos consomem toda a linha de comando depois deles
+			if (switchSetup.complexParser()) {
+				return;
+			}
 		}
 	}
 
@@ -97,8 +121,8 @@ public class CommandLineParser {
 		return setter.getParameterTypes()[0].getName().equals("boolean");
 	}
 
-	private void callSetterFor(Method propertySetterMethod, String value) throws CommandLineParserException {
-		Object o = doParser(propertySetterMethod, value);
+	private void callSetterFor(Method propertySetterMethod, String[] valueCandidate) throws CommandLineParserException {
+		Object o = doParser(propertySetterMethod, valueCandidate);
 
 		try {
 			propertySetterMethod.invoke(switchesObject, o);
@@ -115,9 +139,7 @@ public class CommandLineParser {
 		}
 	}
 
-	private Object doParser(Method setter, String value) throws CommandLineParserException {
-		CommandLineSwitch switchSetup = setter.getAnnotation(CommandLineSwitch.class);
-
+	private Object doParser(Method setter, String[] valueCandidate) throws CommandLineParserException {
 		Class<?> setterParameter = setter.getParameterTypes()[0];
 
 		if (switchSetup.parser().isEmpty()) {
@@ -125,11 +147,11 @@ public class CommandLineParser {
 			if (setterParameter.equals(String.class)) {
 				// Se for string, copia o valor da linha de comando para o
 				// setter
-				return value;
+				return valueCandidate[0];
 			} else if (isBooleanSwitch(setter)) {
 				// Switch tipo boolean, apenas mudar para true se o parâmetro
 				// for encontrado
-				return new Boolean(value);
+				return new Boolean(valueCandidate[0]);
 
 			} else {
 				throw new RuntimeException("Switches do tipo \"" + setterParameter + "\" devem possuir um parser obrigatoriamente!");
@@ -151,7 +173,11 @@ public class CommandLineParser {
 		Object parsedObject;
 
 		try {
-			parsedObject = parserMethod.invoke(parser, value);
+			if (switchSetup.complexParser()) {
+				parsedObject = parserMethod.invoke(parser, (Object) valueCandidate);
+			} else {
+				parsedObject = parserMethod.invoke(parser, valueCandidate[0]);
+			}
 		} catch (IllegalArgumentException e) {
 			// Condição verificada anteriormente, não deveria acontecer
 			assert false : e;
@@ -221,11 +247,15 @@ public class CommandLineParser {
 		boolean hasRightAnnotation = parserMethod.getAnnotation(CommandLineArgumentParserMethod.class) != null;
 		boolean isMethodPublic = Modifier.isPublic(parserMethod.getModifiers());
 		boolean isOneParameterMethod = parserMethod.getParameterTypes().length == 1;
-		boolean isStringParameter = isOneParameterMethod ? parserMethod.getParameterTypes()[0].equals(String.class) : false;
+		
+		Class<?> parameterClass = switchSetup.complexParser() ? parameterClass = String[].class : String.class;
+		
+		boolean isRightParameter = isOneParameterMethod ? parserMethod.getParameterTypes()[0].equals(parameterClass) : false; 
+		
 		boolean isReturnTypeOk = setterParameter.isAssignableFrom(parserMethod.getReturnType());
 		boolean isEnumProperty = ((setterParameter.isEnum()) && (parserMethod.getReturnType().equals(Enum.class)));
 
-		return hasRightAnnotation && isMethodPublic && isOneParameterMethod && isStringParameter && (isReturnTypeOk || isEnumProperty);
+		return hasRightAnnotation && isMethodPublic && isOneParameterMethod && isRightParameter && (isReturnTypeOk || isEnumProperty);
 	}
 
 	private Method getParserMethod(String parserName, Object parser) {
@@ -235,7 +265,11 @@ public class CommandLineParser {
 
 		Method method = null;
 		try {
+			if (switchSetup.complexParser()) {
+				method = parser.getClass().getMethod(parserMethod, String[].class);
+			} else {
 			method = parser.getClass().getMethod(parserMethod, String.class);
+			}
 			// Nenhuma das duas exceções abaixo deveria acontecer, já foi
 			// verificado antes
 		} catch (SecurityException e) {
@@ -265,21 +299,22 @@ public class CommandLineParser {
 	}
 
 	private void setDefaultValue(Method setter) throws CommandLineParserException {
-		CommandLineSwitch switchSetup = setter.getAnnotation(CommandLineSwitch.class);
-
-		String defaultValue;
+		String[] defaultValue;
+		
+		switchSetup = setter.getAnnotation(CommandLineSwitch.class);
 
 		// Switch boolean
 		if (isBooleanSwitch(setter)) {
 			// Para propriedades boolean o valor da propriedade default é false,
 			// independente da anotação estar configurada ou não para um valor
 			// default
-			defaultValue = "false";
+			defaultValue = new String[] { "false" };
 		} else {
+			// switchSetup ainda não está pronto no momento em que esse método é chamado
 			defaultValue = switchSetup.defaultValue();
 		}
 
-		if (!defaultValue.isEmpty()) {
+		if (defaultValue.length > 0) {
 			callSetterFor(setter, defaultValue);
 		}
 	}

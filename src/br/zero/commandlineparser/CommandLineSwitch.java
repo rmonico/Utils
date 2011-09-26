@@ -24,7 +24,7 @@ public @interface CommandLineSwitch {
 	 * 
 	 * @return
 	 */
-	String defaultValue() default "";
+	String[] defaultValue() default {};
 
 	/**
 	 * Id do objeto de parser (definido em CommandLineParser.addParser) seguido
@@ -72,5 +72,7 @@ public @interface CommandLineSwitch {
 	 * @return
 	 */
 	int index() default -1;
+
+	boolean complexParser() default false;
 
 }

@@ -1,6 +1,7 @@
 package org.zero.commandlineparser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -129,15 +130,42 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 		parser.addParser("arg1parser", new IntegerParser());
 
 		ParsedSwitch switches = new ParsedSwitch();
-		
+
 		parser.setSwitchesObject(switches);
 
 		parser.parse();
 
 		assertEquals("parser error - size", 1, parser.getErrors().size());
-		
+
 		assertTrue("parser error - item 0, class", parser.getErrors().get(0) instanceof CommandLineOptionParsingError);
 
 		assertEquals("parser error - item 0, valor", "Formato incorreto do número (\"xxx\").", parser.getErrors().get(0).getMessage());
+	}
+
+	/**
+	 * Complex switch: permite que um parser receba o restante da linha de
+	 * comando depois dele.
+	 * 
+	 * @throws CommandLineParserException
+	 */
+	@Test
+	public void testComplexSwitch() throws CommandLineParserException {
+		parser.setCommandLine(new String[] { "ComplexSwitch", "param1", "param2" });
+
+		parser.addParser("ComplexSwitchParser", new ComplexSwitchParser());
+
+		ComplexSwitch switches = new ComplexSwitch();
+
+		parser.setSwitchesObject(switches);
+
+		parser.parse();
+
+		assertEquals("Complex switch - size", 2, switches.getComplexSwitch().length);
+
+		assertEquals("Complex switch - item 0", "param1", switches.getComplexSwitch()[0]);
+
+		assertEquals("Complex switch - item 1", "param2", switches.getComplexSwitch()[1]);
+
+		assertFalse("Complex switch - no errors", parser.hasErrors());
 	}
 }
