@@ -7,8 +7,6 @@ import org.junit.Test;
 
 import br.zero.commandlineparser.CommandLineOptionParsingError;
 import br.zero.commandlineparser.CommandLineParserException;
-import br.zero.commandlineparser.CommandLineSwitch;
-import br.zero.commandlineparser.CommandLineSwitchParam;
 import br.zero.commandlineparser.ExcessiveArgument;
 import br.zero.commandlineparser.parsers.EnumParser;
 import br.zero.commandlineparser.parsers.IntegerParser;
@@ -154,91 +152,5 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 		assertTrue("parser error - item 0, class", parser.getErrors().get(0) instanceof CommandLineOptionParsingError);
 
 		assertEquals("parser error - item 0, valor", "Formato incorreto do número (\"xxx\")", parser.getErrors().get(0).getMessage());
-	}
-}
-
-class NamedSwitch {
-
-	private String arg1;
-
-	@CommandLineSwitch(param = "argument1")
-	public void setArg1(String value) {
-		arg1 = value;
-	}
-
-	public String getArg1() {
-		return arg1;
-	}
-
-}
-
-class DefaultValueSwitch {
-	private String arg1;
-
-	@CommandLineSwitch(defaultValue = "argument1_value")
-	public void setArg1(String arg1) {
-		this.arg1 = arg1;
-	}
-
-	public String getArg1() {
-		return arg1;
-	}
-}
-
-class BooleanSwitch {
-	private boolean showHelp;
-
-	@CommandLineSwitch(param = "help")
-	public void setShowHelp(boolean value) {
-		showHelp = value;
-	}
-
-	public boolean getShowHelp() {
-		return showHelp;
-	}
-
-}
-
-class DefaultSwitch {
-	private Command command;
-
-	@CommandLineSwitch(parser = "EnumParser.parseEnum", index = 1)
-	public void setCommand(Command value) {
-		command = value;
-	}
-
-	public Command getCommand() {
-		return command;
-	}
-}
-
-enum AnotherCommand {
-	ADD, @CommandLineSwitchParam(name = "rm")
-	REMOVE;
-}
-
-class CommandLineOptionSwitch {
-	private AnotherCommand command;
-
-	@CommandLineSwitch(parser = "EnumParser.parseEnum")
-	public void setCommand(AnotherCommand value) {
-		command = value;
-	}
-
-	public AnotherCommand getCommand() {
-		return command;
-	}
-}
-
-class MultipleNamedSwitch {
-	private String argument;
-
-	@CommandLineSwitch(param = { "-arg", "--argument" })
-	public void setArgument(String value) {
-		argument = value;
-	}
-
-	public String getArgument() {
-		return argument;
 	}
 }
