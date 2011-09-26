@@ -89,6 +89,8 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 		CommandLineOptionSwitch switches = new CommandLineOptionSwitch();
 
 		parser.setSwitchesObject(switches);
+		
+		parser.addParser("EnumParser", new EnumParser(AnotherCommand.class));
 
 		parser.parse();
 
