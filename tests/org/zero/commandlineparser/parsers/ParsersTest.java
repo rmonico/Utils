@@ -3,7 +3,9 @@ package org.zero.commandlineparser.parsers;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.zero.commandlineparser.AnotherCommand;
 import org.zero.commandlineparser.Command;
+import org.zero.commandlineparser.CommandLineOptionSwitch;
 import org.zero.commandlineparser.CustomCommandLineParserTests;
 import org.zero.commandlineparser.EnumSwitch;
 import org.zero.commandlineparser.ParsedSwitch;
@@ -42,6 +44,27 @@ public class ParsersTest extends CustomCommandLineParserTests {
 		parser.parse();
 
 		assertEquals("Command", Command.ADD, so.getCommand());
+	}
+
+	/**
+	 * Testa um opção de enum nomeada. No exemplo, o item REMOVE do enum é
+	 * setado pelo parâmetro "rm" da linha de comando.
+	 * 
+	 * @throws CommandLineParserException
+	 */
+	@Test
+	public void testNamedEnumSwitch() throws CommandLineParserException {
+		parser.setCommandLine(new String[] { "Command", "rm" });
+
+		CommandLineOptionSwitch switches = new CommandLineOptionSwitch();
+
+		parser.setSwitchesObject(switches);
+
+		parser.addParser("EnumParser", new EnumParser(AnotherCommand.class));
+
+		parser.parse();
+
+		assertEquals("default param", AnotherCommand.REMOVE, switches.getCommand());
 	}
 
 }

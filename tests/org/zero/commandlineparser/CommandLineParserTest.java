@@ -83,21 +83,6 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 	}
 
 	@Test
-	public void testCommandLineSwitchOption() throws CommandLineParserException {
-		parser.setCommandLine(new String[] { "Command", "rm" });
-
-		CommandLineOptionSwitch switches = new CommandLineOptionSwitch();
-
-		parser.setSwitchesObject(switches);
-		
-		parser.addParser("EnumParser", new EnumParser(AnotherCommand.class));
-
-		parser.parse();
-
-		assertEquals("default param", AnotherCommand.REMOVE, switches.getCommand());
-	}
-
-	@Test
 	public void testMultipleNamedSwitch() throws CommandLineParserException {
 		parser.setCommandLine(new String[] { "-arg", "option1" });
 
@@ -153,6 +138,6 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 		
 		assertTrue("parser error - item 0, class", parser.getErrors().get(0) instanceof CommandLineOptionParsingError);
 
-		assertEquals("parser error - item 0, valor", "Formato incorreto do número (\"xxx\")", parser.getErrors().get(0).getMessage());
+		assertEquals("parser error - item 0, valor", "Formato incorreto do número (\"xxx\").", parser.getErrors().get(0).getMessage());
 	}
 }
