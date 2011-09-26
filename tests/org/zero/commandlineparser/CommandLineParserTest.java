@@ -166,6 +166,7 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 		assertEquals("Complex switch - item 1", "param2", switches.getComplexSwitch()[1]);
 
+		// O switch complexo consumiu toda a linha de comando
 		assertFalse("Complex switch - no errors", parser.hasErrors());
 	}
 }
