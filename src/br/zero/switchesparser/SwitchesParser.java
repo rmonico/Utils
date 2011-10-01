@@ -3,7 +3,6 @@ package br.zero.switchesparser;
 import java.io.PrintStream;
 import java.util.List;
 
-import br.zero.commandlineparser.IInvalidCommandLineArgument;
 
 public interface SwitchesParser {
 

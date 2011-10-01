@@ -169,4 +169,28 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 		// O switch complexo consumiu toda a linha de comando
 		assertFalse("Complex switch - no errors", parser.hasErrors());
 	}
+	
+	@Test
+	public void testComplexEnumSwitch() throws ParserException {
+		parser.setCommandLine(new String[] { "ComplexCommand", "COMMAND1", "Command1Switch1", "Command1Value1", "Command1Switch2", "Command1Value1" });
+
+		parser.addParser("ComplexSwitchParser", new ComplexSwitchParser());
+
+		ComplexSwitch switches = new ComplexSwitch();
+
+		parser.setSwitchesObject(switches);
+
+		parser.parse();
+
+		assertEquals("Complex switch - size", 2, switches.getComplexSwitch().length);
+
+		assertEquals("Complex switch - item 0", "param1", switches.getComplexSwitch()[0]);
+
+		assertEquals("Complex switch - item 1", "param2", switches.getComplexSwitch()[1]);
+
+		// O switch complexo consumiu toda a linha de comando
+		assertFalse("Complex switch - no errors", parser.hasErrors());
+
+	}
+	
 }

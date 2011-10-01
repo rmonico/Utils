@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.zero.switchesparser.IInvalidCommandLineArgument;
 import br.zero.switchesparser.ParserException;
 import br.zero.switchesparser.SwitchesParser;
 

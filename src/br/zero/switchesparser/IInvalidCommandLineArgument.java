@@ -1,4 +1,4 @@
-package br.zero.commandlineparser;
+package br.zero.switchesparser;
 
 /**
  * Representação de um erro em uma linha de comando.
@@ -7,6 +7,7 @@ package br.zero.commandlineparser;
  * 
  */
 
+// TODO Mudar para um nome mais genérico
 public interface IInvalidCommandLineArgument {
 	String getMessage();
 	
