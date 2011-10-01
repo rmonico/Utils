@@ -1,5 +1,6 @@
 package br.zero.commandlineparser;
 
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -9,9 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.zero.switchesparser.ParserException;
+import br.zero.switchesparser.SwitchesParser;
+
 // TODO Criar suporte a i18n. Do jeito que está teria que fazer uma classe para cada localidade que tiver que ser suportada.
 // TODO Ver o que fazer quando houver um defaultValue e um index simultaneamente no mesmo switch
-public class CommandLineParser {
+public class CommandLineParser implements SwitchesParser {
 
 	private String[] commandLine;
 	private Object switchesObject;
@@ -28,7 +32,7 @@ public class CommandLineParser {
 		switchesObject = o;
 	}
 
-	public void parse() throws CommandLineParserException {
+	public void parse() throws ParserException {
 		properties = new HashMap<String, Method>();
 
 		errors = new ArrayList<IInvalidCommandLineArgument>();
@@ -48,7 +52,7 @@ public class CommandLineParser {
 		doParsing();
 	}
 
-	private void doParsing() throws CommandLineParserException {
+	private void doParsing() throws ParserException {
 		for (int i = 0; i < commandLine.length; i++) {
 			String switchCandidate = commandLine[i];
 			String[] valueCandidate;
@@ -121,7 +125,7 @@ public class CommandLineParser {
 		return setter.getParameterTypes()[0].getName().equals("boolean");
 	}
 
-	private void callSetterFor(Method propertySetterMethod, String[] valueCandidate) throws CommandLineParserException {
+	private void callSetterFor(Method propertySetterMethod, String[] valueCandidate) throws ParserException {
 		Object o = doParser(propertySetterMethod, valueCandidate);
 
 		try {
@@ -135,15 +139,15 @@ public class CommandLineParser {
 			assert false : e;
 			throw new RuntimeException(e);
 		} catch (InvocationTargetException e) {
-			throw new CommandLineParserException("Erro chamando método setter...\n\n" + e);
+			throw new ParserException("Erro chamando método setter...\n\n" + e);
 		}
 	}
 
-	private Object doParser(Method setter, String[] valueCandidate) throws CommandLineParserException {
+	private Object doParser(Method setter, String[] valueCandidate) throws ParserException {
 		Class<?> setterParameter = setter.getParameterTypes()[0];
 
 		if (switchSetup.parser().isEmpty()) {
-			// Parser não informado na anotação
+			// SwitchesParser não informado na anotação
 			if (setterParameter.equals(String.class)) {
 				// Se for string, copia o valor da linha de comando para o
 				// setter
@@ -167,7 +171,7 @@ public class CommandLineParser {
 		Method parserMethod = getParserMethod(parserName, parser);
 
 		if (!isValidParserMethodFor(parserMethod, setterParameter)) {
-			throw new CommandLineParserException("O método \"" + parserMethod + "\" não é um método de parsing válido para propriedades do tipo \"" + setterParameter + "\".");
+			throw new ParserException("O método \"" + parserMethod + "\" não é um método de parsing válido para propriedades do tipo \"" + setterParameter + "\".");
 		}
 
 		Object parsedObject;
@@ -187,7 +191,7 @@ public class CommandLineParser {
 			assert false : e;
 			throw new RuntimeException(e);
 		} catch (InvocationTargetException e) {
-			throw new CommandLineParserException("Erro chamando parser...\n\n" + e);
+			throw new ParserException("Erro chamando parser...\n\n" + e);
 		}
 
 		CommandLineArgumentParserMethod parserMethodSetup = parserMethod.getAnnotation(CommandLineArgumentParserMethod.class);
@@ -226,7 +230,7 @@ public class CommandLineParser {
 				assert false : e;
 				throw new RuntimeException(e);
 			} catch (InvocationTargetException e) {
-				throw new CommandLineParserException("Erro devolvendo a mensagem de erro...");
+				throw new ParserException("Erro devolvendo a mensagem de erro...");
 			}
 
 			if (message != null) {
@@ -238,8 +242,8 @@ public class CommandLineParser {
 		return parsedObject;
 	}
 
-	private void throwInvalidParserMessageMethodException(String methodName, Object parser) throws CommandLineParserException {
-		throw new CommandLineParserException("O nome de método \"" + methodName + "\" é inválido para a classe \"" + parser.getClass() + "\".");
+	private void throwInvalidParserMessageMethodException(String methodName, Object parser) throws ParserException {
+		throw new ParserException("O nome de método \"" + methodName + "\" é inválido para a classe \"" + parser.getClass() + "\".");
 	}
 
 	private boolean isValidParserMethodFor(Method parserMethod, Class<?> setterParameter) {
@@ -283,7 +287,7 @@ public class CommandLineParser {
 		return method;
 	}
 
-	private void findProperties() throws CommandLineParserException {
+	private void findProperties() throws ParserException {
 
 		for (Method method : switchesObject.getClass().getMethods()) {
 			if (isPropertySetterMethod(method)) {
@@ -298,7 +302,7 @@ public class CommandLineParser {
 		}
 	}
 
-	private void setDefaultValue(Method setter) throws CommandLineParserException {
+	private void setDefaultValue(Method setter) throws ParserException {
 		String[] defaultValue;
 		
 		switchSetup = setter.getAnnotation(CommandLineSwitch.class);
@@ -352,9 +356,9 @@ public class CommandLineParser {
 		return !getErrors().isEmpty();
 	}
 
-	public void printErrors() {
+	public void printErrors(PrintStream printStream) {
 		for (IInvalidCommandLineArgument error : getErrors()) {
-			System.out.println(error);
+			printStream.println(error);
 		}
 	}
 

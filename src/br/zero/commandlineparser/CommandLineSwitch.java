@@ -36,9 +36,9 @@ public @interface CommandLineSwitch {
 	 * 
 	 * Neste caso, o método addParser deve ser chamado da seguinte forma:
 	 * 
-	 * addParser("IntegerParser", new Parser())
+	 * addParser("IntegerParser", new SwitchesParser())
 	 * 
-	 * onde a classe Parser() deverá possuir um método
+	 * onde a classe SwitchesParser() deverá possuir um método
 	 * 
 	 * public Integer parse(String value)
 	 * 

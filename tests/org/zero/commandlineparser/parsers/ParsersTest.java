@@ -10,14 +10,14 @@ import org.zero.commandlineparser.CustomCommandLineParserTests;
 import org.zero.commandlineparser.EnumSwitch;
 import org.zero.commandlineparser.ParsedSwitch;
 
-import br.zero.commandlineparser.CommandLineParserException;
 import br.zero.commandlineparser.parsers.EnumParser;
 import br.zero.commandlineparser.parsers.IntegerParser;
+import br.zero.switchesparser.ParserException;
 
 public class ParsersTest extends CustomCommandLineParserTests {
 
 	@Test
-	public void testParsedSwitch() throws CommandLineParserException {
+	public void testParsedSwitch() throws ParserException {
 		parser.setCommandLine(new String[] { "Arg1", "45" });
 
 		parser.addParser("arg1parser", new IntegerParser());
@@ -32,7 +32,7 @@ public class ParsersTest extends CustomCommandLineParserTests {
 	}
 
 	@Test
-	public void testEnumSwitch() throws CommandLineParserException {
+	public void testEnumSwitch() throws ParserException {
 		parser.setCommandLine(new String[] { "Command", "ADD" });
 
 		EnumSwitch so = new EnumSwitch();
@@ -50,10 +50,10 @@ public class ParsersTest extends CustomCommandLineParserTests {
 	 * Testa um opção de enum nomeada. No exemplo, o item REMOVE do enum é
 	 * setado pelo parâmetro "rm" da linha de comando.
 	 * 
-	 * @throws CommandLineParserException
+	 * @throws ParserException
 	 */
 	@Test
-	public void testNamedEnumSwitch() throws CommandLineParserException {
+	public void testNamedEnumSwitch() throws ParserException {
 		parser.setCommandLine(new String[] { "Command", "rm" });
 
 		CommandLineOptionSwitch switches = new CommandLineOptionSwitch();
