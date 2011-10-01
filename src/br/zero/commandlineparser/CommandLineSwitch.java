@@ -73,6 +73,8 @@ public @interface CommandLineSwitch {
 	 */
 	int index() default -1;
 
+	
+	// Isso ficaria melhor se estivesse na classe do parser
 	boolean complexParser() default false;
 
 }
