@@ -261,7 +261,7 @@ public class CommandLineParser implements SwitchesParser {
 		boolean isMethodPublic = Modifier.isPublic(parserMethod.getModifiers());
 		boolean isOneParameterMethod = parserMethod.getParameterTypes().length == 1;
 
-		Class<?> parameterClass = switchSetup.complexParser() ? parameterClass = String[].class : String.class;
+		Class<?> parameterClass = switchSetup.complexParser() ? parameterClass = ComplexParserParameter.class : String.class;
 
 		boolean isRightParameter = isOneParameterMethod ? parserMethod.getParameterTypes()[0].equals(parameterClass) : false;
 
@@ -279,7 +279,7 @@ public class CommandLineParser implements SwitchesParser {
 		Method method = null;
 		try {
 			if (switchSetup.complexParser()) {
-				method = parser.getClass().getMethod(parserMethod, String[].class);
+				method = parser.getClass().getMethod(parserMethod, ComplexParserParameter.class);
 			} else {
 				method = parser.getClass().getMethod(parserMethod, String.class);
 			}
