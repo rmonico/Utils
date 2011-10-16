@@ -33,7 +33,7 @@ public class ComplexSwitchParser {
 	}
 
 	@CommandLineArgumentParserMethod(messageMethod = "getError")
-	public ComplexParserReturn parseComplexEnum(ComplexParserParameter value) {
+	public ComplexParserReturn parseComplex(ComplexParserParameter value) {
 		ComplexSwitchParserReturn r = new ComplexSwitchParserReturn();
 		
 		r.setSubObjectValue(value.getArgs());
