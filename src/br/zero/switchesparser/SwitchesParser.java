@@ -2,7 +2,7 @@ package br.zero.switchesparser;
 
 import java.io.PrintStream;
 import java.util.List;
-
+import java.util.Map;
 
 public interface SwitchesParser {
 
@@ -10,7 +10,7 @@ public interface SwitchesParser {
 
 	void parse() throws ParserException;
 	
-	void addParser(String parserId, Object parser);
+	Map<String, Object> getParsers();
 	
 	boolean hasErrors();
 	

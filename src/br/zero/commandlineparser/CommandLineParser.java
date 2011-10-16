@@ -402,10 +402,6 @@ public class CommandLineParser implements SwitchesParser {
 		return isAnnotated && isOneParameterMethod && methodNameBeginsWithSet && isVoidMethod && isPublicMethod && (!isStatic);
 	}
 
-	public void addParser(String parserId, Object parser) {
-		parsers.put(parserId, parser);
-	}
-
 	public List<IInvalidCommandLineArgument> getErrors() {
 		return errors;
 	}
@@ -418,6 +414,11 @@ public class CommandLineParser implements SwitchesParser {
 		for (IInvalidCommandLineArgument error : getErrors()) {
 			printStream.println(error);
 		}
+	}
+
+	@Override
+	public Map<String, Object> getParsers() {
+		return parsers;
 	}
 
 }

@@ -1,11 +1,10 @@
 package br.zero.commandlineparser;
 
-import java.util.Map;
 
 class DefaultComplexParserParameter implements ComplexParserParameter {
 
 	private String[] args;
-	private Map<String, Object> parsers;
+//	private Map<String, Object> parsers;
 
 	@Override
 	public String[] getArgs() {
