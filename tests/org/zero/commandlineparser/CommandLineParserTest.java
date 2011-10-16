@@ -160,9 +160,9 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 		parser.parse();
 
-		assertEquals("Complex switch - size", "ComplexSwitchValue", switches.getComplexSwitch());
+		assertEquals("Complex switch - value", "ComplexSwitchValue_Param1", switches.getComplexSwitch());
 
-		assertEquals("Complex switch - item 0", "param1value", switches.getParam1());
+		assertEquals("SubCommandLine - Param 1", "param1value", switches.getParam1());
 
 		// O switch complexo consumiu toda a linha de comando
 		assertFalse("Complex switch - no errors", parser.hasErrors());
@@ -180,9 +180,9 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 		parser.parse();
 
-		assertEquals("Complex switch - size", "ComplexSwitchValue", switches.getComplexSwitch());
+		assertEquals("Complex switch - value", "ComplexSwitchValue_Param2", switches.getComplexSwitch());
 
-		assertEquals("Complex switch - item 0", "param2value", switches.getParam2());
+		assertEquals("SubCommandLine - Param 2", "param2value", switches.getParam2());
 
 		// O switch complexo consumiu toda a linha de comando
 		assertFalse("Complex switch - no errors", parser.hasErrors());
