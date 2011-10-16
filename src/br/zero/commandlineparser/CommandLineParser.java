@@ -60,7 +60,7 @@ public class CommandLineParser implements SwitchesParser {
 			String[] valueCandidate;
 
 			Method setter;
-			
+
 			switchSetup = null;
 
 			if ((setter = getIndexedArgument(properties, i)) != null) {
@@ -103,7 +103,7 @@ public class CommandLineParser implements SwitchesParser {
 			}
 
 			setValueFor(setter, valueCandidate);
-			
+
 			// switch's complexos consomem toda a linha de comando depois deles
 			if (switchSetup.complexParser()) {
 				return;
@@ -149,7 +149,7 @@ public class CommandLineParser implements SwitchesParser {
 		Class<?> setterParameter = setter.getParameterTypes()[0];
 
 		Object parsedObject = makeEmbeededParser(setter, valueCandidate, setterParameter);
-		
+
 		if (parsedObject != null) {
 			return parsedObject;
 		}
@@ -165,7 +165,7 @@ public class CommandLineParser implements SwitchesParser {
 		if (!isValidParserMethodFor(parserMethod, setterParameter)) {
 			throw new ParserException("O método \"" + parserMethod + "\" não é um método de parsing válido para propriedades do tipo \"" + setterParameter + "\".");
 		}
-		
+
 		try {
 			if (switchSetup.complexParser()) {
 				parsedObject = parserMethod.invoke(parser, (Object) valueCandidate);
@@ -260,11 +260,11 @@ public class CommandLineParser implements SwitchesParser {
 		boolean hasRightAnnotation = parserMethod.getAnnotation(CommandLineArgumentParserMethod.class) != null;
 		boolean isMethodPublic = Modifier.isPublic(parserMethod.getModifiers());
 		boolean isOneParameterMethod = parserMethod.getParameterTypes().length == 1;
-		
+
 		Class<?> parameterClass = switchSetup.complexParser() ? parameterClass = String[].class : String.class;
-		
-		boolean isRightParameter = isOneParameterMethod ? parserMethod.getParameterTypes()[0].equals(parameterClass) : false; 
-		
+
+		boolean isRightParameter = isOneParameterMethod ? parserMethod.getParameterTypes()[0].equals(parameterClass) : false;
+
 		boolean isReturnTypeOk = setterParameter.isAssignableFrom(parserMethod.getReturnType());
 		boolean isEnumProperty = ((setterParameter.isEnum()) && (parserMethod.getReturnType().equals(Enum.class)));
 
@@ -281,7 +281,7 @@ public class CommandLineParser implements SwitchesParser {
 			if (switchSetup.complexParser()) {
 				method = parser.getClass().getMethod(parserMethod, String[].class);
 			} else {
-			method = parser.getClass().getMethod(parserMethod, String.class);
+				method = parser.getClass().getMethod(parserMethod, String.class);
 			}
 			// Nenhuma das duas exceções abaixo deveria acontecer, já foi
 			// verificado antes
@@ -313,7 +313,7 @@ public class CommandLineParser implements SwitchesParser {
 
 	private void setDefaultValue(Method setter) throws ParserException {
 		String[] defaultValue;
-		
+
 		switchSetup = setter.getAnnotation(CommandLineSwitch.class);
 
 		// Switch boolean
