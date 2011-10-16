@@ -131,7 +131,11 @@ public class CommandLineParser implements SwitchesParser {
 		Object parsedObject = doParser(setter, value);
 
 		try {
-			setter.invoke(switchesObject, parsedObject);
+			if (switchSetup.complexParser()) {
+				callSetterForComplex(switchesObject, setter, (ComplexParserReturn) parsedObject);
+			} else {
+				setter.invoke(switchesObject, parsedObject);
+			}
 		} catch (IllegalArgumentException e) {
 			// Condição verificada anteriormente, não deveria acontecer
 			assert false : e;
@@ -143,6 +147,40 @@ public class CommandLineParser implements SwitchesParser {
 		} catch (InvocationTargetException e) {
 			throw new ParserException("Erro chamando método setter...\n\n" + e);
 		}
+	}
+
+	private void callSetterForComplex(Object targetBean, Method setter, ComplexParserReturn parsedObject) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException {
+		setter.invoke(switchesObject, parsedObject.getComplexSwitchValue());
+		
+		SubCommandLine subCommandLineSetup = getSubCommandLineFor(parsedObject);
+		
+		if (subCommandLineSetup == null) {
+			throw new RuntimeException("Nenhuma sub linha de comando encontrada..."); 
+		}
+		
+		Method subObjectMethod;
+		
+		try {
+			subObjectMethod = targetBean.getClass().getMethod(subCommandLineSetup.propertyName(), parsedObject.getSubObjectValue().getClass());
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeException(e);
+		}
+		
+		subObjectMethod.invoke(targetBean, parsedObject.getSubObjectValue());
+	}
+
+	private SubCommandLine getSubCommandLineFor(ComplexParserReturn parsedObject) {
+		
+		String complexSwitchValueAsString = parsedObject.getComplexSwitchValue().toString();
+		
+		for (SubCommandLine s : switchSetup.subCommandLineProperties()) {
+			if (complexSwitchValueAsString.equals(s.value())) {
+				return s;
+			}
+		}
+		
+		// O toString não bateu com nenhum objeto, não sub command line
+		return null;
 	}
 
 	private Object doParser(Method setter, String[] valueCandidate) throws ParserException {
@@ -168,7 +206,7 @@ public class CommandLineParser implements SwitchesParser {
 
 		try {
 			if (switchSetup.complexParser()) {
-				parsedObject = parserMethod.invoke(parser, (Object) valueCandidate);
+				parsedObject = callComplexParser(parser, parserMethod, valueCandidate);
 			} else {
 				parsedObject = parserMethod.invoke(parser, valueCandidate[0]);
 			}
@@ -232,6 +270,18 @@ public class CommandLineParser implements SwitchesParser {
 		return parsedObject;
 	}
 
+	private Object callComplexParser(Object parser, Method parserMethod, String[] valueCandidate) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		// TODO Montar um ComplexParserParameter e passar no lugar de value
+		// candidate
+		DefaultComplexParserParameter complexParserParameter = new DefaultComplexParserParameter();
+
+		complexParserParameter.setArgs(valueCandidate);
+
+		Object parsedObject = parserMethod.invoke(parser, complexParserParameter);
+
+		return parsedObject;
+	}
+
 	private Object makeEmbeededParser(Method setter, String[] valueCandidate, Class<?> setterParameter) {
 		if (switchSetup.parser().isEmpty()) {
 			// SwitchesParser não informado na anotação
@@ -261,11 +311,11 @@ public class CommandLineParser implements SwitchesParser {
 		boolean isMethodPublic = Modifier.isPublic(parserMethod.getModifiers());
 		boolean isOneParameterMethod = parserMethod.getParameterTypes().length == 1;
 
-		Class<?> parameterClass = switchSetup.complexParser() ? parameterClass = ComplexParserParameter.class : String.class;
+		Class<?> parameterClass = switchSetup.complexParser() ? ComplexParserParameter.class : String.class;
 
 		boolean isRightParameter = isOneParameterMethod ? parserMethod.getParameterTypes()[0].equals(parameterClass) : false;
 
-		boolean isReturnTypeOk = setterParameter.isAssignableFrom(parserMethod.getReturnType());
+		boolean isReturnTypeOk = switchSetup.complexParser() ? true : setterParameter.isAssignableFrom(parserMethod.getReturnType());
 		boolean isEnumProperty = ((setterParameter.isEnum()) && (parserMethod.getReturnType().equals(Enum.class)));
 
 		return hasRightAnnotation && isMethodPublic && isOneParameterMethod && isRightParameter && (isReturnTypeOk || isEnumProperty);
