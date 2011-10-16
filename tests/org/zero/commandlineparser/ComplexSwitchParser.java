@@ -36,8 +36,9 @@ public class ComplexSwitchParser {
 	public ComplexParserReturn parseComplex(ComplexParserParameter value) {
 		ComplexSwitchParserReturn r = new ComplexSwitchParserReturn();
 		
-		r.setSubObjectValue(value.getArgs());
-		r.setComplexSwitchValue(null);
+		// TODO Chamar o CommandLineParser para descobrir esse valor 
+		r.setSubObjectValue("param1value");
+		r.setComplexSwitchValue(value.getArgs()[0]);
 		
 		return r;
 	}
