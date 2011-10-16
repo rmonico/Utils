@@ -16,6 +16,7 @@ import br.zero.switchesparser.SwitchesParser;
 
 // TODO Criar suporte a i18n. Do jeito que está teria que fazer uma classe para cada localidade que tiver que ser suportada.
 // TODO Ver o que fazer quando houver um defaultValue e um index simultaneamente no mesmo switch
+// TODO Melhorar a implementação. Fazer refatorações para extrair mais métodos.
 public class CommandLineParser implements SwitchesParser {
 
 	private String[] commandLine;
@@ -101,7 +102,7 @@ public class CommandLineParser implements SwitchesParser {
 				continue;
 			}
 
-			callSetterFor(setter, valueCandidate);
+			setValueFor(setter, valueCandidate);
 			
 			// switch's complexos consomem toda a linha de comando depois deles
 			if (switchSetup.complexParser()) {
@@ -126,11 +127,11 @@ public class CommandLineParser implements SwitchesParser {
 		return setter.getParameterTypes()[0].getName().equals("boolean");
 	}
 
-	private void callSetterFor(Method propertySetterMethod, String[] valueCandidate) throws ParserException {
-		Object o = doParser(propertySetterMethod, valueCandidate);
+	private void setValueFor(Method setter, String[] value) throws ParserException {
+		Object parsedObject = doParser(setter, value);
 
 		try {
-			propertySetterMethod.invoke(switchesObject, o);
+			setter.invoke(switchesObject, parsedObject);
 		} catch (IllegalArgumentException e) {
 			// Condição verificada anteriormente, não deveria acontecer
 			assert false : e;
@@ -147,20 +148,10 @@ public class CommandLineParser implements SwitchesParser {
 	private Object doParser(Method setter, String[] valueCandidate) throws ParserException {
 		Class<?> setterParameter = setter.getParameterTypes()[0];
 
-		if (switchSetup.parser().isEmpty()) {
-			// SwitchesParser não informado na anotação
-			if (setterParameter.equals(String.class)) {
-				// Se for string, copia o valor da linha de comando para o
-				// setter
-				return valueCandidate[0];
-			} else if (isBooleanSwitch(setter)) {
-				// Switch tipo boolean, apenas mudar para true se o parâmetro
-				// for encontrado
-				return new Boolean(valueCandidate[0]);
-
-			} else {
-				throw new RuntimeException("Switches do tipo \"" + setterParameter + "\" devem possuir um parser obrigatoriamente!");
-			}
+		Object parsedObject = makeEmbeededParser(setter, valueCandidate, setterParameter);
+		
+		if (parsedObject != null) {
+			return parsedObject;
 		}
 
 		String parserName = switchSetup.parser();
@@ -174,9 +165,7 @@ public class CommandLineParser implements SwitchesParser {
 		if (!isValidParserMethodFor(parserMethod, setterParameter)) {
 			throw new ParserException("O método \"" + parserMethod + "\" não é um método de parsing válido para propriedades do tipo \"" + setterParameter + "\".");
 		}
-
-		Object parsedObject;
-
+		
 		try {
 			if (switchSetup.complexParser()) {
 				parsedObject = parserMethod.invoke(parser, (Object) valueCandidate);
@@ -207,14 +196,14 @@ public class CommandLineParser implements SwitchesParser {
 			} catch (Exception e) {
 				throwInvalidParserMessageMethodException(parserMessageMethodName, parser);
 
-				// Código inatingível, ver método acima
+				// Código inatingível, ver chamada acima
 				return null;
 			}
 
 			if (!(parserMessageMethod.getReturnType().equals(String.class) && (Modifier.isPublic(parserMessageMethod.getModifiers())))) {
 				throwInvalidParserMessageMethodException(parserMessageMethodName, parser);
 
-				// Código inatingível, ver método acima
+				// Código inatingível, ver chamada acima
 				return null;
 			}
 
@@ -241,6 +230,25 @@ public class CommandLineParser implements SwitchesParser {
 		}
 
 		return parsedObject;
+	}
+
+	private Object makeEmbeededParser(Method setter, String[] valueCandidate, Class<?> setterParameter) {
+		if (switchSetup.parser().isEmpty()) {
+			// SwitchesParser não informado na anotação
+			if (setterParameter.equals(String.class)) {
+				// Se for string, copia o valor da linha de comando para o
+				// setter
+				return valueCandidate[0];
+			} else if (isBooleanSwitch(setter)) {
+				// Switch tipo boolean, apenas mudar para true se o parâmetro
+				// for encontrado
+				return new Boolean(valueCandidate[0]);
+
+			} else {
+				throw new RuntimeException("Switches do tipo \"" + setterParameter + "\" devem possuir um parser obrigatoriamente!");
+			}
+		}
+		return null;
 	}
 
 	private void throwInvalidParserMessageMethodException(String methodName, Object parser) throws ParserException {
@@ -315,12 +323,11 @@ public class CommandLineParser implements SwitchesParser {
 			// default
 			defaultValue = new String[] { "false" };
 		} else {
-			// switchSetup ainda não está pronto no momento em que esse método é chamado
 			defaultValue = switchSetup.defaultValue();
 		}
 
 		if (defaultValue.length > 0) {
-			callSetterFor(setter, defaultValue);
+			setValueFor(setter, defaultValue);
 		}
 	}
 

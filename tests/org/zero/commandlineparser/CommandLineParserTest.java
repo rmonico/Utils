@@ -149,48 +149,42 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 	 * @throws ParserException
 	 */
 	@Test
-	public void testComplexSwitch() throws ParserException {
-		parser.setCommandLine(new String[] { "ComplexSwitch", "param1", "param2" });
+	public void test1ComplexSwitch() throws ParserException {
+		parser.setCommandLine(new String[] { "ComplexSwitch", "ComplexSwitchValue_Param1", "param1", "param1value" });
 
 		parser.addParser("ComplexSwitchParser", new ComplexSwitchParser());
 
-		ComplexSwitch switches = new ComplexSwitch();
+		ComplexParserBean switches = new ComplexParserBean();
 
 		parser.setSwitchesObject(switches);
 
 		parser.parse();
 
-		assertEquals("Complex switch - size", 2, switches.getComplexSwitch().length);
+		assertEquals("Complex switch - size", "ComplexSwitchValue", switches.getComplexSwitch());
 
-		assertEquals("Complex switch - item 0", "param1", switches.getComplexSwitch()[0]);
-
-		assertEquals("Complex switch - item 1", "param2", switches.getComplexSwitch()[1]);
+		assertEquals("Complex switch - item 0", "param1value", switches.getParam1());
 
 		// O switch complexo consumiu toda a linha de comando
 		assertFalse("Complex switch - no errors", parser.hasErrors());
 	}
-	
+		
 	@Test
-	public void testComplexEnumSwitch() throws ParserException {
-		parser.setCommandLine(new String[] { "ComplexCommand", "COMMAND1", "Command1Switch1", "Command1Value1", "Command1Switch2", "Command1Value1" });
+	public void test2ComplexSwitch() throws ParserException {
+		parser.setCommandLine(new String[] { "ComplexSwitch", "ComplexSwitchValue_Param2", "param2", "param2value" });
 
 		parser.addParser("ComplexSwitchParser", new ComplexSwitchParser());
 
-		ComplexSwitch switches = new ComplexSwitch();
+		ComplexParserBean switches = new ComplexParserBean();
 
 		parser.setSwitchesObject(switches);
 
 		parser.parse();
 
-		assertEquals("Complex switch - size", 2, switches.getComplexSwitch().length);
+		assertEquals("Complex switch - size", "ComplexSwitchValue", switches.getComplexSwitch());
 
-		assertEquals("Complex switch - item 0", "param1", switches.getComplexSwitch()[0]);
-
-		assertEquals("Complex switch - item 1", "param2", switches.getComplexSwitch()[1]);
+		assertEquals("Complex switch - item 0", "param2value", switches.getParam2());
 
 		// O switch complexo consumiu toda a linha de comando
 		assertFalse("Complex switch - no errors", parser.hasErrors());
-
 	}
-	
 }

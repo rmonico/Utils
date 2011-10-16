@@ -1,8 +1,9 @@
 package br.zero.commandlineparser.parsers;
 
 import br.zero.commandlineparser.CommandLineArgumentParserMethod;
-import br.zero.commandlineparser.CommandLineParser;
 import br.zero.commandlineparser.CommandLineSwitchParam;
+import br.zero.commandlineparser.ComplexParserParameter;
+import br.zero.commandlineparser.ComplexParserReturn;
 
 public class EnumParser {
 
@@ -48,16 +49,20 @@ public class EnumParser {
 		return null;
 	}
 
-	public Enum<?> parseComplexEnum(String[] value) {
-		Enum<?> e = parseEnum(value[0]);
+	@CommandLineArgumentParserMethod(messageMethod = "getError")
+	public ComplexParserReturn parseComplexEnum(ComplexParserParameter value) {
+//		Enum<?> e = parseEnum(value.getArgs()[0]);
 
-		CommandLineParser parser = new CommandLineParser();
+//		CommandLineParser parser = new CommandLineParser();
 
 		// De onde eu vou tirar a propriedade addParser do parser???
 		// Posso criar um setter para passar essas informações. Usar uma
 		// interface que representa o parser
+		// Para quem passar o objeto de sublinha de comando?
+		
+//		Object switches = new T();
 
-		return e;
+		return null;
 	}
 
 	public String getError() {

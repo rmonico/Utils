@@ -1,11 +1,12 @@
 package org.zero.commandlineparser.parsers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
-import org.zero.commandlineparser.AnotherCommand;
 import org.zero.commandlineparser.Command;
-import org.zero.commandlineparser.CommandLineOptionSwitch;
 import org.zero.commandlineparser.CustomCommandLineParserTests;
 import org.zero.commandlineparser.EnumSwitch;
 import org.zero.commandlineparser.ParsedSwitch;
@@ -67,4 +68,49 @@ public class ParsersTest extends CustomCommandLineParserTests {
 		assertEquals("default param", AnotherCommand.REMOVE, switches.getCommand());
 	}
 
+	@Test
+	public void test1ComplexEnumSwitch() throws ParserException {
+		parser.setCommandLine(new String[] { "ComplexCommand", "COMMAND1", "setCommand1Switch", "Command1Value" });
+
+		parser.addParser("EnumParser", new EnumParser(ComplexCommand.class));
+
+		MainBean switches = new MainBean();
+
+		parser.setSwitchesObject(switches);
+		
+		parser.parse();
+
+		assertEquals("Main Bean - Command", ComplexCommand.COMMAND1, switches.getComplexCommand());
+		
+		assertNotNull("Complex command - sub switches 1 not null", switches.getCommand1SubSwitches());
+		assertNull("Complex command - sub switches 2 null", switches.getCommand2SubSwitches());
+
+		assertEquals("Complex switch - sub switches 1 contents", "Command1Value", switches.getCommand1SubSwitches().getCommand1Switch());
+
+		// O switch complexo consumiu toda a linha de comando
+		assertFalse("Complex switch - no errors", parser.hasErrors());
+	}
+
+	@Test
+	public void test2ComplexEnumSwitch() throws ParserException {
+		parser.setCommandLine(new String[] { "ComplexCommand", "COMMAND2", "setCommand2Switch", "Command2Value" });
+
+		parser.addParser("EnumParser", new EnumParser(ComplexCommand.class));
+
+		MainBean switches = new MainBean();
+
+		parser.setSwitchesObject(switches);
+		
+		parser.parse();
+
+		assertEquals("Main Bean - Command", ComplexCommand.COMMAND2, switches.getComplexCommand());
+		
+		assertNull("Complex command - sub switches 1 null", switches.getCommand1SubSwitches());
+		assertNotNull("Complex command - sub switches 2 not null", switches.getCommand2SubSwitches());
+
+		assertEquals("Complex switch - sub switches 2 contents", "Command2Value", switches.getCommand2SubSwitches().getCommand2Switch());
+
+		// O switch complexo consumiu toda a linha de comando
+		assertFalse("Complex switch - no errors", parser.hasErrors());
+	}
 }

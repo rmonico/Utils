@@ -5,6 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface CommandLineSwitch {
@@ -73,8 +74,15 @@ public @interface CommandLineSwitch {
 	 */
 	int index() default -1;
 
-	
-	// Isso ficaria melhor se estivesse na classe do parser
 	boolean complexParser() default false;
+
+	/**
+	 * Valido apenas para parsers complexos. Determina qual propriedade do bean
+	 * principal deve ser chamada em função da classe instanciada durante o
+	 * parsing complexo.
+	 * 
+	 * @return
+	 */
+	SubCommandLine[] subCommandLineProperties() default {};
 
 }
