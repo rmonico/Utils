@@ -10,8 +10,8 @@ public class ComplexParserBean {
 	private String param2;
 
 	@CommandLineSwitch(parser = "ComplexSwitchParser.parseComplex", complexParser = true, subCommandLineProperties = { 
-				@SubCommandLine(value = "ComplexSwitchValue_Param1", propertyName = "param1"),
-				@SubCommandLine(value = "ComplexSwitchValue_Param2", propertyName = "param2") })
+				@SubCommandLine(value = "ComplexSwitchValue_Param1", propertyName = "setParam1"),
+				@SubCommandLine(value = "ComplexSwitchValue_Param2", propertyName = "setParam2") })
 	public void setComplexSwitch(String value) {
 		complexSwitch = value;
 	}
