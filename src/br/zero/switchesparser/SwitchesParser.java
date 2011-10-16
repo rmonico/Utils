@@ -12,9 +12,9 @@ public interface SwitchesParser {
 	
 	void addParser(String parserId, Object parser);
 	
-	List<IInvalidCommandLineArgument> getErrors();
-	
 	boolean hasErrors();
+	
+	List<IInvalidCommandLineArgument> getErrors();
 	
 	void printErrors(PrintStream printStream);
 }
