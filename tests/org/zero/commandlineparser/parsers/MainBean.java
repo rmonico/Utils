@@ -8,9 +8,9 @@ public class MainBean {
 	private Command1SubSwitches command1SubSwitches;
 	private Command2SubSwitches command2SubSwitches;
 
-	@CommandLineSwitch(parser = "EnumParser.parseComplex", complexParser = true, subCommandLineProperties = { 
-			@SubCommandLine(value="ComplexCommand.COMMAND1", propertyName="setCommand1SubSwitches"),
-			@SubCommandLine(value="ComplexCommand.COMMAND2", propertyName="setCommand2SubSwitches") })
+	@CommandLineSwitch(parser = "EnumParser.parseComplexEnum", complexParser = true, subCommandLineProperties = { 
+			@SubCommandLine(value="COMMAND1", propertyName="setCommand1SubSwitches", subCommandLineClass=Command1SubSwitches.class),
+			@SubCommandLine(value="COMMAND2", propertyName="setCommand2SubSwitches", subCommandLineClass=Command2SubSwitches.class) })
 	public void setComplexCommand(ComplexCommand complexCommand) {
 		this.complexCommand = complexCommand;
 	}

@@ -19,9 +19,9 @@ public class ParsersTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void testParsedSwitch() throws ParserException {
-		parser.setCommandLine(new String[] { "Arg1", "45" });
+		parser.setValuesObject(new String[] { "Arg1", "45" });
 
-		parser.getParsers().put("arg1parser", new IntegerParser());
+		parser.getPropertyParsers().put("arg1parser", new IntegerParser());
 
 		ParsedSwitch switches = new ParsedSwitch();
 
@@ -34,13 +34,13 @@ public class ParsersTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void testEnumSwitch() throws ParserException {
-		parser.setCommandLine(new String[] { "Command", "ADD" });
+		parser.setValuesObject(new String[] { "Command", "ADD" });
 
 		EnumSwitch so = new EnumSwitch();
 
 		parser.setSwitchesObject(so);
 
-		parser.getParsers().put("EnumParser", new EnumParser(Command.class));
+		parser.getPropertyParsers().put("EnumParser", new EnumParser(Command.class));
 
 		parser.parse();
 
@@ -55,13 +55,13 @@ public class ParsersTest extends CustomCommandLineParserTests {
 	 */
 	@Test
 	public void testNamedEnumSwitch() throws ParserException {
-		parser.setCommandLine(new String[] { "Command", "rm" });
+		parser.setValuesObject(new String[] { "Command", "rm" });
 
 		CommandLineOptionSwitch switches = new CommandLineOptionSwitch();
 
 		parser.setSwitchesObject(switches);
 
-		parser.getParsers().put("EnumParser", new EnumParser(AnotherCommand.class));
+		parser.getPropertyParsers().put("EnumParser", new EnumParser(AnotherCommand.class));
 
 		parser.parse();
 
@@ -70,9 +70,9 @@ public class ParsersTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void test1ComplexEnumSwitch() throws ParserException {
-		parser.setCommandLine(new String[] { "ComplexCommand", "COMMAND1", "setCommand1Switch", "Command1Value" });
+		parser.setValuesObject(new String[] { "ComplexCommand", "COMMAND1", "setCommand1Switch", "Command1Value" });
 
-		parser.getParsers().put("EnumParser", new EnumParser(ComplexCommand.class));
+		parser.getPropertyParsers().put("EnumParser", new EnumParser(ComplexCommand.class));
 
 		MainBean switches = new MainBean();
 
@@ -93,9 +93,9 @@ public class ParsersTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void test2ComplexEnumSwitch() throws ParserException {
-		parser.setCommandLine(new String[] { "ComplexCommand", "COMMAND2", "setCommand2Switch", "Command2Value" });
+		parser.setValuesObject(new String[] { "ComplexCommand", "COMMAND2", "setCommand2Switch", "Command2Value" });
 
-		parser.getParsers().put("EnumParser", new EnumParser(ComplexCommand.class));
+		parser.getPropertyParsers().put("EnumParser", new EnumParser(ComplexCommand.class));
 
 		MainBean switches = new MainBean();
 

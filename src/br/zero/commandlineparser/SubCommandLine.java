@@ -13,4 +13,6 @@ public @interface SubCommandLine {
 
 	String propertyName();
 
+	Class<?> subCommandLineClass();
+
 }

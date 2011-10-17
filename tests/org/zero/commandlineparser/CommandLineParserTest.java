@@ -16,7 +16,7 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void testMinimalParsing() throws ParserException {
-		parser.setCommandLine(new String[] { "Arg1", "arg1_value" });
+		parser.setValuesObject(new String[] { "Arg1", "arg1_value" });
 
 		BasicSwitch switches = new BasicSwitch();
 
@@ -29,7 +29,7 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void testNamedSwitches() throws ParserException {
-		parser.setCommandLine(new String[] { "argument1", "argument1_value" });
+		parser.setValuesObject(new String[] { "argument1", "argument1_value" });
 
 		NamedSwitch switches = new NamedSwitch();
 
@@ -42,7 +42,7 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void testDefaultValueSwitch() throws ParserException {
-		parser.setCommandLine(new String[] {});
+		parser.setValuesObject(new String[] {});
 
 		DefaultValueSwitch switches = new DefaultValueSwitch();
 
@@ -55,7 +55,7 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void testBooleanSwitch() throws ParserException {
-		parser.setCommandLine(new String[] { "help" });
+		parser.setValuesObject(new String[] { "help" });
 
 		BooleanSwitch switches = new BooleanSwitch();
 
@@ -70,13 +70,13 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void testDefaultSwitch() throws ParserException {
-		parser.setCommandLine(new String[] { "REMOVE" });
+		parser.setValuesObject(new String[] { "REMOVE" });
 
 		DefaultSwitch switches = new DefaultSwitch();
 
 		parser.setSwitchesObject(switches);
 
-		parser.getParsers().put("EnumParser", new EnumParser(Command.class));
+		parser.getPropertyParsers().put("EnumParser", new EnumParser(Command.class));
 
 		parser.parse();
 
@@ -85,7 +85,7 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void testMultipleNamedSwitch() throws ParserException {
-		parser.setCommandLine(new String[] { "-arg", "option1" });
+		parser.setValuesObject(new String[] { "-arg", "option1" });
 
 		MultipleNamedSwitch switches = new MultipleNamedSwitch();
 
@@ -95,7 +95,7 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 		assertEquals("-arg", "option1", switches.getArgument());
 
-		parser.setCommandLine(new String[] { "--argument", "option2" });
+		parser.setValuesObject(new String[] { "--argument", "option2" });
 
 		switches = new MultipleNamedSwitch();
 
@@ -108,7 +108,7 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void testExcessiveCommandLineArgument() throws ParserException {
-		parser.setCommandLine(new String[] { "Arg1", "arg1_value", "excessive argument" });
+		parser.setValuesObject(new String[] { "Arg1", "arg1_value", "excessive argument" });
 
 		BasicSwitch switches = new BasicSwitch();
 
@@ -125,9 +125,9 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void testParserError() throws ParserException {
-		parser.setCommandLine(new String[] { "Arg1", "xxx" });
+		parser.setValuesObject(new String[] { "Arg1", "xxx" });
 
-		parser.getParsers().put("arg1parser", new IntegerParser());
+		parser.getPropertyParsers().put("arg1parser", new IntegerParser());
 
 		ParsedSwitch switches = new ParsedSwitch();
 
@@ -150,9 +150,9 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 	 */
 	@Test
 	public void test1ComplexSwitch() throws ParserException {
-		parser.setCommandLine(new String[] { "ComplexSwitch", "ComplexSwitchValue_Param1", "param1", "param1value" });
+		parser.setValuesObject(new String[] { "ComplexSwitch", "ComplexSwitchValue_Param1", "param1", "param1value" });
 
-		parser.getParsers().put("ComplexSwitchParser", new ComplexSwitchParser());
+		parser.getPropertyParsers().put("ComplexSwitchParser", new ComplexSwitchParser());
 
 		ComplexParserBean switches = new ComplexParserBean();
 
@@ -170,9 +170,9 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 		
 	@Test
 	public void test2ComplexSwitch() throws ParserException {
-		parser.setCommandLine(new String[] { "ComplexSwitch", "ComplexSwitchValue_Param2", "param2", "param2value" });
+		parser.setValuesObject(new String[] { "ComplexSwitch", "ComplexSwitchValue_Param2", "param2", "param2value" });
 
-		parser.getParsers().put("ComplexSwitchParser", new ComplexSwitchParser());
+		parser.getPropertyParsers().put("ComplexSwitchParser", new ComplexSwitchParser());
 
 		ComplexParserBean switches = new ComplexParserBean();
 

@@ -4,6 +4,8 @@ import br.zero.commandlineparser.CommandLineArgumentParserMethod;
 import br.zero.commandlineparser.CommandLineSwitchParam;
 import br.zero.commandlineparser.ComplexParserParameter;
 import br.zero.commandlineparser.ComplexParserReturn;
+import br.zero.switchesparser.ParserException;
+import br.zero.switchesparser.SwitchesParser;
 
 public class EnumParser {
 
@@ -49,20 +51,74 @@ public class EnumParser {
 		return null;
 	}
 
-	@CommandLineArgumentParserMethod(messageMethod = "getError")
-	public ComplexParserReturn parseComplexEnum(ComplexParserParameter value) {
-//		Enum<?> e = parseEnum(value.getArgs()[0]);
+	private class EnumParserComplexReturn implements ComplexParserReturn {
 
-//		CommandLineParser parser = new CommandLineParser();
+		private Object subObjectValue;
+		private Enum<?> complexSwitchValue;
 
-		// De onde eu vou tirar a propriedade addParser do parser???
-		// Posso criar um setter para passar essas informações. Usar uma
-		// interface que representa o parser
-		// Para quem passar o objeto de sublinha de comando?
+		@Override
+		public Enum<?> getComplexSwitchValue() {
+			return complexSwitchValue;
+		}
 		
-//		Object switches = new T();
+		public void setComplexSwitchValue(Enum<?> value) {
+			complexSwitchValue = value;
+		}
+		
+		@Override
+		public Object getSubObjectValue() {
+			return subObjectValue;
+		}
+		
+		public void setSubObjectValue(Object value) {
+			subObjectValue = value;
+		}
+		
+	}
+	
+	@CommandLineArgumentParserMethod(messageMethod = "getError")
+	public ComplexParserReturn parseComplexEnum(ComplexParserParameter parameter) {
+		
+		if (!(parameter.getValuesObject() instanceof String[])) {
+			throw new RuntimeException("Tipo de propriedade não suportada por este parser!");
+		}
+		
+		String[] valuesObject = (String[]) parameter.getValuesObject();
+		
+		Enum<?> e = parseEnum(valuesObject[0]);
 
-		return null;
+		EnumParserComplexReturn r = new EnumParserComplexReturn();
+
+		r.setComplexSwitchValue(e);
+		
+		SwitchesParser subParser = parameter.getParser().createSubSwitchesParser();
+		
+		Class<?> subObjectClass = parameter.getSubObjectClasses().get(e.toString());
+		
+		if (subObjectClass == null) {
+			throw new RuntimeException("Classe de subObjeto não encontrada (" + e + ").");
+		}
+		
+		Object subObject = null;
+		try {
+			subObject = subObjectClass.newInstance();
+		} catch (Exception e1) {
+			throw new RuntimeException(e1);
+		}
+		
+		subParser.setSwitchesObject(subObject);
+		
+		subParser.setValuesObject(parameter.getValuesObject());
+		
+		try {
+			subParser.parse();
+		} catch (ParserException e1) {
+			throw new RuntimeException(e1);
+		}
+		
+		r.setSubObjectValue(subObject); 
+
+		return r;
 	}
 
 	public String getError() {

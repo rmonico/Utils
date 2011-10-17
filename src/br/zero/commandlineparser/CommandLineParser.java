@@ -26,10 +26,20 @@ public class CommandLineParser implements SwitchesParser {
 	private List<IInvalidCommandLineArgument> errors;
 	private CommandLineSwitch switchSetup;
 
-	public void setCommandLine(String[] commandLine) {
-		this.commandLine = commandLine;
+	@Override
+	public void setValuesObject(Object o) {
+		if (!(o instanceof String[])) {
+			throw new RuntimeException("CommandLineParser.setValuesObject: Parâmetro deve ser uma linha de comando (String[]).");
+		}
+		
+		this.commandLine = (String[]) o;
 	}
 
+	@Override
+	public String[] getValuesObject() {
+		return commandLine;
+	}
+	
 	public void setSwitchesObject(Object o) {
 		switchesObject = o;
 	}
@@ -219,7 +229,7 @@ public class CommandLineParser implements SwitchesParser {
 			assert false : e;
 			throw new RuntimeException(e);
 		} catch (InvocationTargetException e) {
-			throw new ParserException("Erro chamando parser...\n\n" + e);
+			throw new ParserException("Erro chamando parser...\n" + e);
 		}
 
 		CommandLineArgumentParserMethod parserMethodSetup = parserMethod.getAnnotation(CommandLineArgumentParserMethod.class);
@@ -271,11 +281,15 @@ public class CommandLineParser implements SwitchesParser {
 	}
 
 	private Object callComplexParser(Object parser, Method parserMethod, String[] valueCandidate) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		// TODO Montar um ComplexParserParameter e passar no lugar de value
-		// candidate
 		DefaultComplexParserParameter complexParserParameter = new DefaultComplexParserParameter();
 
-		complexParserParameter.setArgs(valueCandidate);
+		complexParserParameter.setParser(this);
+		
+		complexParserParameter.setValuesObject(valueCandidate);
+		
+		for (SubCommandLine subCommandLine : switchSetup.subCommandLineProperties()) {
+			complexParserParameter.getSubObjectClasses().put(subCommandLine.value(), subCommandLine.subCommandLineClass());
+		}
 
 		Object parsedObject = parserMethod.invoke(parser, complexParserParameter);
 
@@ -417,8 +431,19 @@ public class CommandLineParser implements SwitchesParser {
 	}
 
 	@Override
-	public Map<String, Object> getParsers() {
+	public Map<String, Object> getPropertyParsers() {
 		return parsers;
+	}
+
+	@Override
+	public SwitchesParser createSubSwitchesParser() {
+		CommandLineParser subParser = new CommandLineParser();
+		
+		for (String id : getPropertyParsers().keySet()) {
+			subParser.getPropertyParsers().put(id, getPropertyParsers().get(id));
+		}
+		
+		return subParser;
 	}
 
 }
