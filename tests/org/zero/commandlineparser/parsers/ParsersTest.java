@@ -70,7 +70,7 @@ public class ParsersTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void test1ComplexEnumSwitch() throws ParserException {
-		parser.setValuesObject(new String[] { "ComplexCommand", "COMMAND1", "setCommand1Switch", "Command1Value" });
+		parser.setValuesObject(new String[] { "ComplexCommand", "COMMAND1", "Command1Switch", "Command1Value" });
 
 		parser.getPropertyParsers().put("EnumParser", new EnumParser(ComplexCommand.class));
 
@@ -93,7 +93,7 @@ public class ParsersTest extends CustomCommandLineParserTests {
 
 	@Test
 	public void test2ComplexEnumSwitch() throws ParserException {
-		parser.setValuesObject(new String[] { "ComplexCommand", "COMMAND2", "setCommand2Switch", "Command2Value" });
+		parser.setValuesObject(new String[] { "ComplexCommand", "COMMAND2", "Command2Switch", "Command2Value" });
 
 		parser.getPropertyParsers().put("EnumParser", new EnumParser(ComplexCommand.class));
 
