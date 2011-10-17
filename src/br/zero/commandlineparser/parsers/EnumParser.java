@@ -1,5 +1,7 @@
 package br.zero.commandlineparser.parsers;
 
+import java.util.Arrays;
+
 import br.zero.commandlineparser.CommandLineArgumentParserMethod;
 import br.zero.commandlineparser.CommandLineSwitchParam;
 import br.zero.commandlineparser.ComplexParserParameter;
@@ -83,9 +85,11 @@ public class EnumParser {
 			throw new RuntimeException("Tipo de propriedade não suportada por este parser!");
 		}
 		
-		String[] valuesObject = (String[]) parameter.getValuesObject();
+		String mainObject = ((String[]) parameter.getValuesObject())[0];
+		String[] valuesAsStringArray = (String[]) parameter.getValuesObject();
+		String[] valuesObject = Arrays.copyOfRange(valuesAsStringArray, 1, valuesAsStringArray.length);
 		
-		Enum<?> e = parseEnum(valuesObject[0]);
+		Enum<?> e = parseEnum(mainObject);
 
 		EnumParserComplexReturn r = new EnumParserComplexReturn();
 
@@ -108,7 +112,7 @@ public class EnumParser {
 		
 		subParser.setSwitchesObject(subObject);
 		
-		subParser.setValuesObject(parameter.getValuesObject());
+		subParser.setValuesObject(valuesObject);
 		
 		try {
 			subParser.parse();
