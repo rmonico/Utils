@@ -155,7 +155,7 @@ public class CommandLineParser implements SwitchesParser {
 			assert false : e;
 			throw new RuntimeException(e);
 		} catch (InvocationTargetException e) {
-			throw new ParserException("Exception occurred calling setter \"" + setter + "\".\n" + e);
+			throw new ParserException("Exception occurred calling setter \"" + setter + "\".", e);
 		}
 	}
 
@@ -173,7 +173,7 @@ public class CommandLineParser implements SwitchesParser {
 		try {
 			subObjectMethod = targetBean.getClass().getMethod(subCommandLineSetup.propertyName(), parsedObject.getSubObjectValue().getClass());
 		} catch (NoSuchMethodException e) {
-			throw new ParserException("SubObject method not found: \"" + targetBean.getClass() + "." + subCommandLineSetup.propertyName() + "(" + parsedObject.getSubObjectValue().getClass() + ")\".");
+			throw new ParserException("SubObject method not found: \"" + targetBean.getClass() + "." + subCommandLineSetup.propertyName() + "(" + parsedObject.getSubObjectValue().getClass() + ")\".", e);
 		}
 
 		subObjectMethod.invoke(targetBean, parsedObject.getSubObjectValue());
@@ -229,7 +229,7 @@ public class CommandLineParser implements SwitchesParser {
 			assert false : e;
 			throw new RuntimeException(e);
 		} catch (InvocationTargetException e) {
-			throw new ParserException("Exception occurred making parser with method: \"" + parserMethod + "\".\n" + e);
+			throw new ParserException("Exception occurred making parser with method: \"" + parserMethod + "\".", e);
 		}
 
 		CommandLineArgumentParserMethod parserMethodSetup = parserMethod.getAnnotation(CommandLineArgumentParserMethod.class);
