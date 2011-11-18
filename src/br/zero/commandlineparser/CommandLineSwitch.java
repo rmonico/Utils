@@ -33,11 +33,11 @@ public @interface CommandLineSwitch {
 	 * 
 	 * Exemplo:
 	 * 
-	 * IntegerParser.parse
+	 * PrimitiveParsers.parse
 	 * 
 	 * Neste caso, o método addParser deve ser chamado da seguinte forma:
 	 * 
-	 * addParser("IntegerParser", new SwitchesParser())
+	 * addParser("PrimitiveParsers", new SwitchesParser())
 	 * 
 	 * onde a classe SwitchesParser() deverá possuir um método
 	 * 

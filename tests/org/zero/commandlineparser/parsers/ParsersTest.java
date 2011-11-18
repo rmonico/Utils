@@ -12,7 +12,7 @@ import org.zero.commandlineparser.EnumSwitch;
 import org.zero.commandlineparser.ParsedSwitch;
 
 import br.zero.commandlineparser.parsers.EnumParser;
-import br.zero.commandlineparser.parsers.IntegerParser;
+import br.zero.commandlineparser.parsers.PrimitiveParsers;
 import br.zero.switchesparser.ParserException;
 
 public class ParsersTest extends CustomCommandLineParserTests {
@@ -21,7 +21,7 @@ public class ParsersTest extends CustomCommandLineParserTests {
 	public void testParsedSwitch() throws ParserException {
 		parser.setValuesObject(new String[] { "Arg1", "45" });
 
-		parser.getPropertyParsers().put("arg1parser", new IntegerParser());
+		parser.getPropertyParsers().put("arg1parser", new PrimitiveParsers());
 
 		ParsedSwitch switches = new ParsedSwitch();
 

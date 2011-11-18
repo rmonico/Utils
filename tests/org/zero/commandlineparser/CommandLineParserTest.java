@@ -9,7 +9,7 @@ import org.junit.Test;
 import br.zero.commandlineparser.CommandLineOptionParsingError;
 import br.zero.commandlineparser.ExcessiveArgument;
 import br.zero.commandlineparser.parsers.EnumParser;
-import br.zero.commandlineparser.parsers.IntegerParser;
+import br.zero.commandlineparser.parsers.PrimitiveParsers;
 import br.zero.switchesparser.ParserException;
 
 public class CommandLineParserTest extends CustomCommandLineParserTests {
@@ -127,7 +127,7 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 	public void testParserError() throws ParserException {
 		parser.setValuesObject(new String[] { "Arg1", "xxx" });
 
-		parser.getPropertyParsers().put("arg1parser", new IntegerParser());
+		parser.getPropertyParsers().put("arg1parser", new PrimitiveParsers());
 
 		ParsedSwitch switches = new ParsedSwitch();
 

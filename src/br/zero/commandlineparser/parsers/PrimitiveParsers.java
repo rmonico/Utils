@@ -2,7 +2,7 @@ package br.zero.commandlineparser.parsers;
 
 import br.zero.commandlineparser.CommandLineArgumentParserMethod;
 
-public class IntegerParser {
+public class PrimitiveParsers {
 	private String error = null;
 	
 	@CommandLineArgumentParserMethod(messageMethod="getError")
