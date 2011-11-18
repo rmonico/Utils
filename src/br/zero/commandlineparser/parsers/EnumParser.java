@@ -91,15 +91,15 @@ public class EnumParser {
 		
 		Enum<?> e = parseEnum(mainObject);
 
+		if (e == null) {
+			throw new RuntimeException("Nenhum sub objeto retornado...");
+		}
+		
 		EnumParserComplexReturn r = new EnumParserComplexReturn();
 
 		r.setComplexSwitchValue(e);
 		
 		SwitchesParser subParser = parameter.getParser().createSubSwitchesParser();
-		
-		if (e == null) {
-			throw new RuntimeException("Nenhum subObject retornado...");
-		}
 		
 		Class<?> subObjectClass = parameter.getSubObjectClasses().get(e.toString());
 		
