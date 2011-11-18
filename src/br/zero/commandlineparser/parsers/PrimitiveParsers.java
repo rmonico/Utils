@@ -6,7 +6,7 @@ public class PrimitiveParsers {
 	private String error = null;
 	
 	@CommandLineArgumentParserMethod(messageMethod="getError")
-	public Integer parseInteger(String value) {
+	public int parseInteger(String value) {
 		try {
 			return Integer.parseInt(value);
 		} catch (NumberFormatException nfe) {
