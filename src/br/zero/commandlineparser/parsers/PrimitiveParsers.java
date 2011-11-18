@@ -6,11 +6,11 @@ public class PrimitiveParsers {
 	private String error = null;
 	
 	@CommandLineArgumentParserMethod(messageMethod="getError")
-	public Integer parse(String value) {
+	public Integer parseInteger(String value) {
 		try {
 			return Integer.parseInt(value);
 		} catch (NumberFormatException nfe) {
-			error = "Formato incorreto do número (\"" + value + "\").";
+			error = "Invalid number format (\"" + value + "\").";
 			return 0;
 		}
 	}
