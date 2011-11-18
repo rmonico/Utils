@@ -97,6 +97,10 @@ public class EnumParser {
 		
 		SwitchesParser subParser = parameter.getParser().createSubSwitchesParser();
 		
+		if (e == null) {
+			throw new RuntimeException("Nenhum subObject retornado...");
+		}
+		
 		Class<?> subObjectClass = parameter.getSubObjectClasses().get(e.toString());
 		
 		if (subObjectClass == null) {
