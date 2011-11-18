@@ -14,9 +14,9 @@ import br.zero.switchesparser.IInvalidCommandLineArgument;
 import br.zero.switchesparser.ParserException;
 import br.zero.switchesparser.SwitchesParser;
 
-// TODO Criar suporte a i18n. Do jeito que está teria que fazer uma classe para cada localidade que tiver que ser suportada.
 // TODO Ver o que fazer quando houver um defaultValue e um index simultaneamente no mesmo switch
 // TODO Melhorar a implementação. Fazer refatorações para extrair mais métodos.
+// TODO Melhorar o sistema de exceções (não encapsular mais exceções checadas dentro de não checadas)
 public class CommandLineParser implements SwitchesParser {
 
 	private String[] commandLine;
@@ -31,7 +31,7 @@ public class CommandLineParser implements SwitchesParser {
 		if (!(o instanceof String[])) {
 			throw new RuntimeException("CommandLineParser.setValuesObject: Parâmetro deve ser uma linha de comando (String[]).");
 		}
-		
+
 		this.commandLine = (String[]) o;
 	}
 
@@ -39,7 +39,7 @@ public class CommandLineParser implements SwitchesParser {
 	public String[] getValuesObject() {
 		return commandLine;
 	}
-	
+
 	public void setSwitchesObject(Object o) {
 		switchesObject = o;
 	}
@@ -73,7 +73,7 @@ public class CommandLineParser implements SwitchesParser {
 
 			switchSetup = null;
 
-			if ((setter = getIndexedArgument(properties, i)) != null) {
+			if ((setter = getIndexedArgument(properties, i + 1)) != null) {
 				switchSetup = setter.getAnnotation(CommandLineSwitch.class);
 
 				if (switchSetup.complexParser()) {
@@ -125,7 +125,7 @@ public class CommandLineParser implements SwitchesParser {
 		for (Method method : properties.values()) {
 			CommandLineSwitch annotation = method.getAnnotation(CommandLineSwitch.class);
 
-			if (annotation.index() > 0) {
+			if (annotation.index() == argIndex) {
 				return method;
 			}
 		}
@@ -155,40 +155,40 @@ public class CommandLineParser implements SwitchesParser {
 			assert false : e;
 			throw new RuntimeException(e);
 		} catch (InvocationTargetException e) {
-			throw new ParserException("Erro chamando método setter...\n\n" + e);
+			throw new ParserException("Exception occurred calling setter \"" + setter + "\".\n" + e);
 		}
 	}
 
-	private void callSetterForComplex(Object targetBean, Method setter, ComplexParserReturn parsedObject) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException {
+	private void callSetterForComplex(Object targetBean, Method setter, ComplexParserReturn parsedObject) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, ParserException {
 		setter.invoke(switchesObject, parsedObject.getComplexSwitchValue());
-		
+
 		SubCommandLine subCommandLineSetup = getSubCommandLineFor(parsedObject);
-		
+
 		if (subCommandLineSetup == null) {
-			throw new RuntimeException("Nenhuma sub linha de comando encontrada..."); 
+			throw new ParserException("None sub command line found for \"" + parsedObject.getClass() + "\"...");
 		}
-		
+
 		Method subObjectMethod;
-		
+
 		try {
 			subObjectMethod = targetBean.getClass().getMethod(subCommandLineSetup.propertyName(), parsedObject.getSubObjectValue().getClass());
 		} catch (NoSuchMethodException e) {
-			throw new RuntimeException(e);
+			throw new ParserException("SubObject method not found: \"" + targetBean.getClass() + "." + subCommandLineSetup.propertyName() + "(" + parsedObject.getSubObjectValue().getClass() + ")\".");
 		}
-		
+
 		subObjectMethod.invoke(targetBean, parsedObject.getSubObjectValue());
 	}
 
 	private SubCommandLine getSubCommandLineFor(ComplexParserReturn parsedObject) {
-		
+
 		String complexSwitchValueAsString = parsedObject.getComplexSwitchValue().toString();
-		
+
 		for (SubCommandLine s : switchSetup.subCommandLineProperties()) {
 			if (complexSwitchValueAsString.equals(s.value())) {
 				return s;
 			}
 		}
-		
+
 		// O toString não bateu com nenhum objeto, não sub command line
 		return null;
 	}
@@ -229,7 +229,7 @@ public class CommandLineParser implements SwitchesParser {
 			assert false : e;
 			throw new RuntimeException(e);
 		} catch (InvocationTargetException e) {
-			throw new ParserException("Erro chamando parser...\n" + e);
+			throw new ParserException("Exception occurred making parser with method: \"" + parserMethod + "\".\n" + e);
 		}
 
 		CommandLineArgumentParserMethod parserMethodSetup = parserMethod.getAnnotation(CommandLineArgumentParserMethod.class);
@@ -268,7 +268,7 @@ public class CommandLineParser implements SwitchesParser {
 				assert false : e;
 				throw new RuntimeException(e);
 			} catch (InvocationTargetException e) {
-				throw new ParserException("Erro devolvendo a mensagem de erro...");
+				throw new ParserException("Erro devolvendo a mensagem de erro (método: \"" + parserMessageMethod + "\")...");
 			}
 
 			if (message != null) {
@@ -284,9 +284,9 @@ public class CommandLineParser implements SwitchesParser {
 		DefaultComplexParserParameter complexParserParameter = new DefaultComplexParserParameter();
 
 		complexParserParameter.setParser(this);
-		
+
 		complexParserParameter.setValuesObject(valueCandidate);
-		
+
 		for (SubCommandLine subCommandLine : switchSetup.subCommandLineProperties()) {
 			complexParserParameter.getSubObjectClasses().put(subCommandLine.value(), subCommandLine.subCommandLineClass());
 		}
@@ -296,7 +296,7 @@ public class CommandLineParser implements SwitchesParser {
 		return parsedObject;
 	}
 
-	private Object makeEmbeededParser(Method setter, String[] valueCandidate, Class<?> setterParameter) {
+	private Object makeEmbeededParser(Method setter, String[] valueCandidate, Class<?> setterParameter) throws ParserException {
 		if (switchSetup.parser().isEmpty()) {
 			// SwitchesParser não informado na anotação
 			if (setterParameter.equals(String.class)) {
@@ -309,7 +309,7 @@ public class CommandLineParser implements SwitchesParser {
 				return new Boolean(valueCandidate[0]);
 
 			} else {
-				throw new RuntimeException("Switches do tipo \"" + setterParameter + "\" devem possuir um parser obrigatoriamente!");
+				throw new ParserException("Switches do tipo \"" + setterParameter + "\" devem possuir um parser obrigatoriamente!");
 			}
 		}
 		return null;
@@ -438,11 +438,11 @@ public class CommandLineParser implements SwitchesParser {
 	@Override
 	public SwitchesParser createSubSwitchesParser() {
 		CommandLineParser subParser = new CommandLineParser();
-		
+
 		for (String id : getPropertyParsers().keySet()) {
 			subParser.getPropertyParsers().put(id, getPropertyParsers().get(id));
 		}
-		
+
 		return subParser;
 	}
 
