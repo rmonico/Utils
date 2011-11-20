@@ -6,11 +6,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import br.zero.commandlineparser.CommandLineOptionParsingError;
+import br.zero.commandlineparser.CommandLineOptionParsingInvalid;
 import br.zero.commandlineparser.ExcessiveArgument;
+import br.zero.commandlineparser.ParserException;
 import br.zero.commandlineparser.parsers.EnumParser;
 import br.zero.commandlineparser.parsers.PrimitiveParsers;
-import br.zero.switchesparser.ParserException;
 
 public class CommandLineParserTest extends CustomCommandLineParserTests {
 
@@ -137,7 +137,7 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 		assertEquals("parser error - size", 1, parser.getErrors().size());
 
-		assertTrue("parser error - item 0, class", parser.getErrors().get(0) instanceof CommandLineOptionParsingError);
+		assertTrue("parser error - item 0, class", parser.getErrors().get(0) instanceof CommandLineOptionParsingInvalid);
 
 		assertEquals("parser error - item 0, valor", "Invalid number format (\"xxx\").", parser.getErrors().get(0).getMessage());
 	}

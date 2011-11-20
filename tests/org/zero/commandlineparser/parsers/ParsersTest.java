@@ -11,9 +11,9 @@ import org.zero.commandlineparser.CustomCommandLineParserTests;
 import org.zero.commandlineparser.EnumSwitch;
 import org.zero.commandlineparser.ParsedSwitch;
 
+import br.zero.commandlineparser.ParserException;
 import br.zero.commandlineparser.parsers.EnumParser;
 import br.zero.commandlineparser.parsers.PrimitiveParsers;
-import br.zero.switchesparser.ParserException;
 
 public class ParsersTest extends CustomCommandLineParserTests {
 

@@ -1,6 +1,5 @@
 package br.zero.commandlineparser;
 
-import br.zero.switchesparser.IInvalidCommandLineArgument;
 
 public abstract class AbstractInvalidCommandLineArgument implements IInvalidCommandLineArgument {
 

@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.zero.switchesparser.IInvalidCommandLineArgument;
-import br.zero.switchesparser.ParserException;
 
 // TODO Ver o que fazer quando houver um defaultValue e um index simultaneamente no mesmo switch
 // TODO Melhorar a implementação. Fazer refatorações para extrair mais métodos.
@@ -269,7 +267,7 @@ public class CommandLineParser {
 			}
 
 			if (message != null) {
-				errors.add(new CommandLineOptionParsingError(message));
+				errors.add(new CommandLineOptionParsingInvalid(message));
 			}
 
 		}

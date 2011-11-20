@@ -1,4 +1,4 @@
-package br.zero.switchesparser;
+package br.zero.commandlineparser;
 
 /**
  * Representação de um erro em uma linha de comando.

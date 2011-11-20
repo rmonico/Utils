@@ -7,7 +7,7 @@ import br.zero.commandlineparser.CommandLineParser;
 import br.zero.commandlineparser.CommandLineSwitchParam;
 import br.zero.commandlineparser.ComplexParserParameter;
 import br.zero.commandlineparser.ComplexParserReturn;
-import br.zero.switchesparser.ParserException;
+import br.zero.commandlineparser.ParserException;
 
 public class EnumParser {
 

@@ -1,4 +1,4 @@
-package br.zero.switchesparser;
+package br.zero.commandlineparser;
 
 public class ParserException extends Exception {
 
