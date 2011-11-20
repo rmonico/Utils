@@ -1,4 +1,4 @@
-package org.zero.commandlineparser;
+package br.zero.commandlineparser;
 
 import org.junit.Before;
 

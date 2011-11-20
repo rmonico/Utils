@@ -1,4 +1,4 @@
-package org.zero.commandlineparser.parsers;
+package br.zero.commandlineparser.parsers;
 
 import br.zero.commandlineparser.CommandLineSwitch;
 

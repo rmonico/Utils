@@ -1,4 +1,4 @@
-package org.zero.commandlineparser;
+package br.zero.commandlineparser;
 
 public enum Command {
 	ADD, REMOVE;

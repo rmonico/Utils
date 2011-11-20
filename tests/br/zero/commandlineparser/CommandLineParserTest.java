@@ -1,4 +1,4 @@
-package org.zero.commandlineparser;
+package br.zero.commandlineparser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

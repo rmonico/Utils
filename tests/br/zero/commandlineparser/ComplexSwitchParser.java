@@ -1,4 +1,4 @@
-package org.zero.commandlineparser;
+package br.zero.commandlineparser;
 
 import br.zero.commandlineparser.CommandLineArgumentParserMethod;
 import br.zero.commandlineparser.ComplexParserParameter;

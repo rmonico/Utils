@@ -1,4 +1,4 @@
-package org.zero.commandlineparser.parsers;
+package br.zero.commandlineparser.parsers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -6,11 +6,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
-import org.zero.commandlineparser.Command;
-import org.zero.commandlineparser.CustomCommandLineParserTests;
-import org.zero.commandlineparser.EnumSwitch;
-import org.zero.commandlineparser.ParsedSwitch;
 
+import br.zero.commandlineparser.Command;
+import br.zero.commandlineparser.CustomCommandLineParserTests;
+import br.zero.commandlineparser.EnumSwitch;
+import br.zero.commandlineparser.ParsedSwitch;
 import br.zero.commandlineparser.ParserException;
 import br.zero.commandlineparser.parsers.EnumParser;
 import br.zero.commandlineparser.parsers.PrimitiveParsers;

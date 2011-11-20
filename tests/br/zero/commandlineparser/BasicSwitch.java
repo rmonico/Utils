@@ -1,12 +1,11 @@
-package org.zero.commandlineparser;
+package br.zero.commandlineparser;
 
 import br.zero.commandlineparser.CommandLineSwitch;
 
-public class NamedSwitch {
-
+public class BasicSwitch {
 	private String arg1;
 
-	@CommandLineSwitch(param = "argument1")
+	@CommandLineSwitch
 	public void setArg1(String value) {
 		arg1 = value;
 	}

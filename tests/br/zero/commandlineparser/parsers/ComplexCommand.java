@@ -1,4 +1,4 @@
-package org.zero.commandlineparser.parsers;
+package br.zero.commandlineparser.parsers;
 
 public enum ComplexCommand {
 	COMMAND1, COMMAND2;
