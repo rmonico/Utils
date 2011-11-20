@@ -6,15 +6,15 @@ import java.util.Map;
 public class TinyController {
 
 	private class ConfiguredAction {
-		private Action action;
+		private Class<Action> action;
 		private Object param;
 		
-		public ConfiguredAction(Action action, Object param) {
+		public ConfiguredAction(Class<Action> action, Object param) {
 			this.action = action;
 			this.param = param;
 		}
 
-		public Action getAction() {
+		public Class<Action> getActionClass() {
 			return action;
 		}
 
@@ -27,7 +27,7 @@ public class TinyController {
 	private Map<Object[], ConfiguredAction> registeredActions = new HashMap<Object[], ConfiguredAction>();
 	private ConfiguredAction selectedAction;
 
-	public void registerAction(Action action, Object actionParam, Object... values) {
+	public void registerAction(Class<Action> action, Object actionParam, Object... values) {
 		ConfiguredAction configuredAction = new ConfiguredAction(action, actionParam);
 		
 		registeredActions.put(values, configuredAction);
@@ -41,7 +41,16 @@ public class TinyController {
 		return selectedAction != null;
 	}
 
-	public void runSelectedAction() {
-		selectedAction.getAction().setParams(selectedAction.getParam());
+	public void runSelectedAction() throws TinyControllerException {
+		Class<Action> actionClass = selectedAction.getActionClass();
+		
+		Action action;
+		try {
+			action = actionClass.newInstance();
+		} catch (Exception e) {
+			throw new TinyControllerException(e);
+		}
+		
+		action.setParams(selectedAction.getParam());
 	}
 }
