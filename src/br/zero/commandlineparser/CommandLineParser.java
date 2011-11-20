@@ -12,12 +12,11 @@ import java.util.Map;
 
 import br.zero.switchesparser.IInvalidCommandLineArgument;
 import br.zero.switchesparser.ParserException;
-import br.zero.switchesparser.SwitchesParser;
 
 // TODO Ver o que fazer quando houver um defaultValue e um index simultaneamente no mesmo switch
 // TODO Melhorar a implementação. Fazer refatorações para extrair mais métodos.
 // TODO Melhorar o sistema de exceções (não encapsular mais exceções checadas dentro de não checadas)
-public class CommandLineParser implements SwitchesParser {
+public class CommandLineParser {
 
 	private String[] commandLine;
 	private Object switchesObject;
@@ -26,7 +25,6 @@ public class CommandLineParser implements SwitchesParser {
 	private List<IInvalidCommandLineArgument> errors;
 	private CommandLineSwitch switchSetup;
 
-	@Override
 	public void setValuesObject(Object o) {
 		if (!(o instanceof String[])) {
 			throw new RuntimeException("CommandLineParser.setValuesObject: Parâmetro deve ser uma linha de comando (String[]).");
@@ -35,7 +33,6 @@ public class CommandLineParser implements SwitchesParser {
 		this.commandLine = (String[]) o;
 	}
 
-	@Override
 	public String[] getValuesObject() {
 		return commandLine;
 	}
@@ -430,13 +427,11 @@ public class CommandLineParser implements SwitchesParser {
 		}
 	}
 
-	@Override
 	public Map<String, Object> getPropertyParsers() {
 		return parsers;
 	}
 
-	@Override
-	public SwitchesParser createSubSwitchesParser() {
+	public CommandLineParser createSubParser() {
 		CommandLineParser subParser = new CommandLineParser();
 
 		for (String id : getPropertyParsers().keySet()) {

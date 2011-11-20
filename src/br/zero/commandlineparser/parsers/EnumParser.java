@@ -3,11 +3,11 @@ package br.zero.commandlineparser.parsers;
 import java.util.Arrays;
 
 import br.zero.commandlineparser.CommandLineArgumentParserMethod;
+import br.zero.commandlineparser.CommandLineParser;
 import br.zero.commandlineparser.CommandLineSwitchParam;
 import br.zero.commandlineparser.ComplexParserParameter;
 import br.zero.commandlineparser.ComplexParserReturn;
 import br.zero.switchesparser.ParserException;
-import br.zero.switchesparser.SwitchesParser;
 
 public class EnumParser {
 
@@ -99,7 +99,7 @@ public class EnumParser {
 
 		r.setComplexSwitchValue(e);
 		
-		SwitchesParser subParser = parameter.getParser().createSubSwitchesParser();
+		CommandLineParser subParser = parameter.getParser().createSubParser();
 		
 		Class<?> subObjectClass = parameter.getSubObjectClasses().get(e.toString());
 		

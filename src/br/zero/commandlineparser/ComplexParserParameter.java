@@ -2,8 +2,6 @@ package br.zero.commandlineparser;
 
 import java.util.Map;
 
-import br.zero.switchesparser.SwitchesParser;
-
 /**
  * Deve devolver um parser e o objeto de valores com as informações sobre onde
  * deverá ser efetuado o processamento do parsing.
@@ -13,7 +11,7 @@ import br.zero.switchesparser.SwitchesParser;
  */
 public interface ComplexParserParameter {
 
-	SwitchesParser getParser();
+	CommandLineParser getParser();
 
 	Object getValuesObject();
 	

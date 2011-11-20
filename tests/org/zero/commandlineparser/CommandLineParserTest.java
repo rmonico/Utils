@@ -139,7 +139,7 @@ public class CommandLineParserTest extends CustomCommandLineParserTests {
 
 		assertTrue("parser error - item 0, class", parser.getErrors().get(0) instanceof CommandLineOptionParsingError);
 
-		assertEquals("parser error - item 0, valor", "Formato incorreto do número (\"xxx\").", parser.getErrors().get(0).getMessage());
+		assertEquals("parser error - item 0, valor", "Invalid number format (\"xxx\").", parser.getErrors().get(0).getMessage());
 	}
 
 	/**
