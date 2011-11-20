@@ -53,8 +53,12 @@ public class TinyController {
 			throw new TinyControllerException(e);
 		}
 		
-		action.setParams(selectedAction.getParam());
+		Object param = selectedAction.getParam();
 		
-		action.run();
+		try {
+			action.run(param);
+		} catch (Exception e) {
+			throw new TinyControllerException("Exception launched running action.", e);
+		}
 	}
 }

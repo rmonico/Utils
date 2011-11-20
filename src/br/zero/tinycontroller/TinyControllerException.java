@@ -6,6 +6,10 @@ public class TinyControllerException extends Exception {
 		super(e);
 	}
 
+	public TinyControllerException(String message, Exception exception) {
+		super(message, exception);
+	}
+
 	/**
 	 * 
 	 */
