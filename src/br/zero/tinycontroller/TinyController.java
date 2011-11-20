@@ -1,6 +1,8 @@
 package br.zero.tinycontroller;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TinyController {
@@ -24,17 +26,17 @@ public class TinyController {
 
 	}
 
-	private Map<Object[], ConfiguredAction> registeredActions = new HashMap<Object[], ConfiguredAction>();
+	private Map<List<?>, ConfiguredAction> registeredActions = new HashMap<List<?>, ConfiguredAction>();
 	private ConfiguredAction selectedAction;
 
 	public void registerAction(Class<? extends Action> action, Object actionParam, Object... values) {
 		ConfiguredAction configuredAction = new ConfiguredAction(action, actionParam);
 		
-		registeredActions.put(values, configuredAction);
+		registeredActions.put(Arrays.asList(values), configuredAction);
 	}
 
 	public void selectAction(Object... params) {
-		selectedAction = registeredActions.get(params);
+		selectedAction = registeredActions.get(Arrays.asList(params));
 	}
 
 	public boolean isActionFound() {
@@ -52,5 +54,7 @@ public class TinyController {
 		}
 		
 		action.setParams(selectedAction.getParam());
+		
+		action.run();
 	}
 }
