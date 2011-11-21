@@ -103,7 +103,7 @@ public abstract class CustomDAO<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public T getById(int id) {
+	public T getById(Integer id) {
 		Query q = getEntityManager().createNamedQuery(setup.findByIdQuery());
 		q.setParameter(setup.idFieldName(), id);
 
