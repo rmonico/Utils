@@ -22,7 +22,7 @@ public class PrimitiveParsers {
 	}
 	
 	@CommandLineArgumentParserMethod(messageMethod="getError")
-	public double parseDouble(String value) {
+	public Double parseDouble(String value) {
 		error = null;
 		
 		try {
