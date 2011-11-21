@@ -104,12 +104,20 @@ public abstract class CustomDAO<T> {
 
 	@SuppressWarnings("unchecked")
 	public T getById(Integer id) {
-		Query q = getEntityManager().createNamedQuery(setup.findByIdQuery());
+		Query q = getEntityManager().createQuery(setup.findByIdQuery());
 		q.setParameter(setup.idFieldName(), id);
 
 		List<T> results = q.getResultList();
-
-		return results.get(0);
+		
+		int resultsNumber = results.size();
+		
+		if (resultsNumber == 0) {
+			return null;
+		} else {
+			assert resultsNumber == 1 : "getById: Mais de um resultado retornado (possível inconsistência na PK)!";
+			
+			return results.get(0);
+		}
 	}
 
 	public void excluir(T o) {
