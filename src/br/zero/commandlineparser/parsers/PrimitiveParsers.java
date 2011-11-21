@@ -25,6 +25,10 @@ public class PrimitiveParsers {
 	public Double parseDouble(String value) {
 		error = null;
 		
+		if ("null".equals(value)) {
+			return null;
+		}
+		
 		try {
 			return Double.parseDouble(value);
 		} catch (NumberFormatException nfe) {
