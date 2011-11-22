@@ -1,7 +1,7 @@
 package br.zero.textgrid;
 
 // Não usei enums aqui para permitir extensões da classe
-public abstract class ColumnAlignment {
+public abstract class TextGridColumnAlignment {
 
 	public abstract StringBuilder getAlignedString(Integer finalLength, StringBuilder value);
 	
@@ -15,7 +15,7 @@ public abstract class ColumnAlignment {
 		return sb;
 	}
 
-	public static final ColumnAlignment LEFT = new ColumnAlignment() {
+	public static final TextGridColumnAlignment LEFT = new TextGridColumnAlignment() {
 		@Override
 		public StringBuilder getAlignedString(Integer finalLength, StringBuilder value) {
 			StringBuilder returnValue;
@@ -42,12 +42,12 @@ public abstract class ColumnAlignment {
 			return returnValue;
 		}
 	};
-	public static final ColumnAlignment CENTER = new ColumnAlignment() {
+	public static final TextGridColumnAlignment CENTER = new TextGridColumnAlignment() {
 		public StringBuilder getAlignedString(Integer finalLength, StringBuilder value) {
 			return null;
 		};
 	};
-	public static final ColumnAlignment RIGHT = new ColumnAlignment() {
+	public static final TextGridColumnAlignment RIGHT = new TextGridColumnAlignment() {
 		public StringBuilder getAlignedString(Integer finalLength, StringBuilder value) {
 			StringBuilder returnValue;
 			

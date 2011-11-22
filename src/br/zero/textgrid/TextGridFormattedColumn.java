@@ -11,7 +11,7 @@ public class TextGridFormattedColumn implements TextGridColumn {
 	private String separator;
 	private TextGridFormatter formatter;
 	private String lineGetterMethod;
-	private ColumnAlignment alignment;
+	private TextGridColumnAlignment alignment;
 
 	public static final TextGridFormatter ID_FORMATTER = createIDFormatter();
 	public static final TextGridFormatter DATE_FORMATTER = createDateFormatter();
@@ -182,7 +182,7 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		return stringFormatter;
 	}
 
-	public static TextGridFormattedColumn createFormattedColumn(TextGrid grid, String title, TextGridFormatter formatter, ColumnAlignment alignment, String getterMethod, String columnSeparator) {
+	public static TextGridFormattedColumn createFormattedColumn(TextGrid grid, String title, TextGridFormatter formatter, TextGridColumnAlignment alignment, String getterMethod, String columnSeparator) {
 		TextGridFormattedColumn newColumn = new TextGridFormattedColumn();
 		
 		newColumn.setTitle(title);
@@ -196,17 +196,17 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		return newColumn;
 	}
 
-	public static TextGridFormattedColumn createFormattedColumn(TextGrid grid, String title, TextGridFormatter formatter, ColumnAlignment alignment, String getterMethod) {
+	public static TextGridFormattedColumn createFormattedColumn(TextGrid grid, String title, TextGridFormatter formatter, TextGridColumnAlignment alignment, String getterMethod) {
 		return createFormattedColumn(grid, title, formatter, alignment, getterMethod, grid.getData().getDefaultColumnSeparator());
 	}
 
 	@Override
-	public ColumnAlignment getAlignment() {
+	public TextGridColumnAlignment getAlignment() {
 		return alignment;
 	}
 
 	@Override
-	public void setAlignment(ColumnAlignment alignment) {
+	public void setAlignment(TextGridColumnAlignment alignment) {
 		this.alignment = alignment;
 	}
 	
