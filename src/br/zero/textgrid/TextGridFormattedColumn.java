@@ -2,7 +2,7 @@ package br.zero.textgrid;
 
 import java.lang.reflect.Method;
 
-public class TextGridColumn {
+public class TextGridFormattedColumn {
 
 	private String title;
 	private String separator;

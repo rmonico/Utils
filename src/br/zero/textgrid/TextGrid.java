@@ -31,7 +31,7 @@ public class TextGrid {
 
 			StringBuilder line = new StringBuilder();
 
-			for (TextGridColumn column : getData().getColumns()) {
+			for (TextGridFormattedColumn column : getData().getColumns()) {
 
 				Object cellValue = column.getCellValue(o);
 				
@@ -62,7 +62,7 @@ public class TextGrid {
 
 		StringBuilder columnTitles = new StringBuilder();
 
-		for (TextGridColumn column : getData().getColumns()) {
+		for (TextGridFormattedColumn column : getData().getColumns()) {
 			columnTitles.append(column.getTitle());
 
 			// Se não é a última coluna...
