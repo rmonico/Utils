@@ -50,7 +50,7 @@ public class TextGridData {
 		this.aligned = aligned;
 	}
 
-	public TextGridFormattedColumn createColumn(String title, TextGridFormatter formatter, String getterMethod, String columnSeparator) {
+	public TextGridFormattedColumn createFormattedColumn(String title, TextGridFormatter formatter, String getterMethod, String columnSeparator) {
 		TextGridFormattedColumn newColumn = new TextGridFormattedColumn();
 		
 		newColumn.setTitle(title);
@@ -63,8 +63,8 @@ public class TextGridData {
 		return newColumn;
 	}
 
-	public TextGridFormattedColumn createColumn(String title, TextGridFormatter formatter, String getterMethod) {
-		return createColumn(title, formatter, getterMethod, defaultColumnSeparator);
+	public TextGridFormattedColumn createFormattedColumn(String title, TextGridFormatter formatter, String getterMethod) {
+		return createFormattedColumn(title, formatter, getterMethod, defaultColumnSeparator);
 	}
 	
 }
