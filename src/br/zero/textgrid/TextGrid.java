@@ -1,12 +1,16 @@
 package br.zero.textgrid;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import br.zero.utils.StringUtils;
 
 public class TextGrid {
 
 	private TextGridData data = new TextGridData();
 	private List<?> values;
-	
+	private List<List<StringBuilder>> matrix;
+
 	public TextGridData getData() {
 		return data;
 	}
@@ -16,33 +20,9 @@ public class TextGrid {
 	}
 
 	public void show() throws TextGridException {
-		if (getData().isAligned()) {
-//			calcColumn
-		}
-		
-		makeListHeader();
+		calcValuesMatrix();
 
-		for (Object o : values) {
-
-			StringBuilder line = new StringBuilder();
-
-			List<? extends TextGridColumn> columns = getData().getColumns();
-			
-			for (TextGridColumn column : columns) {
-
-				Object cellObject = column.getCellObject(o);
-				
-				String cellValue = column.parse(cellObject);
-				
-				line.append(cellValue);
-
-				if (column != columns.get(columns.size() - 1)) {
-					line.append(column.getSeparator());
-				}
-			}
-
-			System.out.println(line.toString());
-		}
+		makeList();
 
 		System.out.println("");
 
@@ -50,33 +30,107 @@ public class TextGrid {
 
 	}
 
-	private void makeListHeader() {
+	private void makeList() {
 		System.out.println("-- " + data.getTitle() + " --");
 		System.out.println("");
 		System.out.println("");
 
-		StringBuilder columnTitles = new StringBuilder();
+		List<StringBuilder> headerLine = matrix.get(0);
 
 		List<? extends TextGridColumn> columns = getData().getColumns();
-		
-		for (TextGridColumn column : columns) {
-			columnTitles.append(column.getTitle());
+		TextGridColumn lastColumn = columns.get(columns.size() - 1);
 
-			// Se não é a última coluna...
-			if (column != columns.get(columns.size() - 1)) {
-				columnTitles.append(column.getSeparator());
+		for (List<StringBuilder> line : matrix) {
+
+			StringBuilder outputLine = new StringBuilder();
+			for (int i = 0; i < line.size(); i++) {
+				StringBuilder cell = line.get(i);
+				TextGridColumn column = columns.get(i);
+
+				outputLine.append(cell);
+
+				// Não adiciona separador depois da última coluna
+				if (column != lastColumn) {
+					outputLine.append(column.getSeparator());
+				}
+			}
+
+			System.out.println(outputLine);
+
+			// Se é a primeira linha, imprime o separador
+			if (line == headerLine) {
+				System.out.println(StringUtils.replicateChar(getData().getHeaderSeparatorChar(), outputLine.length()));
+			}
+		}
+	}
+
+	private void calcValuesMatrix() throws TextGridException {
+		List<List<StringBuilder>> baseMatrix = new ArrayList<List<StringBuilder>>();
+
+		List<String> headerBaseMatrix = new ArrayList<String>();
+
+		for (TextGridColumn column : getData().getColumns()) {
+			headerBaseMatrix.add(column.getTitle());
+		}
+
+		List<? extends TextGridColumn> columns = getData().getColumns();
+
+		for (Object o : values) {
+			List<StringBuilder> lineBaseMatrix = new ArrayList<StringBuilder>();
+
+			for (TextGridColumn column : columns) {
+
+				Object cellObject = column.getCellObject(o);
+
+				StringBuilder cellValue = column.parse(cellObject);
+
+				lineBaseMatrix.add(cellValue);
+			}
+
+			baseMatrix.add(lineBaseMatrix);
+		}
+
+		if (!getData().isAligned()) {
+			matrix = baseMatrix;
+			return;
+		}
+
+		// Faz o alinhamento das colunas através da inclusão de espaços nos
+		// valores
+
+		List<Integer> columnsWidth = new ArrayList<Integer>();
+
+		for (List<StringBuilder> line : baseMatrix) {
+			// Não posso usar for melhorado aqui, preciso saber o índice
+			for (int i = 0; i < line.size(); i++) {
+				StringBuilder value = line.get(i);
+
+				if (value.length() > columnsWidth.get(i)) {
+					columnsWidth.set(i, value.length());
+				}
 			}
 		}
 
-		System.out.println(columnTitles);
+		matrix = new ArrayList<List<StringBuilder>>();
 
-		StringBuilder headerSeparator = new StringBuilder();
+		for (List<StringBuilder> baseLine : baseMatrix) {
 
-		for (int i = 0; i < columnTitles.length(); i++) {
-			headerSeparator.append(getData().getHeaderSeparatorChar());
+			List<StringBuilder> matrixLine = new ArrayList<StringBuilder>();
+
+			// Não posso usar for melhorado aqui, preciso saber o índice
+			for (int i = 0; i < baseLine.size(); i++) {
+				StringBuilder value = baseLine.get(i);
+
+				TextGridColumnAlignment columnAlignment = columns.get(i).getAlignment();
+
+				StringBuilder finalValue = columnAlignment.getAlignedString(columnsWidth.get(i), value);
+
+				matrixLine.add(finalValue);
+			}
+
+			matrix.add(matrixLine);
 		}
 
-		System.out.println(headerSeparator.toString());
 	}
 
 }
