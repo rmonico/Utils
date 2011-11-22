@@ -1,19 +1,11 @@
 package br.zero.textgrid;
 
+import br.zero.utils.StringUtils;
+
 // Não usei enums aqui para permitir extensões da classe
 public abstract class TextGridColumnAlignment {
 
 	public abstract StringBuilder getAlignedString(Integer finalLength, StringBuilder value);
-
-	private static StringBuilder replicateChar(char ch, int count) {
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < count; i++) {
-			sb.append(ch);
-		}
-
-		return sb;
-	}
 
 	public static final TextGridColumnAlignment LEFT = new TextGridColumnAlignment() {
 		@Override
@@ -23,7 +15,7 @@ public abstract class TextGridColumnAlignment {
 			int valueLength = value.length();
 
 			if (valueLength < finalLength) {
-				StringBuilder spaces = new StringBuilder(replicateChar(' ', finalLength - valueLength));
+				StringBuilder spaces = new StringBuilder(StringUtils.replicateChar(' ', finalLength - valueLength));
 
 				returnValue = new StringBuilder(value);
 
@@ -50,8 +42,8 @@ public abstract class TextGridColumnAlignment {
 			int valueLength = value.length();
 
 			if (valueLength <= finalLength) {
-				StringBuilder spacesBefore = replicateChar(' ', (finalLength - valueLength) / 2);
-				StringBuilder spacesAfter = replicateChar(' ', finalLength - (spacesBefore.length() + value.length()));
+				StringBuilder spacesBefore = StringUtils.replicateChar(' ', (finalLength - valueLength) / 2);
+				StringBuilder spacesAfter = StringUtils.replicateChar(' ', finalLength - (spacesBefore.length() + value.length()));
 
 				returnValue = new StringBuilder(spacesBefore.toString() + value.toString() + spacesAfter.toString());
 			} else {
@@ -69,7 +61,7 @@ public abstract class TextGridColumnAlignment {
 			int valueLength = value.length();
 
 			if (valueLength < finalLength) {
-				StringBuilder spaces = new StringBuilder(replicateChar(' ', finalLength - valueLength));
+				StringBuilder spaces = new StringBuilder(StringUtils.replicateChar(' ', finalLength - valueLength));
 
 				returnValue = new StringBuilder(spaces);
 

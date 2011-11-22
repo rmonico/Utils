@@ -54,4 +54,15 @@ public class StringUtils {
 	public static String extractTypeName(String fullQualifiedName) {
 		return fullQualifiedName.substring(fullQualifiedName.lastIndexOf('.') + 1, fullQualifiedName.length());
 	}
+
+	public static StringBuilder replicateChar(char ch, int count) {
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < count; i++) {
+			sb.append(ch);
+		}
+
+		return sb;
+	}
+
 }
