@@ -99,6 +99,10 @@ public class TextGrid {
 		// valores
 
 		List<Integer> columnsWidth = new ArrayList<Integer>();
+		
+		for (int i=0; i<baseMatrix.get(0).size(); i++) {
+			columnsWidth.add(-1);
+		}
 
 		for (List<StringBuilder> line : baseMatrix) {
 			// Não posso usar for melhorado aqui, preciso saber o índice
