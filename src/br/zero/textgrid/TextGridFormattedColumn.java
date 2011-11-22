@@ -9,18 +9,22 @@ public class TextGridFormattedColumn implements TextGridColumn {
 	private TextGridFormatter formatter;
 	private String lineGetterMethod;
 
+	@Override
 	public String getTitle() {
 		return title;
 	}
 
+	@Override
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
+	@Override
 	public String getSeparator() {
 		return separator;
 	}
 
+	@Override
 	public void setSeparator(String separator) {
 		this.separator = separator;
 	}
@@ -41,6 +45,7 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		this.lineGetterMethod = lineGetterMethod;
 	}
 
+	@Override
 	public Object getCellValue(Object line) throws TextGridException {
 		Method getter;
 		
