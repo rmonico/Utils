@@ -53,11 +53,13 @@ public class TextGrid {
 
 		StringBuilder columnTitles = new StringBuilder();
 
-		for (TextGridColumn column : getData().getColumns()) {
+		List<? extends TextGridColumn> columns = getData().getColumns();
+		
+		for (TextGridColumn column : columns) {
 			columnTitles.append(column.getTitle());
 
 			// Se não é a última coluna...
-			if (column != getData().getColumns().get(getData().getColumns().size() - 1)) {
+			if (column != columns.get(columns.size() - 1)) {
 				columnTitles.append(column.getSeparator());
 			}
 		}
