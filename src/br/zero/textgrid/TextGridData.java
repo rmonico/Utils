@@ -8,6 +8,7 @@ public class TextGridData {
 	private List<TextGridColumn> columns = new ArrayList<TextGridColumn>();
 	private char headerSeparatorChar = '-';
 	private String defaultColumnSeparator = " | ";
+	private boolean aligned = true;
 
 	public String getTitle() {
 		return title;
@@ -15,10 +16,6 @@ public class TextGridData {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public List<TextGridColumn> getColumns() {
-		return columns;
 	}
 
 	public char getHeaderSeparatorChar() {
@@ -37,8 +34,20 @@ public class TextGridData {
 		this.defaultColumnSeparator = defaultColumnSeparator;
 	}
 
+	public List<TextGridColumn> getColumns() {
+		return columns;
+	}
+
 	public void setColumns(List<TextGridColumn> columns) {
 		this.columns = columns;
+	}
+
+	public boolean getAligned() {
+		return aligned;
+	}
+
+	public void setAligned(boolean aligned) {
+		this.aligned = aligned;		
 	}
 
 	public TextGridColumn createColumn(String title, TextGridFormatter formatter, String getterMethod, String columnSeparator) {
@@ -57,4 +66,5 @@ public class TextGridData {
 	public TextGridColumn createColumn(String title, TextGridFormatter formatter, String getterMethod) {
 		return createColumn(title, formatter, getterMethod, defaultColumnSeparator);
 	}
+	
 }
