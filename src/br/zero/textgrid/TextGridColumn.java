@@ -8,8 +8,11 @@ public interface TextGridColumn {
 
 	public String getSeparator();
 	public void setSeparator(String separator);
+	
+	public ColumnAlignment getAlignment();
+	public void setAlignment(ColumnAlignment alignment);
 
 	public Object getCellObject(Object line) throws TextGridException;
-	public String parse(Object cellValue) throws TextGridException;
+	public StringBuilder parse(Object cellValue) throws TextGridException;
 
 }
