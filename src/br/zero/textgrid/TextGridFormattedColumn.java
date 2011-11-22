@@ -182,12 +182,13 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		return stringFormatter;
 	}
 
-	public static TextGridFormattedColumn createFormattedColumn(TextGrid grid, String title, TextGridFormatter formatter, String getterMethod, String columnSeparator) {
+	public static TextGridFormattedColumn createFormattedColumn(TextGrid grid, String title, TextGridFormatter formatter, ColumnAlignment alignment, String getterMethod, String columnSeparator) {
 		TextGridFormattedColumn newColumn = new TextGridFormattedColumn();
 		
 		newColumn.setTitle(title);
 		newColumn.setSeparator(columnSeparator);
 		newColumn.setFormatter(formatter);
+		newColumn.setAlignment(alignment);
 		newColumn.setLineGetterMethod(getterMethod);
 		
 		grid.getData().registerColumn(newColumn);
@@ -195,8 +196,8 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		return newColumn;
 	}
 
-	public static TextGridFormattedColumn createFormattedColumn(TextGrid grid, String title, TextGridFormatter formatter, String getterMethod) {
-		return createFormattedColumn(grid, title, formatter, getterMethod, grid.getData().getDefaultColumnSeparator());
+	public static TextGridFormattedColumn createFormattedColumn(TextGrid grid, String title, TextGridFormatter formatter, ColumnAlignment alignment, String getterMethod) {
+		return createFormattedColumn(grid, title, formatter, alignment, getterMethod, grid.getData().getDefaultColumnSeparator());
 	}
 
 	@Override
