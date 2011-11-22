@@ -67,11 +67,13 @@ public class TextGrid {
 	private void calcValuesMatrix() throws TextGridException {
 		List<List<StringBuilder>> baseMatrix = new ArrayList<List<StringBuilder>>();
 
-		List<String> headerBaseMatrix = new ArrayList<String>();
+		List<StringBuilder> headerBaseMatrix = new ArrayList<StringBuilder>();
 
 		for (TextGridColumn column : getData().getColumns()) {
-			headerBaseMatrix.add(column.getTitle());
+			headerBaseMatrix.add(new StringBuilder(column.getTitle()));
 		}
+		
+		baseMatrix.add(headerBaseMatrix);
 
 		List<? extends TextGridColumn> columns = getData().getColumns();
 
