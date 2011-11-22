@@ -5,7 +5,7 @@ import java.util.List;
 
 public class TextGridData {
 	private String title = "";
-	private List<TextGridFormattedColumn> columns = new ArrayList<TextGridFormattedColumn>();
+	private List<TextGridColumn> columns = new ArrayList<TextGridColumn>();
 	private char headerSeparatorChar = '-';
 	private String defaultColumnSeparator = " | ";
 	private boolean aligned = true;
@@ -34,12 +34,8 @@ public class TextGridData {
 		this.defaultColumnSeparator = defaultColumnSeparator;
 	}
 
-	public List<TextGridFormattedColumn> getColumns() {
+	public List<? extends TextGridColumn> getColumns() {
 		return columns;
-	}
-
-	public void setColumns(List<TextGridFormattedColumn> columns) {
-		this.columns = columns;
 	}
 
 	public boolean getAligned() {
@@ -49,22 +45,9 @@ public class TextGridData {
 	public void setAligned(boolean aligned) {
 		this.aligned = aligned;
 	}
-
-	public TextGridFormattedColumn createFormattedColumn(String title, TextGridFormatter formatter, String getterMethod, String columnSeparator) {
-		TextGridFormattedColumn newColumn = new TextGridFormattedColumn();
-		
-		newColumn.setTitle(title);
-		newColumn.setSeparator(columnSeparator);
-		newColumn.setFormatter(formatter);
-		newColumn.setLineGetterMethod(getterMethod);
-		
-		columns.add(newColumn);
-		
-		return newColumn;
-	}
-
-	public TextGridFormattedColumn createFormattedColumn(String title, TextGridFormatter formatter, String getterMethod) {
-		return createFormattedColumn(title, formatter, getterMethod, defaultColumnSeparator);
+	
+	public void registerColumn(TextGridColumn column) {
+		columns.add(column);
 	}
 	
 }

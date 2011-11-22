@@ -55,7 +55,7 @@ public class TextGridFormattedColumn implements TextGridColumn {
 	}
 
 	@Override
-	public Object getCellValue(Object line) throws TextGridException {
+	public Object getCellObject(Object line) throws TextGridException {
 		Method getter;
 		
 		Object cellValue;
@@ -69,6 +69,15 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		}
 		
 		return cellValue;
+	}
+	
+	@Override
+	public String parse(Object cellValue) throws TextGridException {
+		TextGridFormatter formatter = getFormatter();
+		
+		String formattedCellValue = formatter.parse(cellValue);
+		
+		return formattedCellValue;
 	}
 
 	public static TextGridFormatter createIDFormatter() {
@@ -169,5 +178,23 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		
 		return stringFormatter;
 	}
+
+	public static TextGridFormattedColumn createFormattedColumn(TextGrid grid, String title, TextGridFormatter formatter, String getterMethod, String columnSeparator) {
+		TextGridFormattedColumn newColumn = new TextGridFormattedColumn();
+		
+		newColumn.setTitle(title);
+		newColumn.setSeparator(columnSeparator);
+		newColumn.setFormatter(formatter);
+		newColumn.setLineGetterMethod(getterMethod);
+		
+		grid.getData().registerColumn(newColumn);
+		
+		return newColumn;
+	}
+
+	public static TextGridFormattedColumn createFormattedColumn(TextGrid grid, String title, TextGridFormatter formatter, String getterMethod) {
+		return createFormattedColumn(grid, title, formatter, getterMethod, grid.getData().getDefaultColumnSeparator());
+	}
+	
 
 }

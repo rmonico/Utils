@@ -22,17 +22,17 @@ public class TextGrid {
 
 			StringBuilder line = new StringBuilder();
 
-			for (TextGridFormattedColumn column : getData().getColumns()) {
+			List<? extends TextGridColumn> columns = getData().getColumns();
+			
+			for (TextGridColumn column : columns) {
 
-				Object cellValue = column.getCellValue(o);
+				Object cellObject = column.getCellObject(o);
 				
-				TextGridFormatter formatter = column.getFormatter();
+				String cellValue = column.parse(cellObject);
 				
-				String formattedCellValue = formatter.parse(cellValue);
-				
-				line.append(formattedCellValue);
+				line.append(cellValue);
 
-				if (column != getData().getColumns().get(getData().getColumns().size() - 1)) {
+				if (column != columns.get(columns.size() - 1)) {
 					line.append(column.getSeparator());
 				}
 			}
@@ -53,7 +53,7 @@ public class TextGrid {
 
 		StringBuilder columnTitles = new StringBuilder();
 
-		for (TextGridFormattedColumn column : getData().getColumns()) {
+		for (TextGridColumn column : getData().getColumns()) {
 			columnTitles.append(column.getTitle());
 
 			// Se não é a última coluna...
