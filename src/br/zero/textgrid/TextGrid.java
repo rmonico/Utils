@@ -16,6 +16,10 @@ public class TextGrid {
 	}
 
 	public void show() throws TextGridException {
+		if (getData().isAligned()) {
+//			calcColumn
+		}
+		
 		makeListHeader();
 
 		for (Object o : values) {

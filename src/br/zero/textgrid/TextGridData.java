@@ -38,7 +38,7 @@ public class TextGridData {
 		return columns;
 	}
 
-	public boolean getAligned() {
+	public boolean isAligned() {
 		return aligned;
 	}
 
