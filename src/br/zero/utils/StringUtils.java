@@ -41,18 +41,110 @@ public class StringUtils {
 		return list;
 	}
 
-	public static String extractPackageName(String fullQualifiedName) {
-		int lastIndexOf = fullQualifiedName.lastIndexOf('.');
-
-		if (lastIndexOf == -1) {
-			lastIndexOf = 0;
+	public static boolean isGenericTypeName(String fullQualifiedName) {
+		if (fullQualifiedName == null) {
+			return false;
 		}
-		
-		return fullQualifiedName.substring(0, lastIndexOf);
+
+		int lessSignalIndex = fullQualifiedName.indexOf('<');
+
+		return lessSignalIndex > -1;
+	}
+
+	public static String getGenericBaseType(String fullQualifiedName) {
+		if (!(isGenericTypeName(fullQualifiedName))) {
+			return fullQualifiedName;
+		}
+
+		int lessSignalIndex = fullQualifiedName.indexOf('<');
+
+		String genericBaseType = fullQualifiedName.substring(0, lessSignalIndex);
+
+		return genericBaseType;
+	}
+
+	public static String extractPackageName(String fullQualifiedName) {
+		if (fullQualifiedName == null) {
+			return null;
+		}
+
+		if (isGenericTypeName(fullQualifiedName)) {
+			fullQualifiedName = getGenericBaseType(fullQualifiedName);
+		}
+
+		int lastDotIndexOf = fullQualifiedName.lastIndexOf('.');
+
+		if (lastDotIndexOf == -1) {
+			lastDotIndexOf = 0;
+		}
+
+		String packageName = fullQualifiedName.substring(0, lastDotIndexOf);
+
+		return packageName;
 	}
 
 	public static String extractTypeName(String fullQualifiedName) {
-		return fullQualifiedName.substring(fullQualifiedName.lastIndexOf('.') + 1, fullQualifiedName.length());
+		if (fullQualifiedName == null) {
+			return null;
+		}
+
+		boolean genericTypeName = isGenericTypeName(fullQualifiedName);
+
+		String genericParameters = null;
+
+		if (genericTypeName) {
+			genericParameters = getGenericParameters(fullQualifiedName);
+
+			fullQualifiedName = getGenericBaseType(fullQualifiedName);
+		}
+
+		String typeName = fullQualifiedName.substring(fullQualifiedName.lastIndexOf('.') + 1, fullQualifiedName.length());
+
+		if (genericTypeName) {
+			typeName = typeName.concat(genericParameters);
+		}
+
+		return typeName;
+	}
+
+//	/**
+//	 * "java.util.Map<java.lang.Integer, java.lang.String>" =>
+//	 * "java.lang.Integer", "java.lang.String"
+//	 * 
+//	 * @param fullQualifiedName
+//	 * @return
+//	 */
+//	private static List<String> getGenericParameterList(String fullQualifiedName) {
+//		if (fullQualifiedName == null) {
+//			return null;
+//		}
+//
+//		int lessSignalIndex = fullQualifiedName.indexOf('<');
+//
+//		String genericParameters = fullQualifiedName.substring(lessSignalIndex, fullQualifiedName.length() - 1);
+//
+//		List<String> genericParameterList = Arrays.asList(genericParameters.split(","));
+//
+//		return genericParameterList;
+//	}
+
+	/**
+	 * "java.util.Map<java.lang.Integer, java.lang.String>" =>
+	 * "java.lang.Integer, java.lang.String"
+	 * 
+	 * @param fullQualifiedName
+	 * @return
+	 */
+	private static String getGenericParameters(String fullQualifiedName) {
+		if (fullQualifiedName == null) {
+			return null;
+		}
+
+		int lessSignalIndex = fullQualifiedName.indexOf('<');
+
+		String genericParameters = fullQualifiedName.substring(lessSignalIndex, fullQualifiedName.length());
+
+		return genericParameters;
 	}
 
 	public static StringBuilder replicateChar(char ch, int count) {
