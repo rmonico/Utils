@@ -48,7 +48,7 @@ public class ParsersTest extends CustomCommandLineParserTests {
 	}
 
 	/**
-	 * Testa um opção de enum nomeada. No exemplo, o item REMOVE do enum é
+	 * Testa uma opção de enum nomeada. No exemplo, o item REMOVE do enum é
 	 * setado pelo parâmetro "rm" da linha de comando.
 	 * 
 	 * @throws ParserException
@@ -77,11 +77,11 @@ public class ParsersTest extends CustomCommandLineParserTests {
 		MainBean switches = new MainBean();
 
 		parser.setSwitchesObject(switches);
-		
+
 		parser.parse();
 
 		assertEquals("Main Bean - Command", ComplexCommand.COMMAND1, switches.getComplexCommand());
-		
+
 		assertNotNull("Complex command - sub switches 1 not null", switches.getCommand1SubSwitches());
 		assertNull("Complex command - sub switches 2 null", switches.getCommand2SubSwitches());
 
@@ -100,17 +100,64 @@ public class ParsersTest extends CustomCommandLineParserTests {
 		MainBean switches = new MainBean();
 
 		parser.setSwitchesObject(switches);
-		
+
 		parser.parse();
 
 		assertEquals("Main Bean - Command", ComplexCommand.COMMAND2, switches.getComplexCommand());
-		
+
 		assertNull("Complex command - sub switches 1 null", switches.getCommand1SubSwitches());
 		assertNotNull("Complex command - sub switches 2 not null", switches.getCommand2SubSwitches());
 
 		assertEquals("Complex switch - sub switches 2 contents", "Command2Value", switches.getCommand2SubSwitches().getCommand2Switch());
 
 		// O switch complexo consumiu toda a linha de comando
+		assertFalse("Complex switch - no errors", parser.hasErrors());
+	}
+
+	/**
+	 * Testa como um parser de enum complexo se comporta quando colocado junto a
+	 * enum não-complexos
+	 * 
+	 * @throws ParserException
+	 */
+	@Test
+	public void testMixedComplexEnumSwitch() throws ParserException {
+		parser.setValuesObject(new String[] { "ComplexCommand", "COMMAND1" });
+
+		parser.getPropertyParsers().put("EnumParser", new EnumParser(ComplexCommand.class));
+
+		MixedBean switches = new MixedBean();
+
+		parser.setSwitchesObject(switches);
+
+		parser.parse();
+
+		assertEquals("Mixed Bean - Command", ComplexCommand.COMMAND1, switches.getComplexCommand());
+		
+		assertNull("Mixed Bean - switches", switches.getCommand2SubSwitches());
+		
+		// O switch complexo consumiu toda a linha de comando
+		assertFalse("Complex switch - no errors", parser.hasErrors());
+	}
+
+	@Test
+	public void test2MixedComplexEnumSwitch() throws ParserException {
+		parser.setValuesObject(new String[] { "ComplexCommand", "COMMAND2", "Command2Switch", "Command2Value" });
+
+		parser.getPropertyParsers().put("EnumParser", new EnumParser(ComplexCommand.class));
+
+		MixedBean switches = new MixedBean();
+
+		parser.setSwitchesObject(switches);
+
+		parser.parse();
+
+		assertEquals("Mixed Bean - Command", ComplexCommand.COMMAND2, switches.getComplexCommand());
+		
+		assertNotNull("Mixed Bean - switches", switches.getCommand2SubSwitches());
+		
+		assertEquals("Complex switch - sub switches 2 contents", "Command2Value", switches.getCommand2SubSwitches().getCommand2Switch());
+
 		assertFalse("Complex switch - no errors", parser.hasErrors());
 	}
 }

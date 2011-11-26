@@ -104,7 +104,8 @@ public class EnumParser {
 		Class<?> subObjectClass = parameter.getSubObjectClasses().get(e.toString());
 		
 		if (subObjectClass == null) {
-			throw new RuntimeException("Classe de subObjeto não encontrada (" + e + ").");
+			// Não conseguiu encontrar nenhum sub objeto correspondente
+			return r;
 		}
 		
 		Object subObject = null;

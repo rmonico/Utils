@@ -160,7 +160,7 @@ public class CommandLineParser {
 		SubCommandLine subCommandLineSetup = getSubCommandLineFor(parsedObject);
 
 		if (subCommandLineSetup == null) {
-			throw new ParserException("None sub command line found for \"" + parsedObject.getClass() + "\"...");
+			return;
 		}
 
 		Method subObjectMethod;

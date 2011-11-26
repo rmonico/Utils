@@ -11,8 +11,9 @@ public @interface SubCommandLine {
 
 	String value();
 
-	String propertyName();
+	Class<?> subCommandLineClass() default Object.class;
+	// TODO Fazer os testes disto depois do almoço
 
-	Class<?> subCommandLineClass();
+	String propertyName() default "";
 
 }
