@@ -18,6 +18,7 @@ public class TextGridFormattedColumn implements TextGridColumn {
 	public static final TextGridFormatter INTEGER_FORMATTER = createIntegerFormatter();
 	public static final TextGridFormatter MONEY_FORMATTER = createMoneyFormatter();
 	public static final TextGridFormatter STRING_FORMATTER = createStringFormatter();
+	public static final TextGridFormatter NULL_FORMATTER = createNullFormatter();
 
 	@Override
 	public String getTitle() {
@@ -46,11 +47,11 @@ public class TextGridFormattedColumn implements TextGridColumn {
 	public void setFormatter(TextGridFormatter formatter) {
 		this.formatter = formatter;
 	}
-	
+
 	public String getLineGetterMethod() {
 		return lineGetterMethod;
 	}
-	
+
 	public void setLineGetterMethod(String lineGetterMethod) {
 		this.lineGetterMethod = lineGetterMethod;
 	}
@@ -58,9 +59,9 @@ public class TextGridFormattedColumn implements TextGridColumn {
 	@Override
 	public Object getCellObject(Object line) throws TextGridException {
 		Method getter;
-		
+
 		Object cellValue;
-		
+
 		try {
 			getter = line.getClass().getMethod(lineGetterMethod);
 
@@ -68,47 +69,54 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		} catch (Exception e) {
 			throw new TextGridException(e);
 		}
-		
+
 		return cellValue;
 	}
-	
+
 	@Override
 	public StringBuilder parse(Object cellValue) throws TextGridException {
 		TextGridFormatter formatter = getFormatter();
-		
+
 		StringBuilder formattedCellValue = formatter.parse(cellValue);
-		
+
 		return formattedCellValue;
 	}
 
 	public static TextGridFormatter createIDFormatter() {
 		TextGridFormatter idFormatter = new TextGridFormatter() {
-			
+
 			@Override
 			public StringBuilder parse(Object cellValue) throws TextGridException {
+				if (cellValue == null) {
+					return NULL_FORMATTER.parse(cellValue);
+				}
+				
 				return new StringBuilder("#" + INTEGER_FORMATTER.parse(cellValue));
 			}
 		};
-		
-		
+
 		return idFormatter;
 	}
 
 	private static TextGridFormatter createDateFormatter() {
 		TextGridFormatter dateFormatter = new TextGridFormatter() {
-			
+
 			@Override
 			public StringBuilder parse(Object cellValue) throws TextGridException {
+				
+				if (cellValue == null) {
+					return NULL_FORMATTER.parse(cellValue);
+				}
 				
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
 
 				if (cellValue instanceof Date) {
 					Date value = (Date) cellValue;
-					
+
 					return new StringBuilder(sdf.format(value));
 				} else if (cellValue instanceof Calendar) {
 					Calendar value = (Calendar) cellValue;
-					
+
 					return new StringBuilder(sdf.format(value.getTime()));
 				} else {
 					throw new TextGridException("DATE_FORMATTER: Must be used only with java.util.Date or java.util.Calendar fields.");
@@ -120,54 +128,60 @@ public class TextGridFormattedColumn implements TextGridColumn {
 
 	private static TextGridFormatter createIntegerFormatter() {
 		TextGridFormatter integerFormatter = new TextGridFormatter() {
-			
+
 			@Override
 			public StringBuilder parse(Object cellValue) throws TextGridException {
+				if (cellValue == null) {
+					return NULL_FORMATTER.parse(cellValue);
+				}
+				
 				if (!(cellValue instanceof Integer)) {
 					throw new TextGridException("INTEGER_FORMATTER: Must be used only with java.lang.Integer fields.");
 				}
-				
+
 				Integer value = (Integer) cellValue;
-				
+
 				StringBuilder finalValue = new StringBuilder(value.toString());
-				
+
 				return finalValue;
 			}
 		};
-		
-		
+
 		return integerFormatter;
 	}
 
 	private static TextGridFormatter createMoneyFormatter() {
 		TextGridFormatter moneyFormatter = new TextGridFormatter() {
-			
+
 			@Override
 			public StringBuilder parse(Object cellValue) throws TextGridException {
-				if (!(cellValue instanceof Double)) {
-					throw new TextGridException("MONEY_FORMATTER: Must be used only with java.lang.Integer fields.");
+				if (cellValue == null) {
+					return NULL_FORMATTER.parse(cellValue);
 				}
-				
+
+				if (!(cellValue instanceof Double)) {
+					throw new TextGridException("MONEY_FORMATTER: Must be used only with java.lang.Double fields.");
+				}
+
 				Double value = (Double) cellValue;
-				
+
 				StringBuilder finalValue = new StringBuilder("$" + value.toString());
-				
+
 				return finalValue;
 			}
 		};
-		
-		
+
 		return moneyFormatter;
 	}
 
 	private static TextGridFormatter createStringFormatter() {
 		TextGridFormatter stringFormatter = new TextGridFormatter() {
-			
+
 			@Override
 			public StringBuilder parse(Object cellValue) throws TextGridException {
-				
+
 				if (cellValue == null) {
-					return new StringBuilder("");
+					return NULL_FORMATTER.parse(cellValue);
 				} else if (cellValue instanceof String) {
 					return new StringBuilder((String) cellValue);
 				} else if (cellValue instanceof StringBuilder) {
@@ -177,22 +191,33 @@ public class TextGridFormattedColumn implements TextGridColumn {
 				}
 			}
 		};
-		
-		
+
 		return stringFormatter;
+	}
+
+	private static TextGridFormatter createNullFormatter() {
+		TextGridFormatter nullFormatter = new TextGridFormatter() {
+
+			@Override
+			public StringBuilder parse(Object cellValue) {
+				return new StringBuilder("[null]");
+			}
+		};
+
+		return nullFormatter;
 	}
 
 	public static TextGridFormattedColumn createFormattedColumn(TextGrid grid, String title, TextGridFormatter formatter, TextGridColumnAlignment alignment, String getterMethod, String columnSeparator) {
 		TextGridFormattedColumn newColumn = new TextGridFormattedColumn();
-		
+
 		newColumn.setTitle(title);
 		newColumn.setSeparator(columnSeparator);
 		newColumn.setFormatter(formatter);
 		newColumn.setAlignment(alignment);
 		newColumn.setLineGetterMethod(getterMethod);
-		
+
 		grid.getData().registerColumn(newColumn);
-		
+
 		return newColumn;
 	}
 
@@ -209,6 +234,5 @@ public class TextGridFormattedColumn implements TextGridColumn {
 	public void setAlignment(TextGridColumnAlignment alignment) {
 		this.alignment = alignment;
 	}
-	
 
 }
