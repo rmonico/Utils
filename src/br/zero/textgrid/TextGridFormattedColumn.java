@@ -18,6 +18,7 @@ public class TextGridFormattedColumn implements TextGridColumn {
 	public static final TextGridFormatter INTEGER_FORMATTER = createIntegerFormatter();
 	public static final TextGridFormatter MONEY_FORMATTER = createMoneyFormatter();
 	public static final TextGridFormatter STRING_FORMATTER = createStringFormatter();
+	public static final TextGridFormatter BOOLEAN_FORMATTER = createBooleanFormatter();
 	public static final TextGridFormatter NULL_FORMATTER = createNullFormatter();
 
 	@Override
@@ -193,6 +194,27 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		};
 
 		return stringFormatter;
+	}
+
+	private static TextGridFormatter createBooleanFormatter() {
+		TextGridFormatter booleanFormatter = new TextGridFormatter() {
+
+			@Override
+			public StringBuilder parse(Object cellValue) throws TextGridException {
+
+				if (cellValue == null) {
+					return NULL_FORMATTER.parse(cellValue);
+				} else if (cellValue instanceof Boolean) {
+					Boolean b = (Boolean) cellValue;
+					
+					return new StringBuilder(b ? "[ X ]" : "[   ]");
+				} else {
+					throw new TextGridException("BOOLEAN_FORMATTER: Must be used only with java.lang.Boolean fields.");
+				}
+			}
+		};
+
+		return booleanFormatter;
 	}
 
 	private static TextGridFormatter createNullFormatter() {
