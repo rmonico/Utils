@@ -26,7 +26,7 @@ public class TextGrid {
 
 		int valueCount = values.size();
 		
-		System.out.println("(" + valueCount + " line" + (valueCount == 1 ? "s" : "") + ")");
+		System.out.println("(" + valueCount + " line" + (valueCount == 1 ? "" : "s") + ")");
 
 		System.out.println("--");
 
