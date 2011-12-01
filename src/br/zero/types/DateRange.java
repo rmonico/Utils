@@ -6,6 +6,16 @@ public class DateRange {
 	private Calendar start;
 	private Calendar end;
 
+	public DateRange() {
+		super();
+	}
+	
+	public DateRange(Calendar start, Calendar end) {
+		this();
+		
+		this.start = start;
+		this.end = end;
+	}
 	public Calendar getStart() {
 		return start;
 	}
