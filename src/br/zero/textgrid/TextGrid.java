@@ -24,9 +24,11 @@ public class TextGrid {
 
 		makeList();
 
-		System.out.println("");
+		int valueCount = values.size();
+		
+		System.out.println("(" + valueCount + " line" + (valueCount == 1 ? "s" : "") + ")");
 
-		System.out.println("-- Fim");
+		System.out.println("--");
 
 	}
 
@@ -72,7 +74,7 @@ public class TextGrid {
 		for (TextGridColumn column : getData().getColumns()) {
 			headerBaseMatrix.add(new StringBuilder(column.getTitle()));
 		}
-		
+
 		baseMatrix.add(headerBaseMatrix);
 
 		List<? extends TextGridColumn> columns = getData().getColumns();
@@ -101,8 +103,8 @@ public class TextGrid {
 		// valores
 
 		List<Integer> columnsWidth = new ArrayList<Integer>();
-		
-		for (int i=0; i<baseMatrix.get(0).size(); i++) {
+
+		for (int i = 0; i < baseMatrix.get(0).size(); i++) {
 			columnsWidth.add(-1);
 		}
 
