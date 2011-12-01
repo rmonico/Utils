@@ -133,9 +133,9 @@ public class ParsersTest extends CustomCommandLineParserTests {
 		parser.parse();
 
 		assertEquals("Mixed Bean - Command", ComplexCommand.COMMAND1, switches.getComplexCommand());
-		
+
 		assertNull("Mixed Bean - switches", switches.getCommand2SubSwitches());
-		
+
 		// O switch complexo consumiu toda a linha de comando
 		assertFalse("Complex switch - no errors", parser.hasErrors());
 	}
@@ -153,31 +153,50 @@ public class ParsersTest extends CustomCommandLineParserTests {
 		parser.parse();
 
 		assertEquals("Mixed Bean - Command", ComplexCommand.COMMAND2, switches.getComplexCommand());
-		
+
 		assertNotNull("Mixed Bean - switches", switches.getCommand2SubSwitches());
-		
+
 		assertEquals("Complex switch - sub switches 2 contents", "Command2Value", switches.getCommand2SubSwitches().getCommand2Switch());
 
 		assertFalse("Complex switch - no errors", parser.hasErrors());
 	}
-	
+
 	@Test
 	public void testDateRangeParser() throws ParserException {
-		parser.setValuesObject(new String[] { "13/nov/2011--15/nov/2011"});
+		parser.setValuesObject(new String[] { "13/nov/2011-15/nov/2011" });
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
-		
+
 		parser.getPropertyParsers().put("UtilsParser", new UtilsParser(sdf));
 
 		DateRangeBean switches = new DateRangeBean();
-		
 
 		parser.setSwitchesObject(switches);
 
 		parser.parse();
-		
+
 		assertNotNull("Date Range Not Null", switches.getDateRange());
 		assertEquals("Date Range - data inicial", "13/Nov/2011", sdf.format(switches.getDateRange().getStart().getTime()));
 		assertEquals("Date Range - data final", "15/Nov/2011", sdf.format(switches.getDateRange().getEnd().getTime()));
 	}
+
+// Depois...
+//	@Test
+//	public void test2DateRangeParser() throws ParserException {
+//		parser.setValuesObject(new String[] { "13-15/nov/2011" });
+//
+//		SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
+//
+//		parser.getPropertyParsers().put("UtilsParser", new UtilsParser(sdf));
+//
+//		DateRangeBean switches = new DateRangeBean();
+//
+//		parser.setSwitchesObject(switches);
+//
+//		parser.parse();
+//
+//		assertNotNull("Date Range Not Null", switches.getDateRange());
+//		assertEquals("Date Range - data inicial", "13/Nov/2011", sdf.format(switches.getDateRange().getStart().getTime()));
+//		assertEquals("Date Range - data final", "15/Nov/2011", sdf.format(switches.getDateRange().getEnd().getTime()));
+//	}
 }

@@ -10,16 +10,17 @@ import br.zero.types.DateRange;
 
 public class UtilsParser {
 
+	private static final Character DATERANGE_SEPARATOR = '-';
 	private String error;
 	private DateFormat dateFormat;
-	
+
 	public UtilsParser() {
 		super();
 	}
-	
+
 	public UtilsParser(DateFormat dateFormat) {
 		this();
-		
+
 		this.dateFormat = dateFormat;
 	}
 
@@ -31,41 +32,50 @@ public class UtilsParser {
 		} catch (ParseException e) {
 			error = "Não foi possível converter a string \"" + value + "\" para uma data...\n" + e.toString();
 		}
-		
+
 		return calendar;
 	}
 
 	@CommandLineArgumentParserMethod(messageMethod = "getError")
 	public DateRange parseDateRange(String value) {
-		String dataInicio = getDataInicio(value);
-		String dataFim = getDataFim(value);
-		
-		
+		String startDateStr = getStartDateStr(value);
+		String endDateStr = getEndDateStr(value);
+
 		Calendar startDate = GregorianCalendar.getInstance();
 		try {
-			startDate.setTime(dateFormat.parse("13/nov/2011"));
+			startDate.setTime(dateFormat.parse(startDateStr));
 		} catch (ParseException e) {
 			error = "Error parsing start date: " + e.getMessage();
 		}
-		
+
 		Calendar endDate = GregorianCalendar.getInstance();
 		try {
-			endDate.setTime(dateFormat.parse("15/nov/2011"));
+			endDate.setTime(dateFormat.parse(endDateStr));
 		} catch (ParseException e) {
 			error = "Error parsing end date: " + e.getMessage();
 		}
-		
+
 		return new DateRange(startDate, endDate);
 	}
-	
-	private String getDataInicio(String value) {
-//		int separatorIndex = 
-		return null;
+
+	private String getStartDateStr(String value) {
+		int separatorIndex = value.indexOf(DATERANGE_SEPARATOR);
+
+		if (separatorIndex == -1) {
+			return null;
+		}
+
+		return value.substring(0, separatorIndex);
 	}
-	
-	private String getDataFim(String value) {
-		// TODO Auto-generated method stub
-		return null;
+
+	private String getEndDateStr(String value) {
+		int separatorIndex = value.indexOf(DATERANGE_SEPARATOR);
+
+		if (separatorIndex == -1) {
+			return null;
+		}
+
+		return value.substring(separatorIndex + 1, value.length());
 	}
 
 	public String getError() {
