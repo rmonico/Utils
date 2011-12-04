@@ -11,8 +11,8 @@ import javax.persistence.Query;
 public abstract class CustomDAO<T> {
 
 	private static EntitySetup setup;
-	private EntityManagerFactory entityManagerFactory;
-	private EntityManager entityManager;
+	private static EntityManagerFactory entityManagerFactory;
+	private static EntityManager entityManager;
 	private EntityTransaction entityTransaction;
 
 	public CustomDAO() {
