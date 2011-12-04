@@ -179,6 +179,7 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		TextGridFormatter stringFormatter = new TextGridFormatter() {
 
 			@Override
+			// TODO Trocar \t (caracteres tab) pelo texto <tab>
 			public StringBuilder parse(Object cellValue) throws TextGridException {
 
 				if (cellValue == null) {
