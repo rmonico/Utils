@@ -182,16 +182,33 @@ public class TextGridFormattedColumn implements TextGridColumn {
 			// TODO Trocar \t (caracteres tab) pelo texto <tab>
 			public StringBuilder parse(Object cellValue) throws TextGridException {
 
+				StringBuilder value;
 				if (cellValue == null) {
-					return NULL_FORMATTER.parse(cellValue);
+					value = NULL_FORMATTER.parse(cellValue);
 				} else if (cellValue instanceof String) {
-					return new StringBuilder((String) cellValue);
+					value = new StringBuilder((String) cellValue);
 				} else if (cellValue instanceof StringBuilder) {
-					return (StringBuilder) cellValue;
+					value = (StringBuilder) cellValue;
 				} else if (cellValue instanceof Character) {
-					return new StringBuilder((Character) cellValue);
+					value = new StringBuilder(cellValue.toString());
 				} else {
 					throw new TextGridException("STRING_FORMATTER: Must be used only with java.lang.String fields.");
+				}
+				
+				removeTabs(value);
+				
+				return value;
+			}
+
+			/**
+			 * Substitui os tabs por <tab>
+			 * @param value
+			 */
+			private void removeTabs(StringBuilder value) {
+				int tabpos;
+				
+				while ((tabpos = value.indexOf("\t")) > -1) {
+					value.replace(tabpos, tabpos+1, "<tab>");
 				}
 			}
 		};
