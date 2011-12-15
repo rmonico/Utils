@@ -5,9 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+// TODO Mudar @Target ElementType para FIELD, não deve ser utilizado mais em
+// métodos (obrigado o usuário a criar um método setter para parâmetros tipo
+// lista).
 public @interface CommandLineSwitch {
 
 	/**
