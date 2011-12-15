@@ -188,6 +188,8 @@ public class TextGridFormattedColumn implements TextGridColumn {
 					return new StringBuilder((String) cellValue);
 				} else if (cellValue instanceof StringBuilder) {
 					return (StringBuilder) cellValue;
+				} else if (cellValue instanceof Character) {
+					return new StringBuilder((Character) cellValue);
 				} else {
 					throw new TextGridException("STRING_FORMATTER: Must be used only with java.lang.String fields.");
 				}
