@@ -1,6 +1,7 @@
 package br.zero.textgrid;
 
 import java.lang.reflect.Method;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -165,8 +166,9 @@ public class TextGridFormattedColumn implements TextGridColumn {
 				}
 
 				Double value = (Double) cellValue;
-
-				StringBuilder finalValue = new StringBuilder("$" + value.toString());
+				
+				NumberFormat nf = NumberFormat.getCurrencyInstance();
+				StringBuilder finalValue = new StringBuilder(nf.format(value));
 
 				return finalValue;
 			}
