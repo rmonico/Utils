@@ -13,7 +13,6 @@ public class TextGridFormattedColumn implements TextGridColumn {
 	private String lineGetterMethod;
 	private TextGridColumnAlignment alignment;
 
-	public static final TextGridFormatter TOSTRING_FORMATTER = createToStringFormatter();
 	public static final TextGridFormatter ID_FORMATTER = createIDFormatter();
 	public static final TextGridFormatter DATE_FORMATTER = createDateFormatter();
 	public static final TextGridFormatter INTEGER_FORMATTER = createIntegerFormatter();
@@ -82,22 +81,6 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		StringBuilder formattedCellValue = formatter.parse(cellValue);
 
 		return formattedCellValue;
-	}
-
-	private static TextGridFormatter createToStringFormatter() {
-		TextGridFormatter toStringFormatter = new TextGridFormatter() {
-
-			@Override
-			public StringBuilder parse(Object cellValue) throws TextGridException {
-				if (cellValue == null) {
-					return NULL_FORMATTER.parse(cellValue);
-				}
-				
-				return new StringBuilder(cellValue.toString());
-			}
-		};
-
-		return toStringFormatter;
 	}
 
 	public static TextGridFormatter createIDFormatter() {
