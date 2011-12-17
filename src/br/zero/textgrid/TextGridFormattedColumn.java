@@ -13,12 +13,13 @@ public class TextGridFormattedColumn implements TextGridColumn {
 	private String lineGetterMethod;
 	private TextGridColumnAlignment alignment;
 
+	public static final TextGridFormatter TOSTRING_FORMATTER = createToStringFormatter();
 	public static final TextGridFormatter ID_FORMATTER = createIDFormatter();
 	public static final TextGridFormatter DATE_FORMATTER = createDateFormatter();
 	public static final TextGridFormatter INTEGER_FORMATTER = createIntegerFormatter();
 	public static final TextGridFormatter MONEY_FORMATTER = createMoneyFormatter();
 	public static final TextGridFormatter STRING_FORMATTER = createStringFormatter();
-	public static final TextGridFormatter BOOLEAN_FORMATTER = createBooleanFormatter();
+	public static final TextGridFormatter BOOLEAN_FORMATTER = createBooleanFormatter("[ X ]", "[   ]");
 	public static final TextGridFormatter NULL_FORMATTER = createNullFormatter();
 
 	@Override
@@ -81,6 +82,22 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		StringBuilder formattedCellValue = formatter.parse(cellValue);
 
 		return formattedCellValue;
+	}
+
+	private static TextGridFormatter createToStringFormatter() {
+		TextGridFormatter toStringFormatter = new TextGridFormatter() {
+
+			@Override
+			public StringBuilder parse(Object cellValue) throws TextGridException {
+				if (cellValue == null) {
+					return NULL_FORMATTER.parse(cellValue);
+				}
+				
+				return new StringBuilder(cellValue.toString());
+			}
+		};
+
+		return toStringFormatter;
 	}
 
 	public static TextGridFormatter createIDFormatter() {
@@ -179,7 +196,6 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		TextGridFormatter stringFormatter = new TextGridFormatter() {
 
 			@Override
-			// TODO Trocar \t (caracteres tab) pelo texto <tab>
 			public StringBuilder parse(Object cellValue) throws TextGridException {
 
 				StringBuilder value;
@@ -216,7 +232,7 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		return stringFormatter;
 	}
 
-	private static TextGridFormatter createBooleanFormatter() {
+	public static TextGridFormatter createBooleanFormatter(final String trueString, final String falseString) {
 		TextGridFormatter booleanFormatter = new TextGridFormatter() {
 
 			@Override
@@ -227,7 +243,7 @@ public class TextGridFormattedColumn implements TextGridColumn {
 				} else if (cellValue instanceof Boolean) {
 					Boolean b = (Boolean) cellValue;
 					
-					return new StringBuilder(b ? "[ X ]" : "[   ]");
+					return new StringBuilder(b ? trueString : falseString);
 				} else {
 					throw new TextGridException("BOOLEAN_FORMATTER: Must be used only with java.lang.Boolean fields.");
 				}
