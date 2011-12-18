@@ -29,16 +29,19 @@ public abstract class CustomDAO<T> {
 	protected String getPersistenceUnitName() {
 		// TODO Transformar essa variável em field
 		DAOSetup puinfo = getClass().getAnnotation(DAOSetup.class);
-		
+
 		if (puinfo != null) {
 			return puinfo.persistenceUnitName();
 		}
-		
+
 		return null;
 	}
 
 	private EntityManagerFactory getEntityManagerFactory() {
 		if (entityManagerFactory == null) {
+			// TODO Este campo deve demora para ser instanciado, colocá-lo sob
+			// controle de uma thread que permita que diferentes programas
+			// possam reutilizá-lo
 			entityManagerFactory = Persistence.createEntityManagerFactory(getPersistenceUnitName());
 		}
 
@@ -77,11 +80,11 @@ public abstract class CustomDAO<T> {
 	 */
 	private Class<?> getEntityClass() {
 		DAOSetup daoInfo = getClass().getAnnotation(DAOSetup.class);
-		
+
 		if (daoInfo == null) {
 			throw new RuntimeException("DAO's herdados de CustomDAO<T> devem ser anotados com @DAOSetup.");
 		}
-		
+
 		return daoInfo.entityClass();
 	}
 
@@ -108,14 +111,14 @@ public abstract class CustomDAO<T> {
 		q.setParameter(setup.idFieldName(), id);
 
 		List<T> results = q.getResultList();
-		
+
 		int resultsNumber = results.size();
-		
+
 		if (resultsNumber == 0) {
 			return null;
 		} else {
 			assert resultsNumber == 1 : "getById: Mais de um resultado retornado (possível inconsistência na PK)!";
-			
+
 			return results.get(0);
 		}
 	}
