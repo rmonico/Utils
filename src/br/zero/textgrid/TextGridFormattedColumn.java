@@ -18,6 +18,7 @@ public class TextGridFormattedColumn implements TextGridColumn {
 	public static final TextGridFormatter DATE_FORMATTER = createDateFormatter();
 	public static final TextGridFormatter INTEGER_FORMATTER = createIntegerFormatter();
 	public static final TextGridFormatter MONEY_FORMATTER = createMoneyFormatter();
+	public static final TextGridFormatter PERCENT_FORMATTER = createPercentFormatter();
 	public static final TextGridFormatter STRING_FORMATTER = createStringFormatter();
 	public static final TextGridFormatter BOOLEAN_FORMATTER = createBooleanFormatter("[ X ]", "[   ]");
 	public static final TextGridFormatter NULL_FORMATTER = createNullFormatter();
@@ -175,6 +176,31 @@ public class TextGridFormattedColumn implements TextGridColumn {
 		};
 
 		return moneyFormatter;
+	}
+
+	private static TextGridFormatter createPercentFormatter() {
+		TextGridFormatter percentFormatter = new TextGridFormatter() {
+
+			@Override
+			public StringBuilder parse(Object cellValue) throws TextGridException {
+				if (cellValue == null) {
+					return NULL_FORMATTER.parse(cellValue);
+				}
+
+				if (!(cellValue instanceof Double)) {
+					throw new TextGridException("PERCENT_FORMATTER: Must be used only with java.lang.Double fields.");
+				}
+
+				Double value = (Double) cellValue;
+				
+				NumberFormat nf = NumberFormat.getPercentInstance();
+				StringBuilder finalValue = new StringBuilder(nf.format(value));
+
+				return finalValue;
+			}
+		};
+
+		return percentFormatter;
 	}
 
 	private static TextGridFormatter createStringFormatter() {
