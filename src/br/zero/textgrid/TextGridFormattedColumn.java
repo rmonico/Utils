@@ -235,7 +235,7 @@ public class TextGridFormattedColumn implements TextGridColumn {
 				int tabpos;
 				
 				while ((tabpos = value.indexOf("\t")) > -1) {
-					value.replace(tabpos, tabpos+1, "<tab>");
+					value.replace(tabpos, tabpos+1, "\\t");
 				}
 			}
 		};
