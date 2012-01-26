@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Utils" default="clean" basedir=".">
+<project name="Utils" default="deploy" basedir=".">
 	<description>
 		Utils Build and Deploy File
     </description>
 
 	<!-- set global properties for this build -->
-	<property name="workspace" location=".." />
-	<property name="workspace_library" location="${workspace}/library" />
-	<property name="dist" location="${workspace_library}/utils" />
 	<property name="src" location="src" />
 	<property name="lib" location="lib" />
 	<property name="build" location="build" />
+	<property name="deployFolder" location="../library/utils" />
 	<loadproperties srcFile="version" />
 
 
 	<target name="init">
 		<tstamp />
-		<!-- Create the build directory structure used by compile -->
-		<mkdir dir="${build}" />
 	</target>
 
 	<target name="compile" depends="init" description="compile the source ">
@@ -27,12 +23,11 @@
 			classpath="${lib}/eclipselink/eclipselink-2.2.0.jar:${lib}/eclipselink/eclipselink-javax.persistence-2.0.jar:${lib}/eclipselink/eclipselink-jpa-modelgen-2.2.0.jar:${lib}/junit/junit-4.8.2.jar" />
 	</target>
 
-	<target name="dist" depends="compile" description="generate the distribution">
+	<target name="deploy" depends="compile" description="generate the distribution">
 		<!-- Create the distribution directory -->
-		<mkdir dir="${dist}" />
 
 		<jar
-			jarfile="${dist}/Utils-${version.major}.${version.minor}.${version.build}.jar"
+			jarfile="${deployFolder}/Utils-${version.major}.${version.minor}.${version.build}.jar"
 			basedir="${build}" />
 
 		<!-- Updates the build number -->
@@ -60,7 +55,6 @@
 	</target>
 
 	<target name="showCurrentVersion">
-		<loadproperties srcFile="version" />
 		<echo
 			message="current version = ${version.major}.${version.minor}.${version.build}" />
 	</target>

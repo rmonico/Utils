@@ -1,4 +1,4 @@
-#Wed Jan 25 22:51:09 BRST 2012
-version.minor=1 # Incrementado mediante alterações nos pontos de contato públicos da biblioteca
-version.build=0 # Incrementado todo o build, sempre que houver uma alteração, mesmo que seja apenas na implementação
-version.major=1 #Incrementado arbitariamente
+#Wed Jan 25 23:07:29 BRST 2012
+version.minor=1
+version.build=0
+version.major=1
