@@ -1,28 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Utils" default="compile" basedir=".">
-    <description>
-        Utils Build and Deploy File
+<project name="Utils" default="clean" basedir=".">
+	<description>
+		Utils Build and Deploy File
     </description>
 
-  <!-- set global properties for this build -->
-  <property name="workspace" location=".." />
-  <property name="workspace_library" location="${workspace}/library" />
-  <property name="dist"  location="${workspace_library}/Utils"/>
-  <property name="src" location="src"/>
-  <property name="lib" location="lib"/>
-  <property name="build" location="build"/>
+	<!-- set global properties for this build -->
+	<property name="workspace" location=".." />
+	<property name="workspace_library" location="${workspace}/library" />
+	<property name="dist" location="${workspace_library}/utils" />
+	<property name="src" location="src" />
+	<property name="lib" location="lib" />
+	<property name="build" location="build" />
+	<loadproperties srcFile="version" />
 
-  <target name="init">
-    <tstamp/>
-    <!-- Create the build directory structure used by compile -->
-    <mkdir dir="${build}"/>
-  </target>
 
-  <target name="compile" depends="init"
-        description="compile the source " >
-    <!-- Compile the java code from ${src} into ${build} -->
-    <javac srcdir="${src}" destdir="${build}" classpath="${lib}/eclipselink/eclipselink-2.2.0.jar:${lib}/eclipselink/eclipselink-javax.persistence-2.0.jar:${lib}/eclipselink/eclipselink-jpa-modelgen-2.2.0.jar:${lib}/junit/junit-4.8.2.jar" />
-  </target>
+	<target name="init">
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+	</target>
 
+	<target name="compile" depends="init" description="compile the source ">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}"
+			classpath="${lib}/eclipselink/eclipselink-2.2.0.jar:${lib}/eclipselink/eclipselink-javax.persistence-2.0.jar:${lib}/eclipselink/eclipselink-jpa-modelgen-2.2.0.jar:${lib}/junit/junit-4.8.2.jar" />
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}" />
+
+		<jar
+			jarfile="${dist}/Utils-${version.major}.${version.minor}.${version.build}.jar"
+			basedir="${build}" />
+
+		<!-- Updates the build number -->
+		<propertyfile file="version">
+			<entry key="version.build" type="int" operation="+" value="1" />
+		</propertyfile>
+
+		<antcall target="showCurrentVersion" />
+	</target>
+
+	<target name="increment_minor_version">
+		<propertyfile file="version">
+			<entry key="version.minor" type="int" operation="+" value="1" />
+		</propertyfile>
+
+		<antcall target="showCurrentVersion" />
+	</target>
+
+	<target name="increment_major_version">
+		<propertyfile file="version">
+			<entry key="version.major" type="int" operation="+" value="1" />
+		</propertyfile>
+
+		<antcall target="showCurrentVersion" />
+	</target>
+
+	<target name="showCurrentVersion">
+		<loadproperties srcFile="version" />
+		<echo
+			message="current version = ${version.major}.${version.minor}.${version.build}" />
+	</target>
 </project>
