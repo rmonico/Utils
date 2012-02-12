@@ -3,12 +3,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/Eclipse Link">
-		<attributes>
-			<attribute name="owner.project.facets" value="jpt.jpa"/>
-			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="lib" path="lib/eclipselink/eclipselink-2.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/eclipselink/eclipselink-javax.persistence-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/eclipselink/eclipselink-jpa-modelgen-2.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/junit/junit-4.8.2.jar"/>
+	<classpathentry kind="output" path="build"/>
 </classpath>
