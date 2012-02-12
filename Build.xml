@@ -12,7 +12,6 @@
 	<property name="build" location="build" />
 	<property name="deployFolder" location="../library/utils" />
 	<property name="workspaceLibrary" location="../library" />
-	<loadproperties srcFile="version" />
 
 
 	<target name="init">
@@ -26,41 +25,13 @@
 	</target>
 
 	<target name="deploy" depends="compile" description="generate the distribution">
-		<!-- Updates the build number -->
-		<propertyfile file="version">
-			<entry key="version.build" type="int" operation="+" value="1" />
-		</propertyfile>
-
 		<jar
-			jarfile="${deployFolder}/Utils-${version.major}.${version.minor}.${version.build}.jar"
+			jarfile="${deployFolder}/Utils.jar"
 			basedir="${build}" />
-
-		<antcall target="showCurrentVersion" />
-	</target>
-
-	<target name="increment_minor_version">
-		<propertyfile file="version">
-			<entry key="version.minor" type="int" operation="+" value="1" />
-		</propertyfile>
-
-		<antcall target="showCurrentVersion" />
-	</target>
-
-	<target name="increment_major_version">
-		<propertyfile file="version">
-			<entry key="version.major" type="int" operation="+" value="1" />
-		</propertyfile>
-
-		<antcall target="showCurrentVersion" />
-	</target>
-
-	<target name="showCurrentVersion">
-		<echo
-			message="current version = ${version.major}.${version.minor}.${version.build}" />
 	</target>
 
 	<target name="UpdateProductionVersion">
-		<copy file="${workspaceLibrary}/utils/Utils-${version.major}.${version.minor}.${version.build}.jar" toFile="${workspaceLibrary}/utils/Utils.jar" />
+		<copy file="${workspaceLibrary}/utils/Utils.jar" toFile="${workspaceLibrary}/utils/Utils.jar" />
 	</target>
 
 </project>
