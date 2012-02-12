@@ -6,12 +6,13 @@
 		Utils Build and Deploy File
     </description>
 
-	<!-- set global properties for this build -->
 	<property name="src" location="src" />
 	<property name="lib" location="lib" />
 	<property name="build" location="build" />
-	<property name="deployFolder" location="../library/utils" />
 	<property name="workspaceLibrary" location="../library" />
+	<property name="deployFolder" location="${workspaceLibrary}/utils" />
+	<property name="productionFolder" location="../../programs/javaclasspath" />
+	<property name="productionDeploy" location="${productionFolder}/library/utils" />
 
 
 	<target name="init">
@@ -19,7 +20,6 @@
 	</target>
 
 	<target name="compile" depends="init" description="compile the source ">
-		<!-- Compile the java code from ${src} into ${build} -->
 		<javac srcdir="${src}" destdir="${build}"
 			classpath="${lib}/eclipselink/eclipselink-2.2.0.jar:${lib}/eclipselink/eclipselink-javax.persistence-2.0.jar:${lib}/eclipselink/eclipselink-jpa-modelgen-2.2.0.jar:${lib}/junit/junit-4.8.2.jar" />
 	</target>
@@ -30,8 +30,7 @@
 			basedir="${build}" />
 	</target>
 
-	<target name="UpdateProductionVersion">
-		<copy file="${workspaceLibrary}/utils/Utils.jar" toFile="${workspaceLibrary}/utils/Utils.jar" />
+	<target name="deploy_to_production" depends="deploy">
+		<copy file="${deployFolder}/Utils.jar" toFile="${productionDeploy}/Utils.jar" />
 	</target>
-
 </project>
