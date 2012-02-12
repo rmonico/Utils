@@ -11,6 +11,7 @@
 	<property name="lib" location="lib" />
 	<property name="build" location="build" />
 	<property name="deployFolder" location="../library/utils" />
+	<property name="workspaceLibrary" location="../library" />
 	<loadproperties srcFile="version" />
 
 
