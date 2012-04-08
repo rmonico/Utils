@@ -14,15 +14,19 @@ public class JUnitUtils {
 		
 		List<String> actual = Arrays.asList(actualBlock.split("\n"));
 		
-		List<String> smallerList = (expected.size() < actual.size()) ? expected : actual;
-		
-		for (int i=0; i < smallerList.size() ; i++) {
-			assertEquals(message + " (linha " + (i+1) + ")", expected.get(i), actual.get(i));
-		}
-		
-		if (expected.size() != actual.size()) {
-			assertEquals(message + " (list sizes diff)", expectedBlock.toString(), actualBlock);
-		}
+		assertListsEquals(message, expected, actual);
 	}
 
+	public static <T> void assertListsEquals(String message, List<T> expectedList, List<T> actualList) {
+		List<T> smallerList = (expectedList.size() < actualList.size()) ? expectedList : actualList;
+		
+		for (int i=0; i < smallerList.size() ; i++) {
+			assertEquals(message + " (linha " + (i+1) + ")", expectedList.get(i), actualList.get(i));
+		}
+
+		if (expectedList.size() != actualList.size()) {
+			assertEquals(message + " (list sizes diff)", expectedList.toString(), actualList.toString());
+		}
+	}
+	
 }

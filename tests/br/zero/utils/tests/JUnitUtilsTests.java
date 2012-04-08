@@ -68,7 +68,7 @@ public class JUnitUtilsTests {
 		try {
 			JUnitUtils.assertBlockEquals("Comparação de blocos de código diferentes", expectedBlock.toString(), actualBlock.toString());
 		} catch (ComparisonFailure e) {
-			assertEquals("Comparação de blocos de código de tamanhos diferentes", "Comparação de blocos de código diferentes (list sizes diff) expected:<linha 1\nlinha 2\n[linha 3\nlinha 4\n]> but was:<linha 1\nlinha 2\n[]>", e.getMessage());
+			assertEquals("Comparação de blocos de código de tamanhos diferentes", "Comparação de blocos de código diferentes (list sizes diff) expected:<[linha 1, linha 2[, linha 3, linha 4]]> but was:<[linha 1, linha 2[]]>", e.getMessage());
 		}
 	}
 }
