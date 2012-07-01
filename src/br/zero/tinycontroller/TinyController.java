@@ -7,58 +7,58 @@ import java.util.Map;
 
 public class TinyController {
 
-	private class ConfiguredAction {
-		private Class<? extends Action> action;
-		private Object param;
-		
-		public ConfiguredAction(Class<? extends Action> action, Object param) {
-			this.action = action;
-			this.param = param;
-		}
+	private Map<List<?>, Class<? extends Action<?, ?>>> registeredActions = new HashMap<List<?>, Class<? extends Action<?, ?>>>();
+	private Class<? extends Action<?, ?>> selectedActionClass;
 
-		public Class<? extends Action> getActionClass() {
-			return action;
-		}
-
-		public Object getParam() {
-			return param;
-		}
-
+	public void registerAction(Class<? extends Action<?, ?>> action, Object... values) {
+		registeredActions.put(Arrays.asList(values), action);
 	}
 
-	private Map<List<?>, ConfiguredAction> registeredActions = new HashMap<List<?>, ConfiguredAction>();
-	private ConfiguredAction selectedAction;
-
-	public void registerAction(Class<? extends Action> action, Object actionParam, Object... values) {
-		ConfiguredAction configuredAction = new ConfiguredAction(action, actionParam);
+	public Class<? extends Action<?, ?>> selectAction(Object... values) {
+		selectedActionClass = registeredActions.get(Arrays.asList(values));
 		
-		registeredActions.put(Arrays.asList(values), configuredAction);
-	}
-
-	public void selectAction(Object... params) {
-		selectedAction = registeredActions.get(Arrays.asList(params));
+		return selectedActionClass;
 	}
 
 	public boolean isActionFound() {
-		return selectedAction != null;
+		return selectedActionClass != null;
 	}
 
-	public void runSelectedAction() throws TinyControllerException {
-		Class<? extends Action> actionClass = selectedAction.getActionClass();
+	/// Both warnings are treated on first catch block
+	@SuppressWarnings("unchecked")
+	public <ParamType, ReturnType> ReturnType runAction(ParamType param, Class<? extends ReturnType> returnTypeClass, Class<? extends Action<?, ?>> untypedActionClass) throws TinyControllerException {
+		Class<? extends Action<ParamType, ReturnType>> actionClass;
 		
-		Action action;
+		try {
+			actionClass = (Class<? extends Action<ParamType, ReturnType>>) untypedActionClass;
+		} catch (ClassCastException e) {
+			throw new TinyControllerException("\"param\" class and returnTypeClass must be the same as generic parameters at \"actionClass\". Look corresponding registerAction call for \"" + untypedActionClass.getClass() + "\".", e);
+		}
+		
+		Action<ParamType, ReturnType> action;
+
 		try {
 			action = actionClass.newInstance();
 		} catch (Exception e) {
 			throw new TinyControllerException(e);
 		}
-		
-		Object param = selectedAction.getParam();
-		
+
+		Object untypedResult;
+
 		try {
-			action.run(param);
+			untypedResult = action.run(param);
 		} catch (Exception e) {
 			throw new TinyControllerException("Exception launched running action.", e);
 		}
+
+		ReturnType result = null;
+		
+		try {
+			result = (ReturnType) untypedResult;
+		} catch(ClassCastException e) {
+			assert false : "Treated on first catch, should never happen!";
+		}
+		
+		return result;
 	}
 }
