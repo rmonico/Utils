@@ -37,11 +37,11 @@ public class TinyControllerTests {
 		assertTrue(action.equals(Action1.class));
 	}
 
-	private static class Action2Return {
+	private static class Action2Result {
 		
 		private String wrappedObject;
 
-		public Action2Return(String wrappedObject) {
+		public Action2Result(String wrappedObject) {
 			this.wrappedObject = wrappedObject;
 		}
 
@@ -51,11 +51,11 @@ public class TinyControllerTests {
 
 	}
 
-	public static class Action2 implements Action<String, Action2Return> {
+	public static class Action2 implements Action<String, Action2Result> {
 
 		@Override
-		public Action2Return run(String param) throws Exception {
-			return new Action2Return(param);
+		public Action2Result run(String param) throws Exception {
+			return new Action2Result(param);
 		}
 
 	}
@@ -66,10 +66,19 @@ public class TinyControllerTests {
 		
 		controller.registerAction(Action2.class, "Action2");
 		
-		Class<? extends Action<?, ?>> action = controller.selectAction("Action2");
+		@SuppressWarnings("rawtypes")
+		Class action = controller.selectAction("Action2");
 		
-		Action2Return result = controller.runAction("param object", Action2Return.class, action);
+		@SuppressWarnings("unchecked")
+		Object untypedResult = controller.runAction("param object", action);
+		
+		Action2Result result = (Action2Result) untypedResult;
 		
 		assertTrue("param object".equals(result.wrappedObject()));
 	}
+	
+	// TODO Testes do SetupableAction
+	
+	// TODO Testes do pool de ações
+	
 }
