@@ -1,0 +1,5 @@
+#!/bin/bash
+# fin
+
+jar cvf Utils.jar -C build/ br/
+
