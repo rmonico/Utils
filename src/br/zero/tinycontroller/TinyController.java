@@ -26,6 +26,7 @@ public class TinyController {
 		return selectedActionClass != null;
 	}
 
+	// TODO Mudar isso para rodar a ação selecionada. Mudar testes depois
 	@SuppressWarnings({ "rawtypes" })
 	public Object runAction(Object param, Class<Action> actionClass) throws TinyControllerException {
 		Action action = getAction(actionClass);
