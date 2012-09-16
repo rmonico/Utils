@@ -7,54 +7,59 @@ import java.util.Map;
 
 public class TinyController {
 
-	private Map<List<?>, Class<? extends Action<?, ?>>> registeredActions = new HashMap<List<?>, Class<? extends Action<?, ?>>>();
-	private Class<? extends Action<?, ?>> selectedActionClass;
-	@SuppressWarnings("rawtypes")
-	private Map<Class<Action>, Action<?, ?>> actionPool = new HashMap<Class<Action>, Action<?, ?>>();
+	private Map<List<?>, Class<? extends BaseAction>> registeredActions = new HashMap<List<?>, Class<? extends BaseAction>>();
+	private Class<? extends BaseAction> selectedActionClass;
+	private Map<Class<? extends BaseAction>, BaseAction> actionPool = new HashMap<Class<? extends BaseAction>, BaseAction>();
 
-	public void registerAction(Class<? extends Action<?, ?>> action, Object... values) {
+	public void registerAction(Class<? extends BaseAction> action, Object... values) {
 		registeredActions.put(Arrays.asList(values), action);
 	}
 
-	public Class<? extends Action<?, ?>> selectAction(Object... values) {
+	public boolean findActionFor(Object... values) {
 		selectedActionClass = registeredActions.get(Arrays.asList(values));
 
-		return selectedActionClass;
-	}
-
-	public boolean isActionFound() {
 		return selectedActionClass != null;
 	}
 
 	// TODO Mudar isso para rodar a ação selecionada. Mudar testes depois
-	@SuppressWarnings({ "rawtypes" })
-	public Object runAction(Object param, Class<Action> actionClass) throws TinyControllerException {
-		Action action = getAction(actionClass);
+	public Object runAction(Object param) throws TinyControllerException {
+		BaseAction action = getAction(selectedActionClass);
 
-		Object result = runAction(param, action);
+		Object result = runInstantiatedAction(param, action);
 
 		return result;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Object runAction(Object param, Action action) throws TinyControllerException {
-		Object result;
+	// TODO Ve depois se vale a pena mudar esse método para usar genéricos
+	protected Object runInstantiatedAction(Object param, BaseAction action) throws TinyControllerException {
 
 		try {
-			result = action.run(param);
+			if (action instanceof NoResultNoParamAction) {
+				((NoResultNoParamAction) action).run();
+
+				return null;
+			} else if (action instanceof NoResultAction) {
+				((NoResultAction) action).run(param);
+
+				return null;
+			} else if (action instanceof NoParamAction) {
+				return ((NoParamAction) action).run();
+			} else if (action instanceof Action) {
+				return (Action) action;
+			}
 		} catch (Exception e) {
 			throw new TinyControllerException("Exception launched running action.", e);
 		}
-		return result;
+
+			throw new TinyControllerException("Action implementation not supported (" + action.getClass() + ").");
 	}
 
-	@SuppressWarnings("rawtypes")
-	private Action getAction(Class<Action> actionClass) throws TinyControllerException {
-		Action action;
+	private BaseAction getAction(Class<? extends BaseAction> actionClass) throws TinyControllerException {
+		BaseAction action;
 
 		try {
-			Action<?, ?> actionFromPool = actionPool.get(actionClass);
-			
+			BaseAction actionFromPool = actionPool.get(actionClass);
+
 			if (actionFromPool == null) {
 				action = actionClass.newInstance();
 				if (action instanceof SetupableAction) {
@@ -64,11 +69,11 @@ public class TinyController {
 			} else {
 				action = actionFromPool;
 			}
-			
+
 		} catch (Exception e) {
 			throw new TinyControllerException(e);
 		}
-		
+
 		return action;
 	}
 

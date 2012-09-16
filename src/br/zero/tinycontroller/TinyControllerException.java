@@ -2,6 +2,11 @@ package br.zero.tinycontroller;
 
 public class TinyControllerException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5939335310834051927L;
+	
 	public TinyControllerException(Exception e) {
 		super(e);
 	}
@@ -10,9 +15,8 @@ public class TinyControllerException extends Exception {
 		super(message, exception);
 	}
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5939335310834051927L;
+	public TinyControllerException(String message) {
+		super(message);
+	}
 
 }
