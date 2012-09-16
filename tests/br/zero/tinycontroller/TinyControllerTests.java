@@ -67,8 +67,7 @@ public class TinyControllerTests {
 
 		@Override
 		public String run() {
-//			return "result sent from ConcreteNoParamAction";
-			return null;
+			return "result sent from ConcreteNoParamAction";
 		}
 		
 	}
