@@ -22,10 +22,10 @@ public class TinyController {
 	}
 
 	// TODO Mudar isso para rodar a ação selecionada. Mudar testes depois
-	public Object runAction(Object param) throws TinyControllerException {
+	public Object runAction(Object arg) throws TinyControllerException {
 		BaseAction action = getAction(selectedActionClass);
 
-		Object result = runInstantiatedAction(param, action);
+		Object result = runInstantiatedAction(arg, action);
 
 		return result;
 	}
