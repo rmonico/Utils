@@ -40,7 +40,30 @@ public class TinyControllerTests {
 		
 		assertTrue(ConcreteNoResultNoParamAction.concreteNoResultNoParamActionRunned);
 	}
+	
+	public static class ConcreteNoResultAction implements NoResultAction<String> {
 
+		public static String receivedParam;
+		
+		@Override
+		public void run(String arg) throws Exception {
+			receivedParam = arg;
+		}
+		
+	}
+	
+	@Test
+	public void should_run_NoResultAction() throws TinyControllerException {
+		controller.registerAction(ConcreteNoResultAction.class, "ConcreteNoResultAction");
+
+		controller.findActionFor("ConcreteNoResultAction");
+
+		controller.runAction("param sent to action");
+		
+		assertTrue("param sent to action".equals(ConcreteNoResultAction.receivedParam));
+	
+	}
+	
 	// private static class Action1 implements Action<Object, Object> {
 	//
 	// @Override
