@@ -83,6 +83,29 @@ public class TinyControllerTests {
 		assertTrue("result sent from ConcreteNoParamAction".equals(actionResult));
 	}
 	
+	public static class ConcreteAction implements Action<String, String> {
+
+		public static Object receivedParam;
+
+		@Override
+		public String run(String arg) throws Exception {
+			return null;
+		}
+		
+	}
+	
+	@Test
+	public void shoud_run_action() throws TinyControllerException {
+		controller.registerAction(ConcreteAction.class, "ConcreteAction");
+
+		controller.findActionFor("ConcreteAction");
+
+		Object actionResult = controller.runAction("param sent to ConcreteAction");
+		
+		assertTrue("result sent from ConcreteAction".equals(actionResult));
+		assertTrue("param sent to ConcreteAction".equals(ConcreteAction.receivedParam));
+	}
+	
 	// private static class Action1 implements Action<Object, Object> {
 	//
 	// @Override
