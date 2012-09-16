@@ -61,7 +61,27 @@ public class TinyControllerTests {
 		controller.runAction("param sent to action");
 		
 		assertTrue("param sent to action".equals(ConcreteNoResultAction.receivedParam));
+	}
 	
+	public static class ConcreteNoParamAction implements NoParamAction<String> {
+
+		@Override
+		public String run() {
+//			return "result sent from ConcreteNoParamAction";
+			return null;
+		}
+		
+	}
+	
+	@Test
+	public void should_run_NoParamAction() throws TinyControllerException {
+		controller.registerAction(ConcreteNoParamAction.class, "ConcreteNoParamAction");
+
+		controller.findActionFor("ConcreteNoParamAction");
+
+		Object actionResult = controller.runAction(null);
+		
+		assertTrue("result sent from ConcreteNoParamAction".equals(actionResult));
 	}
 	
 	// private static class Action1 implements Action<Object, Object> {
