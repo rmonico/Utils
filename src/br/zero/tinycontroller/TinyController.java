@@ -45,7 +45,7 @@ public class TinyController {
 			} else if (action instanceof NoParamAction) {
 				return ((NoParamAction) action).run();
 			} else if (action instanceof Action) {
-				return (Action) action;
+				return ((Action) action).run(param);
 			}
 		} catch (Exception e) {
 			throw new TinyControllerException("Exception launched running action.", e);
