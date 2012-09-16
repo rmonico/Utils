@@ -23,7 +23,7 @@ public class TinyControllerTests {
 	public void should_found_the_action() {
 		controller.registerAction(ConcreteNoResultNoParamAction.class, "action1");
 
-		boolean actionFound = controller.findActionFor("action1");
+		boolean actionFound = controller.selectAction("action1");
 
 		assertTrue(actionFound);
 	}
@@ -32,11 +32,11 @@ public class TinyControllerTests {
 	public void should_run_the_action() throws TinyControllerException {
 		controller.registerAction(ConcreteNoResultNoParamAction.class, "action1");
 
-		controller.findActionFor("action1");
+		controller.selectAction("action1");
 
 		ConcreteNoResultNoParamAction.concreteNoResultNoParamActionRunned = false;
 		
-		controller.runAction(null);
+		controller.runSelectedAction(null);
 		
 		assertTrue(ConcreteNoResultNoParamAction.concreteNoResultNoParamActionRunned);
 	}
@@ -56,9 +56,9 @@ public class TinyControllerTests {
 	public void should_run_NoResultAction() throws TinyControllerException {
 		controller.registerAction(ConcreteNoResultAction.class, "ConcreteNoResultAction");
 
-		controller.findActionFor("ConcreteNoResultAction");
+		controller.selectAction("ConcreteNoResultAction");
 
-		controller.runAction("param sent to action");
+		controller.runSelectedAction("param sent to action");
 		
 		assertTrue("param sent to action".equals(ConcreteNoResultAction.receivedParam));
 	}
@@ -76,9 +76,9 @@ public class TinyControllerTests {
 	public void should_run_NoParamAction() throws TinyControllerException {
 		controller.registerAction(ConcreteNoParamAction.class, "ConcreteNoParamAction");
 
-		controller.findActionFor("ConcreteNoParamAction");
+		controller.selectAction("ConcreteNoParamAction");
 
-		Object actionResult = controller.runAction(null);
+		String actionResult = controller.runSelectedAction(null);
 		
 		assertTrue("result sent from ConcreteNoParamAction".equals(actionResult));
 	}
@@ -99,90 +99,15 @@ public class TinyControllerTests {
 	public void shoud_run_action() throws TinyControllerException {
 		controller.registerAction(ConcreteAction.class, "ConcreteAction");
 
-		controller.findActionFor("ConcreteAction");
+		controller.selectAction("ConcreteAction");
 
-		Object actionResult = controller.runAction("param sent to ConcreteAction");
+		String actionResult = controller.runSelectedAction("param sent to ConcreteAction");
 		
 		assertTrue("result sent from ConcreteAction".equals(actionResult));
 		assertTrue("param sent to ConcreteAction".equals(ConcreteAction.receivedParam));
 	}
 	
-	// private static class Action1 implements Action<Object, Object> {
-	//
-	// @Override
-	// public Object run(Object param) throws Exception {
-	// return null;
-	// }
-	//
-	// }
-	//
-	// @Test
-	// public void shoud_found_a_action() {
-	// TinyController controller = new TinyController();
-	//
-	// controller.registerAction(Action1.class, "Action1");
-	//
-	// controller.selectAction("Action1");
-	//
-	// assertTrue(controller.isActionFound());
-	// }
-	//
-	// @Test
-	// public void actionclass_found_should_be_same_action_registered() {
-	// TinyController controller = new TinyController();
-	//
-	// controller.registerAction(Action1.class, "Action1");
-	//
-	// Class<? extends Action<?, ?>> action =
-	// controller.selectAction("Action1");
-	//
-	// assertTrue(action.equals(Action1.class));
-	// }
-	//
-	// private static class Action2Result {
-	//
-	// private String wrappedObject;
-	//
-	// public Action2Result(String wrappedObject) {
-	// this.wrappedObject = wrappedObject;
-	// }
-	//
-	// public String wrappedObject() {
-	// return wrappedObject;
-	// }
-	//
-	// }
-	//
-	// public static class Action2 implements Action<String, Action2Result> {
-	//
-	// @Override
-	// public Action2Result run(String param) throws Exception {
-	// return new Action2Result(param);
-	// }
-	//
-	// }
-	//
-	// @Test
-	// public void should_run_single_registered_action() throws
-	// TinyControllerException {
-	// TinyController controller = new TinyController();
-	//
-	// controller.registerAction(Action2.class, "Action2");
-	//
-	// @SuppressWarnings("rawtypes")
-	// Class action = controller.selectAction("Action2");
-	//
-	// @SuppressWarnings("unchecked")
-	// Object untypedResult = controller.runAction("param object", action);
-	//
-	// Action2Result result = (Action2Result) untypedResult;
-	//
-	// assertTrue("param object".equals(result.wrappedObject()));
-	// }
-
 	// TODO Testes do SetupableAction
 
 	// TODO Testes do pool de ações
-
-	// TODO Testes do NoResultNoParamAction, NoResultAction, NoParamAction
 }

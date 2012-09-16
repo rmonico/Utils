@@ -15,23 +15,22 @@ public class TinyController {
 		registeredActions.put(Arrays.asList(values), action);
 	}
 
-	public boolean findActionFor(Object... values) {
+	public boolean selectAction(Object... values) {
 		selectedActionClass = registeredActions.get(Arrays.asList(values));
 
 		return selectedActionClass != null;
 	}
 
-	// TODO Mudar isso para rodar a ação selecionada. Mudar testes depois
-	public Object runAction(Object arg) throws TinyControllerException {
+	public <ActionResult, ActionParam> ActionResult runSelectedAction(ActionParam arg) throws TinyControllerException {
 		BaseAction action = getAction(selectedActionClass);
 
-		Object result = runInstantiatedAction(arg, action);
+		ActionResult result = runInstantiatedAction(arg, action);
 
 		return result;
 	}
 
-	// TODO Ve depois se vale a pena mudar esse método para usar genéricos
-	protected Object runInstantiatedAction(Object param, BaseAction action) throws TinyControllerException {
+	@SuppressWarnings("unchecked")
+	protected <ActionResult, ActionParam> ActionResult runInstantiatedAction(ActionParam param, BaseAction action) throws TinyControllerException {
 
 		try {
 			if (action instanceof NoResultNoParamAction) {
@@ -39,19 +38,18 @@ public class TinyController {
 
 				return null;
 			} else if (action instanceof NoResultAction) {
-				((NoResultAction) action).run(param);
-
+				((NoResultAction<ActionParam>) action).run(param);
 				return null;
 			} else if (action instanceof NoParamAction) {
-				return ((NoParamAction) action).run();
+				return ((NoParamAction<ActionResult>) action).run();
 			} else if (action instanceof Action) {
-				return ((Action) action).run(param);
+				return ((Action<ActionParam, ActionResult>) action).run(param);
 			}
 		} catch (Exception e) {
 			throw new TinyControllerException("Exception launched running action.", e);
 		}
 
-			throw new TinyControllerException("Action implementation not supported (" + action.getClass() + ").");
+		throw new TinyControllerException("Action implementation not supported (" + action.getClass() + ").");
 	}
 
 	private BaseAction getAction(Class<? extends BaseAction> actionClass) throws TinyControllerException {
