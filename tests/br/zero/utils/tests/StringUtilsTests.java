@@ -55,4 +55,11 @@ public class StringUtilsTests {
 		
 		assertEquals("Extração do nome do tipo.", "List<? extends br.somepackage.SomeClass>", typeName);
 	}
+	
+	@Test
+	public void shouldReplicateString() {
+		String replicated = StringUtils.replicateString("ab", 3);
+		
+		assertEquals("ababab", replicated);
+	}
 }
