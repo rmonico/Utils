@@ -2,8 +2,11 @@ package br.zero.utils;
 
 import static org.junit.Assert.assertEquals;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class JUnitUtils {
 	public static void assertBlockEquals(String message,
@@ -27,6 +30,12 @@ public class JUnitUtils {
 		if (expectedList.size() != actualList.size()) {
 			assertEquals(message + " (list sizes diff)", expectedList.toString(), actualList.toString());
 		}
+	}
+	
+	public static void assertCalendar(String expected, Calendar actual) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy", Locale.US);
+		
+		assertEquals(expected, sdf.format(actual.getTime()));
 	}
 	
 }
