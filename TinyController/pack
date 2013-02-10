@@ -1,0 +1,5 @@
+#!/bin/bash
+# pack
+
+jar cvf TinyController.jar -C build/ br/
+
