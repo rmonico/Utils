@@ -8,20 +8,20 @@ public class TinyControllerTests {
 
 	private TinyController controller = new TinyController();
 
-	public static class ConcreteNoResultNoParamAction implements NoResultNoParamAction {
+	public static class ConcreteRunnableAction implements RunnableAction {
 		
-		public static boolean concreteNoResultNoParamActionRunned;
+		public static boolean runned;
 
 		@Override
 		public void run() {
-			concreteNoResultNoParamActionRunned = true;
+			runned = true;
 		}
 
 	}
 
 	@Test
 	public void should_found_the_action() {
-		controller.registerAction(ConcreteNoResultNoParamAction.class, "action1");
+		controller.registerAction(ConcreteRunnableAction.class, "action1");
 
 		boolean actionFound = controller.selectAction("action1");
 
@@ -30,18 +30,18 @@ public class TinyControllerTests {
 
 	@Test
 	public void should_run_the_action() throws TinyControllerException {
-		controller.registerAction(ConcreteNoResultNoParamAction.class, "action1");
+		controller.registerAction(ConcreteRunnableAction.class, "action1");
 
 		controller.selectAction("action1");
 
-		ConcreteNoResultNoParamAction.concreteNoResultNoParamActionRunned = false;
+		ConcreteRunnableAction.runned = false;
 		
 		controller.runSelectedAction(null);
 		
-		assertTrue(ConcreteNoResultNoParamAction.concreteNoResultNoParamActionRunned);
+		assertTrue(ConcreteRunnableAction.runned);
 	}
 	
-	public static class ConcreteNoResultAction implements NoResultAction<String> {
+	public static class ConcreteParamAction implements ParamAction<String> {
 
 		public static String receivedParam;
 		
@@ -53,34 +53,34 @@ public class TinyControllerTests {
 	}
 	
 	@Test
-	public void should_run_NoResultAction() throws TinyControllerException {
-		controller.registerAction(ConcreteNoResultAction.class, "ConcreteNoResultAction");
+	public void should_run_ParamAction() throws TinyControllerException {
+		controller.registerAction(ConcreteParamAction.class, "ConcreteParamAction");
 
-		controller.selectAction("ConcreteNoResultAction");
+		controller.selectAction("ConcreteParamAction");
 
 		controller.runSelectedAction("param sent to action");
 		
-		assertTrue("param sent to action".equals(ConcreteNoResultAction.receivedParam));
+		assertTrue("param sent to action".equals(ConcreteParamAction.receivedParam));
 	}
 	
-	public static class ConcreteNoParamAction implements NoParamAction<String> {
+	public static class ConcreteResultAction implements ResultAction<String> {
 
 		@Override
 		public String run() {
-			return "result sent from ConcreteNoParamAction";
+			return "result sent from ConcreteResultAction";
 		}
 		
 	}
 	
 	@Test
-	public void should_run_NoParamAction() throws TinyControllerException {
-		controller.registerAction(ConcreteNoParamAction.class, "ConcreteNoParamAction");
+	public void should_run_ResultAction() throws TinyControllerException {
+		controller.registerAction(ConcreteResultAction.class, "ConcreteResultAction");
 
-		controller.selectAction("ConcreteNoParamAction");
+		controller.selectAction("ConcreteResultAction");
 
 		String actionResult = controller.runSelectedAction(null);
 		
-		assertTrue("result sent from ConcreteNoParamAction".equals(actionResult));
+		assertTrue("result sent from ConcreteResultAction".equals(actionResult));
 	}
 	
 	public static class ConcreteAction implements Action<String, String> {

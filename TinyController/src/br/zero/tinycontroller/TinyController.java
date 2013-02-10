@@ -33,15 +33,15 @@ public class TinyController {
 	protected <ActionResult, ActionParam> ActionResult runInstantiatedAction(ActionParam param, BaseAction action) throws TinyControllerException {
 
 		try {
-			if (action instanceof NoResultNoParamAction) {
-				((NoResultNoParamAction) action).run();
+			if (action instanceof RunnableAction) {
+				((RunnableAction) action).run();
 
 				return null;
-			} else if (action instanceof NoResultAction) {
-				((NoResultAction<ActionParam>) action).run(param);
+			} else if (action instanceof ParamAction) {
+				((ParamAction<ActionParam>) action).run(param);
 				return null;
-			} else if (action instanceof NoParamAction) {
-				return ((NoParamAction<ActionResult>) action).run();
+			} else if (action instanceof ResultAction) {
+				return ((ResultAction<ActionResult>) action).run();
 			} else if (action instanceof Action) {
 				return ((Action<ActionParam, ActionResult>) action).run(param);
 			}
