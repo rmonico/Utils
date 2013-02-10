@@ -1,5 +1,5 @@
 #!/bin/bash
-# fin
+# pack
 
 jar cvf Utils.jar -C build/ br/
 
