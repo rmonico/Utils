@@ -1,0 +1,12 @@
+Demonstração do conceito de desacoplamento entre o aspecto funcional da implementação na camada de apresentação.
+
+A aplicação do conceito proposto neste projeto permite que a camada de apresentação possa ser desenvolvida descoplada de implementação. Desta forma  é possível que um documento seja criado e possa ser renderizado em HTML e Android sem necessidade de manipulação direta do código.
+
+Exemplo:
+
+1. Passo: Criar um documento e adicionar elementos utilizando código Java
+
+2. Passo: Renderizar o documento para a plataforma desejada. No exemplo abaixo, o código é renderizado para HTML
+
+
+Notar que no caso do exemplo acima é possível aplicar um estilo ao documento gerado através do renderizador.
