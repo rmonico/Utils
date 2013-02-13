@@ -1,5 +1,10 @@
 #!/bin/bash
 # pack
 
+pushd .
+
+cd $UTILS
 jar cvf Utils.jar -C build/ br/
+
+popd
 
