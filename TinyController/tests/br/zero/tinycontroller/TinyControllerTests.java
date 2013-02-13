@@ -88,7 +88,7 @@ public class TinyControllerTests {
 		public static Object receivedParam;
 
 		@Override
-		public String run(String arg) throws Exception {
+		public String run(String arg) throws ActionException {
 			receivedParam = arg;
 			return "result sent from ConcreteAction";
 		}
